@@ -1,0 +1,70 @@
+.navBar {
+  
+  align-items: center;
+  width: 100%;
+  display: flex;
+  // position: fixed;
+ 
+  box-sizing: border-box;
+  padding-top: 1.9vw;
+  padding-bottom: 4.3vw;
+  padding-left: 6vw;
+  padding-right: 6vw;
+  transition: padding 140ms ease-in-out;
+
+  font-family: 'EB Garamond', serif;
+
+  .section1 {
+    // width: 33%;
+    flex: 1 1 28%;
+    display: inline-flex;
+    flex-wrap: wrap;
+
+    font-size: 1.15rem;
+    justify-content: center;
+
+    a {
+      color: rgb(29, 29, 29);
+    }
+
+    a:not(:last-child) {
+
+      margin-right: 1.2vw;
+    }
+  }
+
+  .section2 {
+    flex: 1 1 40%;
+    text-align: center;
+  }
+
+  .section3 {
+    align-items: center;
+    // width: 33%;
+    // justify-content: flex-end;
+    // display: inline-flex;
+
+  }
+}
+
+.navBarItems {
+  width: 100%;
+}
+
+.navBarColumn1 {
+  display: flex;
+}
+
+.navBarColumn2 {
+  display: flex;
+  justify-content: center;
+  a { 
+    color:rgb(77, 77, 77);
+  }
+}
+
+.navBarColumn3 {
+  display: flex;
+  justify-content: center;
+}
+

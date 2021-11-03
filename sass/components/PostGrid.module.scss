@@ -1,0 +1,72 @@
+.postGrid {
+  width: 100%;
+  padding-left: 6vw;
+  padding-right: 6vw;
+  transition: padding 140ms ease-in-out;
+
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  grid-column-gap: 66px;
+  grid-row-gap: 85px;
+  grid-auto-rows: min-content;
+  min-height: 10rem;
+}
+
+$breakpoint-tablet: 1000px;
+$breakpoint-mobile: 700px;
+@media (max-width: $breakpoint-tablet) {
+  .postGrid {
+
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
+  .postGrid {
+
+    grid-template-columns: repeat(1,minmax(0,1fr));
+  }
+}
+
+.imageWrapper {
+  display: block;
+
+  img {
+    // position: absolute;
+    height: 22vw;
+    transition: height 80ms ease-in-out;
+    object-fit: cover;
+
+    @media (max-width: $breakpoint-mobile) {
+      height: 88vw;
+    }
+  }
+}
+
+.gridItem {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gridItemText {
+  display: block;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+
+  text-align: center;
+}
+
+.gridItemTextMeta {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: black;
+}
+
+.gridItemTextTitle {
+  font-size: 2.2rem;
+  color: black;
+}

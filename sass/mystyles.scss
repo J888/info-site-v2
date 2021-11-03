@@ -1,0 +1,19 @@
+// This is where bulma variables will be customized
+
+@charset "utf-8";
+
+.card-image:first-child img {
+  height: 10em;
+  object-fit: cover
+}
+
+@import "../node_modules/bulma/bulma.sass";
+
+html,
+body {
+  margin: 0.5em 1em 0 1em;
+  background-color: rgb(251, 249, 249);
+  font-family: 'EB Garamond', serif;
+
+}
+
