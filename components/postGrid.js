@@ -3,7 +3,7 @@ import Link from "next/link";
 import LinkWrapper from "./linkWrapper";
 import styles from "../sass/components/PostGrid.module.scss";
 
-const PostGridItem = ({ link, imageUrl, title, category }) => (
+const PostGridItem = ({ link, imageUrl, title, category, createdAt }) => (
   <article className={styles.gridItem}>
     <div className={styles.imageWrapper}>
       <Link href={link} passHref>
@@ -16,7 +16,15 @@ const PostGridItem = ({ link, imageUrl, title, category }) => (
     <div className={styles.gridItemText}>
       <Link href={link} passHref>
         <a>
-          <div className={styles.gridItemTextMeta}>{category} | 10/26/21</div>
+          <div className={styles.gridItemTextMeta}>
+            {category} |{" "}
+            {new Date(createdAt).toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}{" "}
+          </div>
         </a>
       </Link>
 
@@ -37,6 +45,8 @@ const PostGrid = ({ posts }) => (
         imageUrl={post.image.s3Url}
         title={post.title}
         category={post.category}
+        createdAt={post.createdAt}
+        key={post.id}
       />
     ))}
 
