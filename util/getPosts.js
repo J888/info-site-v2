@@ -14,17 +14,14 @@ const getPostsS3 = async (Bucket, sitename) => {
     let ContentType = 'application/json';
     console.log(`Getting posts from s3 at path ${Key} with ContentType=${ContentType}`);
     const command = new GetObjectCommand({ Bucket, Key, ContentType });
-    console.log(`Sending GetObjectCommand with Bucket=${Bucket}, Key=${Key}`)
     const response = await client.send(command);
     const readStream = response.Body;
     let dataStr = '';
     readStream.on('data', (d) => {
       dataStr+=d;
-      console.log(`got data.`)
     });
 
     readStream.on('close', () => {
-      console.log(`readStream closed. Resolving`)
       resolve(JSON.parse(dataStr));
     })
 
