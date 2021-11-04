@@ -14,14 +14,18 @@ export default function MainWrapper(props) {
       <Head>
         <title>{props.pageTitle}</title>
         <link rel="icon" href="/favicon.ico" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap"
+            rel="stylesheet"
+          />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1"
         />{" "}
         {/* needed for react bootstrap responsiveness */}
-        <style>
+        {/* <style data-href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap">
         @import url('https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap');
-        </style>
+        </style> */}
       </Head>
 
       <Nav siteName={props.siteName}/>
