@@ -49,7 +49,30 @@ for (let i = 0; i < numPosts; i++) {
     ],
     createdAt: faker.date.recent().toLocaleString(),
     tags: tags,
+    category: faker.lorem.word()
   });
+}
+
+for (let i = 0; i < posts.length; i++) {
+  let prevPostSlug = i > 0 ? `/posts/${posts[i-1].category}/${posts[i-1].id}` : null;
+  let prevPostTitle = i > 0 ? posts[i-1].title : null;
+
+  let nextPostSlug = i < posts.length - 1 ? `/posts/${posts[i+1].category}/${posts[i+1].id}`: null;
+  let nextPostTitle = i < posts.length - 1 ? posts[i+1].title : null;
+
+  if (prevPostSlug) {
+    posts[i].prevPost = {
+      slug: prevPostSlug,
+      title: prevPostTitle
+    }
+  }
+
+  if (nextPostSlug) {
+    posts[i].nextPost = {
+      slug: nextPostSlug,
+      title: nextPostTitle
+    }
+  }
 }
 
 if (!filename.endsWith(`.json`)) {

@@ -3,6 +3,18 @@
 - in the posts json data, add a nextPost and prevPost so that on each page, the next or previous post can be linked.
 
 
+# ENV VARS
+
+```
+export AWS_ACCESS_KEY_ID= \
+       AWS_SECRET_ACCESS_KEY= \
+       S3_REGION=us-east-2 \
+       SITE_FOLDER_S3=nftblog1 \
+       STATIC_FILES_S3_BUCKET=nftblog1-static-files \
+       IMG_S3_BUCKET=nftblog1-images
+
+```
+
 ## Run dev server
 
 Set env vars `LOCAL_POSTS_DIR`
