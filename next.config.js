@@ -23,7 +23,8 @@ module.exports = (phase) => {
   const images = {
     domains: [
       `${process.env.IMG_S3_BUCKET}.s3.${process.env.S3_REGION}.amazonaws.com`,
-      'images.squarespace-cdn.com'
+      'images.squarespace-cdn.com',
+      'nftgazer.com' // needed or else NEXT optimized images won't work
     ],
   }
 
