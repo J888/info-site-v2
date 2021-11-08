@@ -104,7 +104,7 @@ export default function Home({ posts, topTags, mostVisited, siteConfig }) {
         <Columns.Column size={3}>
           <Card>
             <Message>
-              <Message.Header>Most Visited This Month</Message.Header>
+              <Message.Header>Most Viewed This Month</Message.Header>
             </Message>
             {mostVisited?.length > 0 && (
               <React.Fragment>

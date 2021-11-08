@@ -179,8 +179,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
       },
     };
   }
-  
-  console.log(posts.filter((post) => post.id == id)[0])
+
   return {
     props: {
       data: posts.filter((post) => post.id == id)[0],
