@@ -53,7 +53,7 @@ const PostContent = ({ data, views }) => (
               {views !== undefined && (
                 <div className={styles.viewCount}>
                   <img src="/icons/eye1.png" className={styles.viewCountIcon} />{" "}
-                  <span>{views}</span>
+                  <span>{views < 1 ? 1 : views}</span>
                 </div>
               )}
             </div>
