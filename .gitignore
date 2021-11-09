@@ -3,3 +3,4 @@ mockData
 .next
 css
 .DS_Store
+.env.*

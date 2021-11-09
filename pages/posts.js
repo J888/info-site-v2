@@ -8,7 +8,7 @@ import PostGrid from "../components/postGrid";
 
 const AllPosts = ({ posts, siteConfig }) => {
   return (
-    <MainWrapper pageTitle={`All post categories`} siteName={siteConfig?.site?.name}>
+    <MainWrapper pageTitle={`All post categories`} siteName={siteConfig?.site?.name} description={`A grid of all blog posts available on the website`}>
       <Columns>
         <Columns.Column size={1}></Columns.Column>
         <Columns.Column size={7} style={{width: '100%'}}>

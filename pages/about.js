@@ -7,7 +7,7 @@ import Billboard from "../components/billboard";
 const About = ({ siteConfig }) => {
   const { site, pageData} = siteConfig;
   return (
-    <MainWrapper pageTitle={`About`} siteName={site.name}>
+    <MainWrapper pageTitle={`About`} siteName={site.name} description={`The about page for ${site.name}`}>
       <Billboard
         title={"About"}
         body={pageData.about.description}

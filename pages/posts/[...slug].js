@@ -22,8 +22,9 @@ import rehypeRaw from 'rehype-raw'
 import { getSiteFile } from "../../util/s3Util";
 import LinkWrapper from "../../components/linkWrapper";
 import postContentStyles from "../../sass/components/PostContent.module.scss"
+import useSWR from "swr";
 
-const PostContent = ({ data }) => (
+const PostContent = ({ data, views }) => (
   <Columns>
     <Columns.Column size={2}></Columns.Column>
     <Columns.Column size={8}>
@@ -43,10 +44,20 @@ const PostContent = ({ data }) => (
             />
           </Container>
           <Container className={styles.publishedDate}>
-            <Tag.Group gapless>
-              <Tag color="info">Published</Tag>
-              <Tag>{data?.createdAt}</Tag>
-            </Tag.Group>
+            <div className={styles.viewCountDateContainer}>
+              <Tag.Group gapless className={styles.publishedDateTagGroup}>
+                <Tag color="info">Published</Tag>
+                <Tag>{data?.createdAt}</Tag>
+              </Tag.Group>
+
+              {views && (
+                <div className={styles.viewCount}>
+                  <img src="/icons/eye1.png" className={styles.viewCountIcon} />{" "}
+                  <span>{views}</span>
+                </div>
+              )}
+            </div>
+
             <Tag.Group>
               {data?.tags?.map((tag) => (
                 // <LinkWrapper href={`/tags/${tag}`} key={tag} wrapInAnchor={true}>
@@ -149,10 +160,19 @@ const PostContent = ({ data }) => (
   </Columns>
 );
 
-const Post = ({ data, postsByCategory, category, siteConfig }) => {
+const Post = ({ postData, postsByCategory, category, siteConfig, slug }) => {
+
+  const { data: pageViewData, error } = useSWR(
+    `/api/page-views?slug=${encodeURIComponent(slug)}`,
+    async (url) => {
+      const res = await fetch(url);
+      return res.json();
+    }
+  );
+  
   return (
-    <MainWrapper pageTitle={`page ${data?.title}`} siteName={siteConfig?.site?.name}>
-      {data && <PostContent data={data} />}
+    <MainWrapper pageTitle={`${postData?.title}`} siteName={siteConfig?.site?.name} description={postData?.description} imageUrl={postData?.image?.s3Url}>
+      {postData && <PostContent data={postData} views={pageViewData?.views} />}
       {postsByCategory && (
         <PostListWide
           posts={postsByCategory}
@@ -182,8 +202,9 @@ export async function getStaticProps({ params, preview = false, previewData }) {
 
   return {
     props: {
-      data: posts.filter((post) => post.id == id)[0],
-      siteConfig
+      postData: posts.filter((post) => post.id == id)[0],
+      siteConfig,
+      slug: `/posts/${params.slug[0]}/${params.slug[1]}`
     },
   };
 }

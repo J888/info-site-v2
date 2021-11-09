@@ -24,7 +24,7 @@ export default function Home({ posts, topTags, mostVisited, siteConfig }) {
   const [visiblePosts, setVisiblePosts] = useState(posts.slice(0, 5));
 
   return (
-    <MainWrapper pageTitle="Home" siteName={siteConfig?.site?.name}>
+    <MainWrapper pageTitle="Home" siteName={siteConfig?.site?.name} description={`The front page and home page of the website.`}>
       <div style={{ paddingBottom: '10vw' }}>
         <Billboard
           title={'Gaze into the eyes of your next NFT'}

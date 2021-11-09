@@ -26,6 +26,20 @@ export default function MainWrapper(props) {
         {/* <style data-href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap">
         @import url('https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap');
         </style> */}
+
+        <meta property="og:title" content={props.pageTitle}/>
+        <meta property="og:description" content={props.description}/>
+        { props.imageUrl && <meta property="og:image" content={props.imageUrl}/> }
+
+        <meta name="twitter:title" content={props.pageTitle}/>
+        <meta name="twitter:description" content={props.description}/>
+        { props.imageUrl && <meta name="twitter:image" content={props.imageUrl}/> }
+
+        <meta name="twitter:card" content="summary_large_image"/> {/* The card type . . . one of “summary”, “summary_large_image”, “app”, or “player”. */}
+
+        {/* <!--  Non-Essential, But Recommended --> */}
+        <meta property="og:site_name" content={props.siteName}/>
+        <meta name="twitter:image:alt" content={`${props.pageTitle} image`}/>
       </Head>
 
       <Nav siteName={props.siteName}/>
