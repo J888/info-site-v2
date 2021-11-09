@@ -44,7 +44,9 @@ export default async (req, res) => {
       viewsBySlug[rowSlug] = viewCount;
     }
 
-    return res.status(200).json({ views: viewsBySlug[slug] })
+    let views = viewsBySlug[slug] || 0;
+
+    return res.status(200).json({ views })
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

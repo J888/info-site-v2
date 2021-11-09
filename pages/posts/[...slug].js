@@ -50,7 +50,7 @@ const PostContent = ({ data, views }) => (
                 <Tag>{data?.createdAt}</Tag>
               </Tag.Group>
 
-              {views && (
+              {views !== undefined && (
                 <div className={styles.viewCount}>
                   <img src="/icons/eye1.png" className={styles.viewCountIcon} />{" "}
                   <span>{views}</span>
