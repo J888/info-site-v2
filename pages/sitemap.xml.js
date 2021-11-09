@@ -12,7 +12,7 @@ export const getServerSideProps = async ({ res }) => {
   const posts = await getPostsS3(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3);
   const tags = Array.from(new Set(posts.map((post) => post.tags || []).flat()));
 
-  const BASE_URL = "https://localhost.com"
+  const BASE_URL = "https://nftgazer.com"
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
