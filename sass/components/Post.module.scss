@@ -1,8 +1,15 @@
+$breakpoint-mobile: 500px;
+
 .publishedDate {
   margin: 1rem 0 -2em 2.8rem;
 }
 
 .viewCount {
+  @media (max-width: $breakpoint-mobile) {
+    display: block;
+    padding-left: 0.5rem;
+  }
+
   padding-left: 0.3rem;
   margin-bottom: 1.68rem;
   color: #787878;
@@ -36,4 +43,8 @@
   display: flex;
   justify-content: space-between;
   margin-right: 1rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    display: block;
+  }
 }
