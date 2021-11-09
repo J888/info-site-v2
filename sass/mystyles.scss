@@ -1,6 +1,7 @@
 // This is where bulma variables will be customized
 
 @charset "utf-8";
+$breakpoint-mobile: 500px;
 
 .card-image:first-child img {
   height: 10em;
@@ -12,6 +13,11 @@
 html,
 body {
   margin: 0.5em 1em 0 1em;
+
+  @media (max-width: $breakpoint-mobile) {
+    margin: 0.5em 0.2rem 0 0.2rem;
+  }
+
   background-color: rgb(251, 249, 249);
   font-family: 'EB Garamond', serif;
 

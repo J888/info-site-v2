@@ -56,6 +56,13 @@ const PostContent = ({ data, views }) => (
                   <span>{views < 1 ? 1 : views}</span>
                 </div>
               )}
+
+              {/* placeholder */}
+              {views === undefined && (
+                <div className={styles.viewCount}>
+                  {`Loading views...`}
+                </div>
+              )}
             </div>
 
             <Tag.Group>
