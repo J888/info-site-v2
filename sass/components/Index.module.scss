@@ -11,3 +11,19 @@
     color: #5c5c5c;
   }
 }
+
+.mostVisitedCard {
+  div {
+    padding: 0 1rem 1.4rem 1.5rem;
+    font-size: 1.3rem;
+    line-height: 1.6rem;
+
+    a {
+      color: rgb(34, 34, 34);
+
+      &:hover {
+        color: rgb(105, 105, 105);
+      }
+    }
+  }
+}

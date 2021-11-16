@@ -19,32 +19,35 @@ import LinkWrapper from "../components/linkWrapper";
 import Billboard from "../components/billboard";
 import PostGrid from "../components/postGrid";
 import styles from "../sass/components/Index.module.scss"
+import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 
-export default function Home({ posts, topTags, mostVisited, siteConfig }) {
+export default function Home({ posts, topTags, mostVisitedList, siteConfig }) {
   const [visiblePosts, setVisiblePosts] = useState(posts.slice(0, 5));
 
   return (
-    <MainWrapper pageTitle="Home" siteName={siteConfig?.site?.name} description={`The front page and home page of the website.`}>
-      <div style={{ paddingBottom: '10vw' }}>
+    <MainWrapper
+      pageTitle="Home"
+      siteName={siteConfig?.site?.name}
+      description={`The front page and home page of the website.`}
+    >
+      <div style={{ paddingBottom: "10vw" }}>
         <Billboard
-          title={'Gaze into the eyes of your next NFT'}
-          body={'Here you’ll find all sorts of non fungible tokens.'}
+          title={"Gaze into the eyes of your next NFT"}
+          body={"Here you’ll find all sorts of non fungible tokens."}
         />
       </div>
-      <PostGrid posts={visiblePosts}/>
+      <PostGrid posts={visiblePosts} />
 
       <div className={styles.seeAllLink}>
         <Link href="/posts" passHref>
-          <a>{'See all posts →'}</a>
+          <a>{"See all posts →"}</a>
         </Link>
       </div>
 
       <Columns>
         <Columns.Column size={1}></Columns.Column>
         <Columns.Column size={7}>
-          <Container>
-            {/* <Heading>Posts</Heading> */}
-          </Container>
+          <Container>{/* <Heading>Posts</Heading> */}</Container>
         </Columns.Column>
         <Columns.Column size={3}></Columns.Column>
       </Columns>
@@ -97,32 +100,26 @@ export default function Home({ posts, topTags, mostVisited, siteConfig }) {
             ))} */}
           </div>
 
-          {visiblePosts.length >= posts.length && (
-            <Box>You're all caught up!</Box>
-          )}
+      
         </Columns.Column>
         <Columns.Column size={3}>
           <Card>
             <Message>
               <Message.Header>Most Viewed This Month</Message.Header>
             </Message>
-            {mostVisited?.length > 0 && (
-              <React.Fragment>
-                <Card.Content>
-                  Fishing Boat Spills Fuel In Bodega Bay (PHOTOS)
-                </Card.Content>
-
-                <Card.Content>
-                  ICYMI: 'We Just Need To See You Again': LI Mom Searc...
-                </Card.Content>
-
-                <Card.Content>
-                  Connecticut Will Take In Over 300 Afghan Refugees: L...
-                </Card.Content>
-              </React.Fragment>
+            {mostVisitedList?.length > 0 && (
+              <div className={styles.mostVisitedCard}>
+                {mostVisitedList.slice(0, 5).map((mostVisitedItem) => (
+                  <Card.Content>
+                    <Link href={mostVisitedItem.slug}>
+                      {mostVisitedItem.title}
+                    </Link>
+                  </Card.Content>
+                ))}
+              </div>
             )}
 
-            {mostVisited == undefined && (
+            {mostVisitedList?.length == 0 && (
               <React.Fragment>
                 <Card.Content>No data</Card.Content>
               </React.Fragment>
@@ -140,7 +137,7 @@ export default function Home({ posts, topTags, mostVisited, siteConfig }) {
                 {topTags.map((tag) => (
                   <Tag clickable key={tag} className={styles.popularTags}>
                     <LinkWrapper wrapInAnchor={true} href={`/tags/${tag}`}>
-                    #{tag}
+                      #{tag}
                     </LinkWrapper>
                   </Tag>
                 ))}
@@ -161,6 +158,30 @@ export default function Home({ posts, topTags, mostVisited, siteConfig }) {
 export async function getStaticProps() {
   const posts = await getPostsS3(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3);
   const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
+
+  const pageViewsMappedBySlug = await getPageViewsBySlug("2021-11-08");
+
+  /**
+   * [
+   *  {
+   *    "slug": "/posts/abcdefg",
+   *    "title": "Something"
+   *  }
+   * ]
+   */
+  let mostVisitedList = [];
+  for (let slug in pageViewsMappedBySlug) {
+    if (slug.includes("/posts/")) {
+      console.log(`slugs is ${slug}`)
+      let title = posts.filter(p => `/posts/${p.category}/${p.id}` === slug)[0]?.title
+
+      if (title) { //  title could be undefined if the page id changes after google analytics already recorded it
+        mostVisitedList.push({ slug, title })
+      }
+    }
+  }
+
+  console.log(JSON.stringify(mostVisitedList, null, 2))
 
   let tagCountOccurence = {
     /* tag: # of occurences */
@@ -193,7 +214,8 @@ export async function getStaticProps() {
     props: {
       posts,
       topTags,
-      siteConfig
+      siteConfig,
+      mostVisitedList
     },
   };
 }

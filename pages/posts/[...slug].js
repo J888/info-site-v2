@@ -156,7 +156,7 @@ const PostContent = ({ data, views }) => (
       <Block>
         <Card>
           <Message>
-            <Message.Header>Trending Now</Message.Header>
+            <Message.Header>Trending in "{data?.category}"</Message.Header>
           </Message>
 
           <Card.Content>No data</Card.Content>
