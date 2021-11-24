@@ -173,7 +173,6 @@ export async function getStaticProps() {
   let mostVisitedList = [];
   for (let slug in pageViewsMappedBySlug) {
     if (slug.includes("/posts/")) {
-      console.log(`slugs is ${slug}`)
       let title = postsDynamo.filter(p => `/posts/${p.Category}/${p.PostId}` === slug)[0]?.Title
 
       if (title) { //  title could be undefined if the page id changes after google analytics already recorded it

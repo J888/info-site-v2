@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Columns, Container, Image, Section, Tag } from "react-bulma-components";
+import shortUUID from "short-uuid";
 import styles from "../sass/components/Admin.module.scss"
 const ADD_CONTENT = "Add content. . .";
 
@@ -38,20 +39,14 @@ const LogIn = ({ loginButtonClickHandler }) => {
 
 const BlogPostEditor = ({
   isEdited,
+  isDraftChangeHandler,
   updatePostHandler,
   postIndex,
   initialData,
   images,
-  fetchImagesHandler,
   saveState,
   savePostHandler
 }) => {
-  useEffect(() => {
-    // if (!images) {
-    //   fetchImagesHandler(initialData.PostId, initialData.Category);
-    // }
-  });
-
   const AddPartButtons = ({ insertPartAfterIndex }) => (
     <React.Fragment>
       <button
@@ -68,6 +63,8 @@ const BlogPostEditor = ({
 
           updatePostHandler(postIndex, newBlogPostData);
         }}
+
+        disabled={!images || !images?.length > 0}
       >
         + image
       </button>
@@ -115,7 +112,7 @@ const BlogPostEditor = ({
           Save
         </Button>
       </div>
-
+{/* 
       {saveState === "NONE" && (
         <div className={styles.postSaveStateTag}>
           {isEdited ? (
@@ -135,7 +132,18 @@ const BlogPostEditor = ({
         <div className={styles.postSaveStateTag}>
           <Tag color="danger">Save Failed</Tag>
         </div>
-      )}
+      )} */}
+
+      <div className={styles.editorPostShortIdTagGroup}>
+        <Tag.Group hasAddons>
+            {isEdited && saveState==="NONE" && <Tag color="warning">Edited</Tag>}
+            {!isEdited && saveState==="NONE" && <Tag color="info">Up to date</Tag>}
+            {saveState === "SUCCESS" && <Tag color="success">Saved!</Tag>}
+            {saveState === "FAIL" && <Tag color="danger">Save Failed</Tag>}
+          <Tag color="light">{initialData.PostShortId}</Tag>
+
+        </Tag.Group>
+      </div>
 
       <label>Title</label>
       <input
@@ -146,6 +154,17 @@ const BlogPostEditor = ({
           genericOnChangeAttrUpdater(e, "Title");
         }}
       ></input>
+
+      <div className={styles.editorIsDraftCheckbox}>
+        <label>Draft</label>
+        <input
+          type="checkbox"
+          checked={initialData.IsDraft === true}
+          onChange={()=> {
+            isDraftChangeHandler(postIndex);
+          }}
+        ></input>
+      </div>
 
       <label>SubTitle</label>
       <input
@@ -366,7 +385,7 @@ const Admin = ({}) => {
   const [loggedInAdmin, setLoggedInAdmin] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
   const [blogPosts, setBlogPosts] = useState([]);
-  const [imagesByPostId, setImagesByPostId] = useState({});
+  const [imagesByPostShortId, setImagesByPostShortId] = useState({});
   const [activeBlogPostIndex, setActiveBlogPostIndex] = useState(0);
   const [editedPostIndexes, setEditedPostIndexes] = useState([]);
   const [infoShownPostIndexes, setInfoShownPostIndexes] = useState([]); // controls which posts to show info of
@@ -413,15 +432,14 @@ const Admin = ({}) => {
     setBlogPosts(items);
   }
 
-  const fetchImagesHandler = async (postId, category) => {
-    const res = await axios.get(`/api/posts/images?postId=${postId}&category=${category}`);
+  const fetchImagesHandler = async (PostShortId) => {
+    const res = await axios.get(`/api/posts/images?PostShortId=${PostShortId}`);
     const { items } = res.data;
-    console.log(`images: ${JSON.stringify(items, null, 2)}`)
-    
-    let newImagesByPostId = {}
-    Object.assign(newImagesByPostId, imagesByPostId);
-    newImagesByPostId[postId] = items;
-    setImagesByPostId(newImagesByPostId);
+
+    let newImagesByPostShortId = {}
+    Object.assign(newImagesByPostShortId, imagesByPostShortId);
+    newImagesByPostShortId[PostShortId] = items;
+    setImagesByPostShortId(newImagesByPostShortId);
   }
 
   const updatePostHandler = (atIndex, newValue) => {
@@ -468,6 +486,26 @@ const Admin = ({}) => {
     }
   }
 
+  const deletePostHandler = async (index) => {
+    let blogPostData = blogPosts[index];
+    const res = await axios.post(`api/posts/delete`, { posts: [blogPostData] });
+    const { updateStatusCodes } = res?.data;
+    console.log(`[POST] for delete, PostId: ${blogPostData.PostId}`)
+    console.log(`Status codes were [${updateStatusCodes.join(", ")}]`);
+
+    let newPosts = [...blogPosts];
+    newPosts.splice(index, 1); // index, num to delete
+    setBlogPosts(newPosts);
+
+    setActiveBlogPostIndex(0);
+  }
+
+  const isDraftChangeHandler = (index) => {
+    let newPosts = [...blogPosts];
+    newPosts[index].IsDraft = !newPosts[index].IsDraft;
+    setBlogPosts(newPosts);
+  }
+
   return (
     <div>
       {!loggedInAdmin && (
@@ -476,18 +514,17 @@ const Admin = ({}) => {
       {loggedInAdmin && <div>Logged in!</div>}
       {loginFailed && <div>Login Failed </div>}
 
-      {loggedInAdmin &&
-
+      {loggedInAdmin && (
         <Columns>
-
           <Columns.Column size={3}>
             <h1 className={styles.postsHeader}>Posts</h1>
             <Button
               className={styles.newPostButton}
               onClick={() => {
                 let newBlogPosts = [...blogPosts];
-                newBlogPosts.push({
+                newBlogPosts.unshift({
                   PostId: `post-${newBlogPosts.length + 1}-id`,
+                  PostShortId: shortUUID.generate(),
                   Category: "category-here",
                   Description: "",
                   ImageS3Url: "",
@@ -501,28 +538,36 @@ const Admin = ({}) => {
                       Contents: ADD_CONTENT,
                     },
                   ],
-                  Tags: ['add','tags','here'],
-                  IsNewPost: true
+                  Tags: ["add", "tags", "here"],
+                  IsNewPost: true,
+                  IsDraft: true,
                 });
 
                 setBlogPosts(newBlogPosts);
-                setActiveBlogPostIndex(newBlogPosts.length - 1);
+                setActiveBlogPostIndex(0);
               }}
             >
               New Post
             </Button>
 
-            <div>
+            <div className={styles.postCardListScrollableContainer}>
               {blogPosts.map((post, i) => (
-                <Card className={styles[`postCard${ activeBlogPostIndex == i ? '--isActive' : ''}`] } key={post.PostId}>
+                <Card
+                  className={
+                    post.IsDraft
+                      ? styles["postCard--grayedOut"]
+                      : styles.postCard
+                  }
+                  key={post.PostId}
+                >
                   <Card.Header className={styles.postCardHeader}>
-
-
                     <div className={styles.postCardHeaderTitleContainer}>
-                      <span 
+                      <span
                         className={styles.expandPostArrow}
                         onClick={() => {
-                          let infoShownPostIndexesNew = [...infoShownPostIndexes];
+                          let infoShownPostIndexesNew = [
+                            ...infoShownPostIndexes,
+                          ];
                           if (infoShownPostIndexesNew.includes(i)) {
                             let index = infoShownPostIndexesNew.indexOf(i);
                             infoShownPostIndexesNew.splice(index, 1); // index, num to delete
@@ -531,24 +576,59 @@ const Admin = ({}) => {
                           }
                           setInfoShownPostIndexes(infoShownPostIndexesNew);
                         }}
-                      >{infoShownPostIndexes.includes(i) ? "v" : ">"}</span>
+                      >
+                        {infoShownPostIndexes.includes(i) ? "v" : ">"}
+                      </span>
 
-                      <Card.Header.Title style={{marginLeft: '1rem'}} id={'postCardTitle'}>
-                        {i + 1}. {post.Title}
+                      <Card.Header.Title className={styles.postCardTitle}>
+                        {i + 1}. {post.Title} {post.IsDraft ? "[DRAFT]" : ""}
                       </Card.Header.Title>
                     </div>
 
                     <div className={styles.postCardButtons}>
                       <Button
+                        className={styles.postCardDeleteButton}
+                        color="danger"
+                        onClick={() => {
+                          if (post.IsNewPost === true) {
+                            // then this post hasn't been saved to dynamo yet
+                            // so we can just remove it from here
+                            let newPosts = [...blogPosts];
+                            newPosts.splice(i, 1); // index, num to delete
+                            setBlogPosts(newPosts);
+
+                            setActiveBlogPostIndex(0);
+                          } else {
+                            let deleteConfirmed = confirm(
+                              "Are you sure you want to delete this post?"
+                            );
+                            if (deleteConfirmed === true) {
+                              deletePostHandler(i);
+
+                              // when switching posts, set the save state back to none
+                              setCurrentSaveState("NONE");
+                            }
+                          }
+                        }}
+                      >
+                        <img
+                          src="/icons/trash-24px.png"
+                          className={styles.viewCountIcon}
+                        />{" "}
+                      </Button>
+
+                      <Button
+                        className={styles.postCardImagesButton}
                         color={showImagesIndex == i ? "dark" : ""}
                         onClick={() => {
                           setActiveBlogPostIndex(i);
-                          fetchImagesHandler(post.PostId, post.Category);
+                          fetchImagesHandler(post.PostShortId);
 
-                          if(showImagesIndex) // deselect the image if navigate away
+                          if (showImagesIndex)
+                            // deselect the image if navigate away
                             setImageFile(null);
 
-                          console.log(`showImagesIndex: ${showImagesIndex}`)
+                          console.log(`showImagesIndex: ${showImagesIndex}`);
                           setShowImagesIndex(
                             showImagesIndex === undefined ? i : undefined
                           );
@@ -558,20 +638,32 @@ const Admin = ({}) => {
                       </Button>
 
                       <Button
+                        className={styles.postCardEditButton}
                         color=""
                         onClick={() => {
                           setActiveBlogPostIndex(i);
-                          setCurrentSaveState('NONE');
+                          setShowImagesIndex(undefined)
+
+                          // when switching posts, set the save state back to none
+                          setCurrentSaveState("NONE");
                         }}
                       >
-                        Edit
-                      </Button>
+                        <span>Edit</span>
 
+                        <span
+                          className={
+                            activeBlogPostIndex === i
+                              ? styles.greenDotPostCardIndicator
+                              : styles["greenDotPostCardIndicator--invisible"]
+                          }
+                        ></span>
+                      </Button>
                     </div>
                   </Card.Header>
                   {infoShownPostIndexes.includes(i) && (
                     <Card.Content>
                       <div>PostId: {post.PostId}</div>
+                      <div>PostShortId: {post.PostShortId}</div>
                       <div>Category: {post.Category}</div>
                       <div>Created at: {post.CreatedAt}</div>
                     </Card.Content>
@@ -581,12 +673,14 @@ const Admin = ({}) => {
             </div>
           </Columns.Column>
           <Columns.Column size={9}>
-            {blogPosts.length > 0 && (showImagesIndex===undefined) && (
+            {blogPosts.length > 0 && showImagesIndex === undefined && (
               <BlogPostEditor
                 saveState={currentSaveState} // SUCCESS, FAIL, NONE
-                isEdited={editedPostIndexes?.includes(activeBlogPostIndex) || false}
-                images={imagesByPostId[blogPosts[activeBlogPostIndex].PostId]}
-                fetchImagesHandler={fetchImagesHandler}
+                isDraftChangeHandler={isDraftChangeHandler}
+                isEdited={
+                  editedPostIndexes?.includes(activeBlogPostIndex) || false
+                }
+                images={imagesByPostShortId[blogPosts[activeBlogPostIndex].PostShortId]}
                 postIndex={activeBlogPostIndex}
                 initialData={blogPosts[activeBlogPostIndex]}
                 saveBlogPostClickHandler={saveBlogPostClickHandler}
@@ -595,12 +689,13 @@ const Admin = ({}) => {
               />
             )}
 
-            {(showImagesIndex!==undefined) && (
+            {showImagesIndex !== undefined && (
               <Section>
                 <h1>Images for "{blogPosts[showImagesIndex]?.Title}"</h1>
                 <Container className={styles.postImagesContainer}>
-                  {imagesByPostId[blogPosts[showImagesIndex]?.PostId]?.map(
+                  {imagesByPostShortId[blogPosts[showImagesIndex]?.PostShortId]?.map(
                     (image) => {
+                      
                       return (
                         <div key={image.Key}>
                           <Image src={image.Url} size={128} />
@@ -608,14 +703,12 @@ const Admin = ({}) => {
                       );
                     }
                   )}
-
                 </Container>
-
               </Section>
             )}
           </Columns.Column>
         </Columns>
-      }
+      )}
     </div>
   );
 };

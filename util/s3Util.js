@@ -33,10 +33,10 @@ const getSiteFile = async (Bucket, sitename, relativePath) => {
  * @param {*} category 
  * @param {*} postId 
  */
-const getImagesByPostId = async (Bucket, category, postId) => {
-  let Prefix = `categories/${category}/posts/${postId}/`;
-  const response = await client.send(new ListObjectsV2Command({ Bucket, Prefix }));
+const getImagesByPostId = async (Bucket, PostShortId) => {
+  let Prefix = `posts/${PostShortId}`;
 
+  const response = await client.send(new ListObjectsV2Command({ Bucket, Prefix }));
   let contents = Object.keys(response.Contents || {}).length === 0 ? [] : response.Contents;
   let images = [];
 

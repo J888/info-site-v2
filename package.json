@@ -34,6 +34,7 @@
     "rehype-raw": "^6.1.0",
     "rich-markdown-editor": "^11.19.4",
     "sharp": "^0.29.1",
+    "short-uuid": "^4.2.0",
     "swr": "^1.0.1"
   },
   "devDependencies": {

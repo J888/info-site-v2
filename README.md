@@ -1,6 +1,6 @@
 ### ToDo
 
-- in the posts json data, add a nextPost and prevPost so that on each page, the next or previous post can be linked.
+- 
 
 
 # ENV VARS
