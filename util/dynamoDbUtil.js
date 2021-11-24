@@ -13,8 +13,21 @@ const getBlogPostsDynamoDb = async (TableName) => {
       }));
 
       const items = res?.Items;
+      let itemsUnmarshalled = items.map(item => unmarshall(item))
 
-      resolve(items.map(item => unmarshall(item)));
+      itemsUnmarshalled.sort((a,b) => {
+        if (new Date(a.CreatedAt) < new Date(b.CreatedAt)) {
+          return 1;
+        }
+    
+        if (new Date(a.CreatedAt) > new Date(b.CreatedAt)) {
+          return -1;
+        }
+    
+        return 0;
+      })
+
+      resolve(itemsUnmarshalled);
 
     } catch (err) {
       reject(err);
@@ -24,19 +37,8 @@ const getBlogPostsDynamoDb = async (TableName) => {
 }
 
 const getBlogPostsWithPrevNext = async (TableName) => {
-  const posts = await getBlogPostsDynamoDb(TableName);
-  // Sort descending (latest posts first in list)
-  posts.sort((a,b) => {
-    if (new Date(a.CreatedAt) < new Date(b.CreatedAt)) {
-      return 1;
-    }
-
-    if (new Date(a.CreatedAt) > new Date(b.CreatedAt)) {
-      return -1;
-    }
-
-    return 0;
-  })
+  let posts = await getBlogPostsDynamoDb(TableName)
+  posts = posts.filter(p => !p.IsDraft);
 
   for (let i = 0; i < posts.length; i++) {
     let post = posts[i];
