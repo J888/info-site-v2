@@ -1,5 +1,5 @@
 const { unmarshall } = require("@aws-sdk/util-dynamodb");
-const { DynamoDBClient, ScanCommand, UpdateItemCommand } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, ScanCommand, UpdateItemCommand, PutItemCommand } = require("@aws-sdk/client-dynamodb");
 
 const REGION = 'us-east-2';
 const dynamoClient = new DynamoDBClient({ region: REGION });
@@ -136,4 +136,62 @@ const updateBlogPostsDynamoDb = async (TableName, posts) => {
   })
 }
 
-export { getBlogPostsDynamoDb, updateBlogPostsDynamoDb, getBlogPostsWithPrevNext }
+const createBlogPostsDynamoDb = async (TableName, posts) => {
+  return new Promise(async (resolve, reject) => {
+
+    let awsResStatusCodes = []
+    for (let i = 0; i < posts.length; i++) {
+      let post = posts[i];
+
+      console.log(JSON.stringify(post, null, 2))
+
+      const params = {
+        TableName,
+        Item: {
+          'Category': {
+            S: post.Category
+          },
+          'PostId': {
+            S: post.PostId
+          },
+          'ImageS3Url': { S: post.ImageS3Url },
+          'ImageKey': { S: post.ImageKey },
+          'Description': { S: post.Description },
+          'Title': { S: post.Title },
+          'SubTitle': { S: post.SubTitle },
+          'CreatedAt': { S: post.CreatedAt },
+          'Parts': {
+            L: post.Parts.map(part => ({
+              M: {
+                'Type': {
+                  S: part.Type
+                },
+                'Contents': {
+                  S: part.Contents
+                }
+              }
+            }))
+          },
+          'Tags': {
+            L: post.Tags.map(tag => ({ S: tag }))
+          }
+        }
+      };
+
+      try {
+        const res = await dynamoClient.send(new PutItemCommand(params));
+        
+        console.log(res['$metadata'].httpStatusCode)
+        awsResStatusCodes.push(res['$metadata'].httpStatusCode);
+  
+      } catch (err) {
+        reject(err);
+      }
+
+    }
+
+    resolve(awsResStatusCodes)
+  })
+}
+
+export { getBlogPostsDynamoDb, createBlogPostsDynamoDb, updateBlogPostsDynamoDb, getBlogPostsWithPrevNext }

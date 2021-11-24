@@ -2,6 +2,7 @@
 //  s 
 }
 
+// styles type=MARKDOWN parts
 .mainContent {
   p {
     font-size: 1.35rem;
@@ -10,6 +11,18 @@
   a {
     text-decoration: underline;
   }
+
+  ul {
+    font-size: 1.2rem;
+  }
+}
+
+.imagePartContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 3.8rem;
+  margin-bottom: 3.8rem;
+
 }
 
 .tagListItem {

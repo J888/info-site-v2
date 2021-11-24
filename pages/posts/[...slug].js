@@ -98,7 +98,7 @@ const PostContent = ({ data, views }) => (
                 );
               } else if (part.Type == "IMAGE") {
                 toRender = (
-                  <Container>
+                  <Container className={postContentStyles.imagePartContainer}>
                     <NextImage
                       objectFit="cover"
                       src={part.Contents}

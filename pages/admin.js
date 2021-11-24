@@ -43,12 +43,13 @@ const BlogPostEditor = ({
   initialData,
   images,
   fetchImagesHandler,
+  saveState,
   savePostHandler
 }) => {
   useEffect(() => {
-    if (!images) {
-      fetchImagesHandler(initialData.PostId, initialData.Category);
-    }
+    // if (!images) {
+    //   fetchImagesHandler(initialData.PostId, initialData.Category);
+    // }
   });
 
   const AddPartButtons = ({ insertPartAfterIndex }) => (
@@ -102,18 +103,39 @@ const BlogPostEditor = ({
     <div>
       <div className={styles.editorTitleContainer}>
         <h1 className={styles.titleEditing}>
-          {initialData.Title}{initialData.IsNewPost ? ' [NEW]' : ''}
+          {initialData.Title}
+          {initialData.IsNewPost ? " [NEW]" : ""}
         </h1>
-        <Button id={styles.editorSaveButton} onClick={() => {
-          savePostHandler(initialData.PostId)
-        }}>
+        <Button
+          id={styles.editorSaveButton}
+          onClick={() => {
+            savePostHandler(initialData.PostId);
+          }}
+        >
           Save
         </Button>
       </div>
 
-      <div className={styles.editedTag}>
-      { isEdited ? <Tag color="warning">Edited</Tag> : <Tag color="white">Not Edited</Tag>  } 
-      </div>
+      {saveState === "NONE" && (
+        <div className={styles.postSaveStateTag}>
+          {isEdited ? (
+            <Tag color="warning">Edited</Tag>
+          ) : (
+            <Tag color="white">Not Edited</Tag>
+          )}
+        </div>
+      )}
+
+      {saveState === "SUCCESS" && (
+        <div className={styles.postSaveStateTag}>
+          <Tag color="success">Saved</Tag>
+        </div>
+      )}
+      {saveState === "FAIL" && (
+        <div className={styles.postSaveStateTag}>
+          <Tag color="danger">Save Failed</Tag>
+        </div>
+      )}
 
       <label>Title</label>
       <input
@@ -309,7 +331,7 @@ const BlogPostEditor = ({
                   ).Url;
 
                   let newParts = [...initialData.Parts];
-                  newParts[i].ImageUrl = url;
+                  newParts[i].Contents = url;
 
                   let newBlogPostData = {};
                   Object.assign(newBlogPostData, initialData);
@@ -325,7 +347,7 @@ const BlogPostEditor = ({
                   </option>
                 ))}
               </select>
-              <img src={part.ImageUrl} style={{ maxWidth: "20rem" }} />
+              <img src={part.Contents} style={{ maxWidth: "20rem" }} />
               <AddPartButtons insertPartAfterIndex={i} />
             </div>
           );
@@ -348,6 +370,7 @@ const Admin = ({}) => {
   const [activeBlogPostIndex, setActiveBlogPostIndex] = useState(0);
   const [editedPostIndexes, setEditedPostIndexes] = useState([]);
   const [infoShownPostIndexes, setInfoShownPostIndexes] = useState([]); // controls which posts to show info of
+  const [currentSaveState, setCurrentSaveState] = useState('NONE');
   
   const [imageFile, setImageFile] = useState(null);
 
@@ -393,6 +416,7 @@ const Admin = ({}) => {
   const fetchImagesHandler = async (postId, category) => {
     const res = await axios.get(`/api/posts/images?postId=${postId}&category=${category}`);
     const { items } = res.data;
+    console.log(`images: ${JSON.stringify(items, null, 2)}`)
     
     let newImagesByPostId = {}
     Object.assign(newImagesByPostId, imagesByPostId);
@@ -414,11 +438,34 @@ const Admin = ({}) => {
 
     let blogPostData = blogPosts.find(post => post.PostId === postId);
 
-    const res = await axios.put(`api/posts/update/`, { posts: [blogPostData] });
+    if (!blogPostData.IsNewPost) {
+      const res = await axios.put(`api/posts/update/`, { posts: [blogPostData] });
 
-    const { updateStatusCodes } = res?.data;
-    console.log(`saving PostId: ${postId}`)
-    console.log(`Status codes were [${updateStatusCodes.join(", ")}]`);
+      const { updateStatusCodes } = res?.data;
+      console.log(`[PUT] saving PostId: ${postId}`)
+      console.log(`Status codes were [${updateStatusCodes.join(", ")}]`);
+
+      if (updateStatusCodes.includes(200)) {
+        setCurrentSaveState("SUCCESS");
+      } else {
+        setCurrentSaveState("FAIL");
+      }
+  
+    } else {
+      delete blogPostData.IsNewPost
+      const res = await axios.post(`api/posts/create/`, { posts: [blogPostData] });
+
+      const { updateStatusCodes } = res?.data;
+      console.log(`[POST] saving PostId: ${postId}`)
+      console.log(`Status codes were [${updateStatusCodes.join(", ")}]`);
+
+      if (updateStatusCodes.includes(200)) {
+        setCurrentSaveState("SUCCESS");
+      } else {
+        setCurrentSaveState("FAIL");
+      }
+
+    }
   }
 
   return (
@@ -442,7 +489,11 @@ const Admin = ({}) => {
                 newBlogPosts.push({
                   PostId: `post-${newBlogPosts.length + 1}-id`,
                   Category: "category-here",
+                  Description: "",
+                  ImageS3Url: "",
+                  ImageKey: "",
                   Title: `Untitled ${newBlogPosts.length + 1}`,
+                  SubTitle: `Untitled ${newBlogPosts.length + 1}`,
                   CreatedAt: new Date().toLocaleString(),
                   Parts: [
                     {
@@ -450,7 +501,7 @@ const Admin = ({}) => {
                       Contents: ADD_CONTENT,
                     },
                   ],
-                  Tags: [],
+                  Tags: ['add','tags','here'],
                   IsNewPost: true
                 });
 
@@ -497,8 +548,9 @@ const Admin = ({}) => {
                           if(showImagesIndex) // deselect the image if navigate away
                             setImageFile(null);
 
+                          console.log(`showImagesIndex: ${showImagesIndex}`)
                           setShowImagesIndex(
-                            showImagesIndex == undefined ? i : undefined
+                            showImagesIndex === undefined ? i : undefined
                           );
                         }}
                       >
@@ -509,6 +561,7 @@ const Admin = ({}) => {
                         color=""
                         onClick={() => {
                           setActiveBlogPostIndex(i);
+                          setCurrentSaveState('NONE');
                         }}
                       >
                         Edit
@@ -528,8 +581,9 @@ const Admin = ({}) => {
             </div>
           </Columns.Column>
           <Columns.Column size={9}>
-            {blogPosts.length > 0 && !showImagesIndex && (
+            {blogPosts.length > 0 && (showImagesIndex===undefined) && (
               <BlogPostEditor
+                saveState={currentSaveState} // SUCCESS, FAIL, NONE
                 isEdited={editedPostIndexes?.includes(activeBlogPostIndex) || false}
                 images={imagesByPostId[blogPosts[activeBlogPostIndex].PostId]}
                 fetchImagesHandler={fetchImagesHandler}
@@ -541,7 +595,7 @@ const Admin = ({}) => {
               />
             )}
 
-            {showImagesIndex && (
+            {(showImagesIndex!==undefined) && (
               <Section>
                 <h1>Images for "{blogPosts[showImagesIndex]?.Title}"</h1>
                 <Container className={styles.postImagesContainer}>
