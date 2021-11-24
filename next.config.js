@@ -14,7 +14,8 @@ module.exports = (phase) => {
       if (isDev) return process.env.LOCAL_POSTS_DIR;
       return 'tmp/posts';
     })(),
-    GOOGLE_ANALYTICS_PROPERTY_ID: process.env.GOOGLE_ANALYTICS_PROPERTY_ID
+    GOOGLE_ANALYTICS_PROPERTY_ID: process.env.GOOGLE_ANALYTICS_PROPERTY_ID,
+    BLOG_POSTS_DYNAMO_TABLE_NAME: process.env.BLOG_POSTS_DYNAMO_TABLE_NAME
   }
 
   /**

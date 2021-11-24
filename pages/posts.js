@@ -1,12 +1,11 @@
 import { Columns } from "react-bulma-components";
 import React from "react";
 import MainWrapper from "../components/mainWrapper";
-import { getPostsS3 } from "../util/getPosts";
 import { getSiteFile } from "../util/s3Util";
-import LinkWrapper from "../components/linkWrapper";
 import PostGrid from "../components/postGrid";
+import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 
-const AllPosts = ({ posts, siteConfig }) => {
+const AllPosts = ({ postsDynamo, siteConfig }) => {
   return (
     <MainWrapper pageTitle={`All post categories`} siteName={siteConfig?.site?.name} description={`A grid of all blog posts available on the website`}>
       <Columns>
@@ -20,7 +19,7 @@ const AllPosts = ({ posts, siteConfig }) => {
             })
           } */}
 
-          <PostGrid posts={posts}/>
+          <PostGrid posts={postsDynamo}/>
         </Columns.Column>
         <Columns.Column size={3}></Columns.Column>
       </Columns>
@@ -29,7 +28,8 @@ const AllPosts = ({ posts, siteConfig }) => {
 };
 
 export async function getStaticProps({ params, preview = false, previewData }) {
-  const posts = await getPostsS3(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3);
+  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
+
   const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
 
   // const tag = params.tag;
@@ -37,7 +37,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
 
   return {
     props: {
-      posts,
+      postsDynamo,
       siteConfig
     },
   };

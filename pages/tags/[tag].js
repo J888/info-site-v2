@@ -1,9 +1,9 @@
 import MainWrapper from "../../components/mainWrapper";
-import { Columns, Heading } from "react-bulma-components";
+import { Columns } from "react-bulma-components";
 import React from "react";
-import { getPostsS3 } from "../../util/getPosts";
 import PostListWide from "../../components/postListWide";
 import { getSiteFile } from "../../util/s3Util";
+import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 
 const PostsByTag = ({ matchingPosts, tag, siteConfig }) => {
   return (
@@ -23,9 +23,10 @@ const PostsByTag = ({ matchingPosts, tag, siteConfig }) => {
 };
 
 export async function getStaticProps({ params, preview = false, previewData }) {
-  const posts = await getPostsS3(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3);
+  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
+
   const tag = params.tag;
-  const matchingPosts = posts.filter((post) => post.tags.includes(tag));
+  const matchingPosts = postsDynamo.filter((post) => post.Tags.includes(tag));
   const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
 
   return {
@@ -38,8 +39,9 @@ export async function getStaticProps({ params, preview = false, previewData }) {
 }
 
 export async function getStaticPaths() {
-  const posts = await getPostsS3(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3);
-  const tags = Array.from(new Set(posts.map((post) => post.tags || []).flat()));
+  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
+
+  const tags = Array.from(new Set(postsDynamo.map((post) => post.Tags || []).flat()));
 
   return {
     paths: tags.map((tag) => `/tags/${tag}`) || [],

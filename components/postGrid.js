@@ -41,12 +41,12 @@ const PostGrid = ({ posts }) => (
   <div className={styles.postGrid}>
     {posts.map((post) => (
       <PostGridItem
-        link={`/posts/${post.category}/${post.id}`}
-        imageUrl={post.image.s3Url}
-        title={post.title}
-        category={post.category}
-        createdAt={post.createdAt}
-        key={post.id}
+        link={`/posts/${post.Category}/${post.PostId}`}
+        imageUrl={post.ImageS3Url}
+        title={post.Title}
+        category={post.Category}
+        createdAt={post.CreatedAt}
+        key={post.PostId}
       />
     ))}
 

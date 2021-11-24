@@ -1,5 +1,5 @@
 import React from "react";
-import { getPostsS3 } from "../util/getPosts";
+import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 
 /**
  * Sitemap component for SEO / crawler optimization
@@ -9,8 +9,9 @@ const SiteMap = () => {
 }
 
 export const getServerSideProps = async ({ res }) => {
-  const posts = await getPostsS3(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3);
-  const tags = Array.from(new Set(posts.map((post) => post.tags || []).flat()));
+  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
+  
+  const tags = Array.from(new Set(postsDynamo.map((post) => post.Tags || []).flat()));
 
   const BASE_URL = "https://nftgazer.com"
 
@@ -23,11 +24,11 @@ export const getServerSideProps = async ({ res }) => {
         <priority>1.0</priority>
       </url>
       ${
-        posts.map(post => {
+        postsDynamo.map(post => {
           return `
             <url>
-              <loc>${BASE_URL}/posts/${post.category}/${post.id}</loc>
-              <lastmod>${new Date(post.createdAt).toISOString()}</lastmod>
+              <loc>${BASE_URL}/posts/${post.Category}/${post.PostId}</loc>
+              <lastmod>${new Date(post.CreatedAt).toISOString()}</lastmod>
               <changefreq>weekly</changefreq>
               <priority>0.9</priority>
             </url>

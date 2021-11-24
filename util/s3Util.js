@@ -1,4 +1,4 @@
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
+const { S3Client, GetObjectCommand, S3, ListObjectsV2Command, PutObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
 const REGION = 'us-east-2';
 const client = new S3Client({ region: REGION });
 
@@ -27,4 +27,34 @@ const getSiteFile = async (Bucket, sitename, relativePath) => {
   })
 }
 
-export { getSiteFile }
+/**
+ * Returns a list of image urls for a post
+ * @param {*} Bucket 
+ * @param {*} category 
+ * @param {*} postId 
+ */
+const getImagesByPostId = async (Bucket, category, postId) => {
+  let Prefix = `categories/${category}/posts/${postId}/`;
+  const response = await client.send(new ListObjectsV2Command({ Bucket, Prefix }));
+
+  let contents = Object.keys(response.Contents || {}).length === 0 ? [] : response.Contents;
+  let images = [];
+
+  for (let content of contents) {
+    
+    if (content.Key.endsWith("/"))
+      continue;
+    
+    images.push(
+      {
+        Key: content.Key.split("/")[content.Key.split("/").length-1],
+        Url: `https://${Bucket}.s3.${REGION}.amazonaws.com/${content.Key}`
+      }
+    )
+  }
+
+  return images;
+
+}
+
+export { getSiteFile, getImagesByPostId }

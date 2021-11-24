@@ -13,16 +13,16 @@ import MainWrapper from "../components/mainWrapper";
 
 import Link from "next/link";
 import React, { useState } from "react";
-import { getPostsS3 } from "../util/getPosts";
 import { getSiteFile } from "../util/s3Util";
 import LinkWrapper from "../components/linkWrapper";
 import Billboard from "../components/billboard";
 import PostGrid from "../components/postGrid";
 import styles from "../sass/components/Index.module.scss"
 import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
+import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 
-export default function Home({ posts, topTags, mostVisitedList, siteConfig }) {
-  const [visiblePosts, setVisiblePosts] = useState(posts.slice(0, 5));
+export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig }) {
+  const [visiblePosts, setVisiblePosts] = useState(postsDynamo.slice(0, 5));
 
   return (
     <MainWrapper
@@ -110,7 +110,7 @@ export default function Home({ posts, topTags, mostVisitedList, siteConfig }) {
             {mostVisitedList?.length > 0 && (
               <div className={styles.mostVisitedCard}>
                 {mostVisitedList.slice(0, 5).map((mostVisitedItem) => (
-                  <Card.Content>
+                  <Card.Content key={mostVisitedItem.slug}>
                     <Link href={mostVisitedItem.slug}>
                       {mostVisitedItem.title}
                     </Link>
@@ -156,7 +156,8 @@ export default function Home({ posts, topTags, mostVisitedList, siteConfig }) {
 }
 
 export async function getStaticProps() {
-  const posts = await getPostsS3(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3);
+  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
+
   const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
 
   const pageViewsMappedBySlug = await getPageViewsBySlug("2021-11-08");
@@ -173,7 +174,7 @@ export async function getStaticProps() {
   for (let slug in pageViewsMappedBySlug) {
     if (slug.includes("/posts/")) {
       console.log(`slugs is ${slug}`)
-      let title = posts.filter(p => `/posts/${p.category}/${p.id}` === slug)[0]?.title
+      let title = postsDynamo.filter(p => `/posts/${p.Category}/${p.PostId}` === slug)[0]?.Title
 
       if (title) { //  title could be undefined if the page id changes after google analytics already recorded it
         mostVisitedList.push({ slug, title })
@@ -181,14 +182,12 @@ export async function getStaticProps() {
     }
   }
 
-  console.log(JSON.stringify(mostVisitedList, null, 2))
-
   let tagCountOccurence = {
     /* tag: # of occurences */
   };
 
-  for (let post of posts) {
-    for (let tag of post.tags) {
+  for (let post of postsDynamo) {
+    for (let tag of post.Tags) {
       if (tagCountOccurence[tag] == undefined) {
         tagCountOccurence[tag] = 1;
       } else {
@@ -212,7 +211,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      posts,
+      postsDynamo,
       topTags,
       siteConfig,
       mostVisitedList

@@ -6,7 +6,6 @@ import {
   Container,
   Content,
   Heading,
-  Image,
   Message,
   Section,
   Tag,
@@ -15,7 +14,6 @@ import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import NextImage from "next/image";
 import styles from "../../sass/components/Post.module.scss";
-import { getPostsS3 } from "../../util/getPosts";
 import PostListWide from "../../components/postListWide";
 import React from "react";
 import rehypeRaw from 'rehype-raw'
@@ -23,20 +21,21 @@ import { getSiteFile } from "../../util/s3Util";
 import LinkWrapper from "../../components/linkWrapper";
 import postContentStyles from "../../sass/components/PostContent.module.scss"
 import useSWR from "swr";
+import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 
 const PostContent = ({ data, views }) => (
   <Columns>
     <Columns.Column size={2}></Columns.Column>
     <Columns.Column size={8}>
       <div className={postContentStyles.postContent}>
-        <Heading className={postContentStyles.mainTitle}>{data?.title}</Heading>
+        <Heading className={postContentStyles.mainTitle}>{data?.Title}</Heading>
         <Content>
           <Container className={postContentStyles.mainImageContainer}>
             {/* <Image src={data?.image?.s3Url} size={2} /> */}
             <NextImage
               objectFit="cover"
-              src={data?.image?.s3Url}
-              alt={data?.title}
+              src={data?.ImageS3Url}
+              alt={data?.Title}
               // layout="fill"
               height="1100"
               width="1100"
@@ -47,7 +46,7 @@ const PostContent = ({ data, views }) => (
             <div className={styles.viewCountDateContainer}>
               <Tag.Group gapless className={styles.publishedDateTagGroup}>
                 <Tag color="info">Published</Tag>
-                <Tag>{data?.createdAt}</Tag>
+                <Tag>{data?.CreatedAt}</Tag>
               </Tag.Group>
 
               {views !== undefined && (
@@ -66,7 +65,7 @@ const PostContent = ({ data, views }) => (
             </div>
 
             <Tag.Group>
-              {data?.tags?.map((tag) => (
+              {data?.Tags?.map((tag) => (
                 // <LinkWrapper href={`/tags/${tag}`} key={tag} wrapInAnchor={true}>
                 <Tag key={tag} clickable>
                   <LinkWrapper
@@ -85,24 +84,24 @@ const PostContent = ({ data, views }) => (
           </Container>
 
           <Section>
-            {data?.parts?.map((part, i) => {
+            {data?.Parts?.map((part, i) => {
               let toRender;
 
-              if (part.type == "MARKDOWN") {
+              if (part.Type == "MARKDOWN") {
                 toRender = (
                   <ReactMarkdown
                     rehypePlugins={[rehypeRaw]}
                     className={postContentStyles.mainContent}
                   >
-                    {part.fileContents}
+                    {part.Contents}
                   </ReactMarkdown>
                 );
-              } else if (part.type == "IMAGE") {
+              } else if (part.Type == "IMAGE") {
                 toRender = (
                   <Container>
                     <NextImage
                       objectFit="cover"
-                      src={part.s3Url}
+                      src={part.Contents}
                       alt="pic alt"
                       height="550"
                       width="700"
@@ -116,24 +115,24 @@ const PostContent = ({ data, views }) => (
               );
             })}
 
-            {data?.parts == undefined && <Section>Post has no content</Section>}
+            {data?.Parts == undefined && <Section>Post has no content</Section>}
           </Section>
 
           <Section className={postContentStyles.nextPrevArticleContainer}>
-            {data?.prevPost?.slug ? (
+            {data?.PrevPost?.Slug ? (
               <div>
-                <Link href={data?.prevPost?.slug}>
-                  {"< " + data?.prevPost?.title}
+                <Link href={data?.PrevPost?.Slug}>
+                  {"< " + data?.PrevPost?.Title}
                 </Link>
               </div>
             ) : (
               <p></p>
             )}
 
-            {data?.nextPost?.slug ? (
+            {data?.NextPost?.Slug ? (
               <div>
-                <Link href={data?.nextPost?.slug}>
-                  {data?.nextPost?.title + " >"}
+                <Link href={data?.NextPost?.Slug}>
+                  {data?.NextPost?.Title + " >"}
                 </Link>
               </div>
             ) : (
@@ -156,7 +155,7 @@ const PostContent = ({ data, views }) => (
       <Block>
         <Card>
           <Message>
-            <Message.Header>Trending in "{data?.category}"</Message.Header>
+            <Message.Header>Trending in "{data?.Category}"</Message.Header>
           </Message>
 
           <Card.Content>No data</Card.Content>
@@ -178,7 +177,7 @@ const Post = ({ postData, postsByCategory, category, siteConfig, slug }) => {
   );
   
   return (
-    <MainWrapper pageTitle={`${postData?.title}`} siteName={siteConfig?.site?.name} description={postData?.description} imageUrl={postData?.image?.s3Url}>
+    <MainWrapper pageTitle={`${postData?.Title || category}`} siteName={siteConfig?.site?.name} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
       {postData && <PostContent data={postData} views={pageViewData?.views} />}
       {postsByCategory && (
         <PostListWide
@@ -192,7 +191,8 @@ const Post = ({ postData, postsByCategory, category, siteConfig, slug }) => {
 };
 
 export async function getStaticProps({ params, preview = false, previewData }) {
-  const posts = await getPostsS3(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3);
+  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
+
   const [category, id] = params.slug;
   const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
 
@@ -200,7 +200,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
     // if no post id is given e.g. /posts/category/
     return {
       props: {
-        postsByCategory: posts.filter((post) => post.category == category),
+        postsByCategory: postsDynamo.filter((post) => post.Category == category),
         category,
         siteConfig
       },
@@ -209,7 +209,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
 
   return {
     props: {
-      postData: posts.filter((post) => post.id == id)[0],
+      postData: postsDynamo.filter((post) => post.PostId == id)[0],
       siteConfig,
       slug: `/posts/${params.slug[0]}/${params.slug[1]}`
     },
@@ -217,10 +217,10 @@ export async function getStaticProps({ params, preview = false, previewData }) {
 }
 
 export async function getStaticPaths() {
-  const posts = await getPostsS3(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3);
+  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
 
   return {
-    paths: posts.map((post) => `/posts/${post.category}/${post.id}`) || [],
+    paths: postsDynamo.map((post) => `/posts/${post.Category}/${post.PostId}`) || [],
     fallback: true,
   };
 }
