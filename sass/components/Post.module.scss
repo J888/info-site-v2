@@ -43,6 +43,7 @@ $breakpoint-mobile: 500px;
   display: flex;
   justify-content: space-between;
   margin-right: 1rem;
+  margin-bottom: 2rem;
 
   @media (max-width: $breakpoint-mobile) {
     display: block;

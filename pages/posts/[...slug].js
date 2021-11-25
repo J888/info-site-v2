@@ -37,17 +37,24 @@ const PostContent = ({ data, views }) => (
               src={data?.ImageS3Url}
               alt={data?.Title}
               // layout="fill"
-              height="1100"
-              width="1100"
+              height="950"
+              width="950"
               priorty="true"
             />
           </Container>
           <Container className={styles.publishedDate}>
             <div className={styles.viewCountDateContainer}>
-              <Tag.Group gapless className={styles.publishedDateTagGroup}>
-                <Tag color="info">Published</Tag>
-                <Tag>{data?.CreatedAt}</Tag>
-              </Tag.Group>
+              <div>
+                <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
+                  <Tag color="info">Published</Tag>
+                  <Tag>{data?.CreatedAt}</Tag>
+                </Tag.Group>
+
+                <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
+                  <Tag color="dark">Category</Tag>
+                  <Tag>{data?.Category?.charAt(0).toUpperCase() + data?.Category?.slice(1)}</Tag>
+                </Tag.Group>
+              </div>
 
               {views !== undefined && (
                 <div className={styles.viewCount}>

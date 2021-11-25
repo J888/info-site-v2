@@ -390,6 +390,8 @@ const Admin = ({}) => {
   const [editedPostIndexes, setEditedPostIndexes] = useState([]);
   const [infoShownPostIndexes, setInfoShownPostIndexes] = useState([]); // controls which posts to show info of
   const [currentSaveState, setCurrentSaveState] = useState('NONE');
+  const [deploymentId, setDeploymentId] = useState(null);
+  const [deploymentDetails, setDeploymentDetails] = useState(null);
   
   const [imageFile, setImageFile] = useState(null);
 
@@ -671,6 +673,45 @@ const Admin = ({}) => {
                 </Card>
               ))}
             </div>
+
+            <Button color="warning"
+              style={{marginRight: '0.4rem'}}
+              onClick={async () => {
+                let confirmed = confirm(`are you sure you want to rebuild the site? This will start a new deployment`);
+                // alert(`confirm was ${confirmed}, DIGITAL_OCEAN_API_BASE_URL=${process.env.DIGITAL_OCEAN_API_BASE_URL}`)
+
+                if (confirmed === true) {
+                  let deployRes = await axios.post(`api/application/deploy`, {})
+                  console.log(deployRes.data);
+
+                  setDeploymentId(deployRes.data.deploymentId)
+                }
+                
+              }}
+            >Rebuild App
+            </Button>
+
+            <Button color="info"
+              disabled={deploymentId===null}
+              onClick={async () => {
+                let deployRes = await axios.get(`api/application/getDeployment?deploymentId=${deploymentId}`);
+                console.log(deployRes.data);
+                setDeploymentDetails(JSON.stringify(deployRes.data, null, 2))
+              }}
+            >Deployment Details
+            </Button>
+
+            <Tag.Group hasAddons className={styles.deploymentIdTagGroup}>
+              <Tag color="black">DeploymentId</Tag>
+              <Tag>{deploymentId !== null ? deploymentId : "No deployment started"}</Tag>
+            </Tag.Group>
+
+            <div>
+              {deploymentDetails === null && <span>No deployment details</span>}
+              {deploymentDetails !== null && <pre>{deploymentDetails}</pre>}
+            </div>
+
+            
           </Columns.Column>
           <Columns.Column size={9}>
             {blogPosts.length > 0 && showImagesIndex === undefined && (

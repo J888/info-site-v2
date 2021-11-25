@@ -44,7 +44,7 @@ const PostGrid = ({ posts }) => (
         link={`/posts/${post.Category}/${post.PostId}`}
         imageUrl={post.ImageS3Url}
         title={post.Title}
-        category={post.Category}
+        category={post.Category?.charAt(0).toUpperCase() + post.Category?.slice(1)}
         createdAt={post.CreatedAt}
         key={post.PostId}
       />
