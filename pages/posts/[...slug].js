@@ -23,6 +23,29 @@ import postContentStyles from "../../sass/components/PostContent.module.scss"
 import useSWR from "swr";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 
+const NextPrevButtons = ({ data }) => 
+  <Section className={postContentStyles.nextPrevArticleContainer}>
+    {data?.PrevPost?.Slug ? (
+      <div>
+        <Link href={data?.PrevPost?.Slug}>
+          {"< " + data?.PrevPost?.Title}
+        </Link>
+      </div>
+    ) : (
+      <p></p>
+    )}
+
+    {data?.NextPost?.Slug ? (
+      <div>
+        <Link href={data?.NextPost?.Slug}>
+          {data?.NextPost?.Title + " >"}
+        </Link>
+      </div>
+    ) : (
+      <p></p>
+    )}
+  </Section>
+
 const PostContent = ({ data, views }) => (
   <Columns>
     <Columns.Column size={2}></Columns.Column>
@@ -44,9 +67,9 @@ const PostContent = ({ data, views }) => (
           </Container>
           <Container className={styles.publishedDate}>
             <div className={styles.viewCountDateContainer}>
-              <div>
+              <div className={styles.postInfoTagGroupsContainer}>
                 <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
-                  <Tag color="info">Published</Tag>
+                  <Tag color="dark">Created</Tag>
                   <Tag>{data?.CreatedAt}</Tag>
                 </Tag.Group>
 
@@ -90,6 +113,9 @@ const PostContent = ({ data, views }) => (
             </Tag.Group>
           </Container>
 
+          <Container>
+            <NextPrevButtons data={data}/>
+          </Container>
           <Section>
             {data?.Parts?.map((part, i) => {
               let toRender;
@@ -125,27 +151,7 @@ const PostContent = ({ data, views }) => (
             {data?.Parts == undefined && <Section>Post has no content</Section>}
           </Section>
 
-          <Section className={postContentStyles.nextPrevArticleContainer}>
-            {data?.PrevPost?.Slug ? (
-              <div>
-                <Link href={data?.PrevPost?.Slug}>
-                  {"< " + data?.PrevPost?.Title}
-                </Link>
-              </div>
-            ) : (
-              <p></p>
-            )}
-
-            {data?.NextPost?.Slug ? (
-              <div>
-                <Link href={data?.NextPost?.Slug}>
-                  {data?.NextPost?.Title + " >"}
-                </Link>
-              </div>
-            ) : (
-              <p></p>
-            )}
-          </Section>
+          <NextPrevButtons data={data}/>
         </Content>
       </div>
 

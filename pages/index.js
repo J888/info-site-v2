@@ -32,8 +32,8 @@ export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig
     >
       <div style={{ paddingBottom: "10vw" }}>
         <Billboard
-          title={"Gaze into the eyes of your next NFT"}
-          body={"Here you’ll find all sorts of non fungible tokens."}
+          title={"Learn about NFTs"}
+          body={"A Blog Dedicated to Non Fungible Tokens"}
         />
       </div>
       <PostGrid posts={visiblePosts} />
@@ -110,7 +110,7 @@ export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig
             {mostVisitedList?.length > 0 && (
               <div className={styles.mostVisitedCard}>
                 {mostVisitedList.slice(0, 5).map((mostVisitedItem) => (
-                  <Card.Content key={mostVisitedItem.slug}>
+                  <Card.Content key={mostVisitedItem.slug} className={styles.mostVisitedCardItem}>
                     <Link href={mostVisitedItem.slug}>
                       {mostVisitedItem.title}
                     </Link>

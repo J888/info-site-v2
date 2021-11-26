@@ -1,7 +1,8 @@
 $breakpoint-mobile: 500px;
 
 .publishedDate {
-  margin: 1rem 0 -2em 2.8rem;
+  // margin: 1rem 0 -2em 2.8rem;
+  margin-top: 1rem;
 }
 
 .viewCount {
@@ -29,14 +30,22 @@ $breakpoint-mobile: 500px;
 }
 
 .publishedDateTagGroup {
-  margin-bottom: 0;
+  // margin-bottom: 0;
+  margin-bottom: 0rem !important;
+  margin-right: 1rem;
 
   span:first-child {
+    background-color: #555555;
     font-size: 0.83rem;
   }
   span:last-child {
     font-size: 0.83rem;
   }
+}
+
+.postInfoTagGroupsContainer {
+  display: flex;
+  flex-direction: row;
 }
 
 .viewCountDateContainer {
