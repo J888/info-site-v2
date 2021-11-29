@@ -49,7 +49,7 @@ export default function MainWrapper(props) {
       </main>
 
       <footer className={styles.footer}>
-        <div>{'© 2021'}</div>
+        <div>{`© ${new Date().getFullYear()} | Powered by NextJS`}</div>
         <div className={styles.twitterIcon}>
           <SocialIcon
             url="https://twitter.com/NFTmusician"

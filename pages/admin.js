@@ -238,6 +238,7 @@ const BlogPostEditor = ({
       ></input>
 
       <div className={styles.editorMainImageContainer}>
+        <label>Main image:</label>
         <select
           name="images"
           id="images"
