@@ -22,6 +22,7 @@ import LinkWrapper from "../../components/linkWrapper";
 import postContentStyles from "../../sass/components/PostContent.module.scss"
 import useSWR from "swr";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
+import HorizontalGoogleAd from "../../components/google-ads/HorizontalGoogleAd";
 
 const NextPrevButtons = ({ data }) => 
   <Section className={postContentStyles.nextPrevArticleContainer}>
@@ -150,6 +151,9 @@ const PostContent = ({ data, views }) => (
 
             {data?.Parts == undefined && <Section>Post has no content</Section>}
           </Section>
+          <Section>
+            <HorizontalGoogleAd/>
+          </Section>
 
           <NextPrevButtons data={data}/>
         </Content>
@@ -188,7 +192,7 @@ const Post = ({ postData, postsByCategory, category, siteConfig, slug }) => {
       return res.json();
     }
   );
-  
+
   return (
     <MainWrapper pageTitle={`${postData?.Title || category}`} siteName={siteConfig?.site?.name} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
       {postData && <PostContent data={postData} views={pageViewData?.views} />}
