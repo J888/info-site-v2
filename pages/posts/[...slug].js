@@ -52,6 +52,9 @@ const PostContent = ({ data, views }) => (
     <Columns.Column size={2}></Columns.Column>
     <Columns.Column size={8}>
       <div className={postContentStyles.postContent}>
+        <Container>
+          <NextPrevButtons data={data}/>
+        </Container>
         <Heading className={postContentStyles.mainTitle}>{data?.Title}</Heading>
         <Content>
           <Container className={postContentStyles.mainImageContainer}>
@@ -114,9 +117,6 @@ const PostContent = ({ data, views }) => (
             </Tag.Group>
           </Container>
 
-          <Container>
-            <NextPrevButtons data={data}/>
-          </Container>
           <Section>
             {data?.Parts?.map((part, i) => {
               let toRender;

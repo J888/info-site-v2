@@ -4,6 +4,9 @@
 
 // styles type=MARKDOWN parts
 .mainContent {
+
+  margin-bottom: 3rem;
+
   p {
     font-size: 1.35rem;
   }
@@ -14,6 +17,11 @@
 
   ul {
     font-size: 1.4rem;
+  }
+
+  blockquote {
+    margin-left: 2.7vw;
+    margin-right: 2.9vw;
   }
 }
 
