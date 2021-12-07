@@ -1,13 +1,11 @@
 import {
-  Button,
-  Box,
   Card,
   Columns,
   Container,
   Message,
   Tag,
   Block,
-  Hero,
+  Heading,
 } from "react-bulma-components";
 import MainWrapper from "../components/mainWrapper";
 
@@ -22,7 +20,7 @@ import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 
 export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig }) {
-  const [visiblePosts, setVisiblePosts] = useState(postsDynamo.slice(0, 5));
+  const [visiblePosts, setVisiblePosts] = useState(postsDynamo.slice(0, 8));
 
   return (
     <MainWrapper
@@ -36,6 +34,14 @@ export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig
           body={"A Blog Dedicated to Non Fungible Tokens"}
         />
       </div>
+
+      <Columns>
+        <Columns.Column size={1}></Columns.Column>
+        <Columns.Column size={7}>
+          <Heading className={styles.headingBeforePostGrid}>Recent Posts</Heading>
+        </Columns.Column>
+        <Columns.Column size={3}></Columns.Column>
+      </Columns>
       <PostGrid posts={visiblePosts} />
 
       <div className={styles.seeAllLink}>

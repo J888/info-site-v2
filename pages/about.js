@@ -1,4 +1,3 @@
-import { Columns, Heading } from "react-bulma-components";
 import React from "react";
 import MainWrapper from "../components/mainWrapper";
 import { getSiteFile } from "../util/s3Util";
