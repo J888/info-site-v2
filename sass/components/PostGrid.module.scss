@@ -32,13 +32,13 @@ $breakpoint-mobile: 700px;
   display: block;
 
   img {
-    // position: absolute;
     height: 22vw;
     transition: height 80ms ease-in-out;
     object-fit: cover;
 
     @media (max-width: $breakpoint-mobile) {
-      height: 88vw;
+      height: 35vw;
+      width: 29rem;
     }
   }
 }
@@ -62,8 +62,14 @@ $breakpoint-mobile: 700px;
 
 .gridItemTextMeta {
   display: block;
+  font-size: 1.1rem;
   margin-bottom: 0.8rem;
-  color: black;
+  color: #5e5e5e;
+  
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
+  }
 }
 
 .gridItemTextTitle {

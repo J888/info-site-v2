@@ -28,17 +28,17 @@ export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig
       siteName={siteConfig?.site?.name}
       description={`The front page and home page of the website.`}
     >
-      <div style={{ paddingBottom: "10vw" }}>
+      <div className={styles.homePageBillboard}>
         <Billboard
-          title={"Learn about NFTs"}
-          body={"A Blog Dedicated to Non Fungible Tokens"}
+          title={"Learn about NFTs and More"}
+          body={"A Blog Dedicated to Non Fungible Tokens and the Latest Blockchain Technologies"}
         />
       </div>
 
       <Columns>
         <Columns.Column size={1}></Columns.Column>
         <Columns.Column size={7}>
-          <Heading className={styles.headingBeforePostGrid}>Recent Posts</Heading>
+          <Heading className={styles.headingBeforePostGrid}>Recent</Heading>
         </Columns.Column>
         <Columns.Column size={3}></Columns.Column>
       </Columns>
