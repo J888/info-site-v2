@@ -7,7 +7,9 @@
   display: grid;
   grid-template-columns: repeat(4,minmax(0,1fr));
   grid-column-gap: 66px;
-  grid-row-gap: 85px;
+  // grid-row-gap: 85px;
+  grid-row-gap: 60px;
+
   grid-auto-rows: min-content;
   min-height: 10rem;
 }
@@ -62,17 +64,23 @@ $breakpoint-mobile: 700px;
 
 .gridItemTextMeta {
   display: block;
-  font-size: 1.1rem;
-  margin-bottom: 0.8rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.1rem;
   color: #5e5e5e;
   
   @media (max-width: $breakpoint-mobile) {
     font-size: 1.4rem;
-    margin-bottom: 0.2rem;
+    margin-bottom: -0.1rem;
   }
 }
 
 .gridItemTextTitle {
-  font-size: 2.2rem;
-  color: black;
+  font-size: 1.4rem;
+  color: rgb(50, 50, 50);
+  line-height: 1.78rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    line-height: 2.5rem;
+  }
 }

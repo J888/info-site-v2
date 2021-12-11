@@ -2,6 +2,7 @@ import { Heading, Navbar } from "react-bulma-components";
 import Link from "next/link";
 import LinkWrapper from "./linkWrapper";
 import styles from "../sass/components/PostGrid.module.scss";
+import TextColoredBackground from "./textColoredBackground";
 
 const PostGridItem = ({ link, imageUrl, title, category, createdAt }) => (
   <article className={styles.gridItem}>
@@ -17,13 +18,25 @@ const PostGridItem = ({ link, imageUrl, title, category, createdAt }) => (
       <Link href={link} passHref>
         <a>
           <div className={styles.gridItemTextMeta}>
-            {category} |{" "}
+            <TextColoredBackground>
+              {category}
+            </TextColoredBackground>
+
+            <span style={{marginLeft: '0.5rem'}}>
+              {new Date(createdAt).toLocaleDateString("en-US", {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
+            {/* {category} |{" "}
             {new Date(createdAt).toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",
               month: "long",
               day: "numeric",
-            })}{" "}
+            })}{" "} */}
           </div>
         </a>
       </Link>

@@ -166,7 +166,7 @@ export async function getStaticProps() {
 
   const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
 
-  const pageViewsMappedBySlug = await getPageViewsBySlug("2021-11-08");
+  const pageViewsMappedBySlug = await getPageViewsBySlug("2021-11-25");
 
   /**
    * [

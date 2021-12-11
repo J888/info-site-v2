@@ -1,4 +1,5 @@
 $breakpoint-large-mobile: 735px;
+$breakpoint-mobile: 700px;
 
 .navBar {
   
@@ -14,7 +15,7 @@ $breakpoint-large-mobile: 735px;
   padding-right: 6vw;
   transition: padding 140ms ease-in-out;
 
-  font-family: 'EB Garamond', serif;
+  font-family: 'Lato', sans-serif;
 
   .section1 {
     // width: 33%;
@@ -27,6 +28,10 @@ $breakpoint-large-mobile: 735px;
 
     @media (max-width: $breakpoint-large-mobile) {
       justify-content: space-between;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 1.7rem;
     }
 
     a {
