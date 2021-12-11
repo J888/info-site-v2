@@ -41,6 +41,12 @@ $breakpoint-mobile: 500px;
   span:last-child {
     font-size: 0.83rem;
   }
+
+  span {
+    a {
+      color: #4a4a4a;
+    }
+  }
 }
 
 .postInfoTagGroupsContainer {

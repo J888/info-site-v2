@@ -13,6 +13,12 @@ $breakpoint-mobile: 700px;
 .homePageBillboard {
   padding-bottom: 5vw;
 
+  div {
+    @media (max-width: $breakpoint-mobile) {
+      width: 90%;
+    }
+  }
+  
   h3 {
     font-size: 3.7rem;
 

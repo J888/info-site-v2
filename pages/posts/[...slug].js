@@ -63,10 +63,9 @@ const PostContent = ({ data, views }) => (
               objectFit="cover"
               src={data?.ImageS3Url}
               alt={data?.Title}
-              // layout="fill"
               height="950"
               width="950"
-              priorty="true"
+              priority={true}
             />
           </Container>
           <Container className={styles.publishedDate}>
@@ -74,12 +73,27 @@ const PostContent = ({ data, views }) => (
               <div className={styles.postInfoTagGroupsContainer}>
                 <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
                   <Tag color="dark">Created</Tag>
-                  <Tag>{data?.CreatedAt}</Tag>
+                  <Tag>
+                  
+                  {new Date(data?.CreatedAt).toLocaleTimeString("en-US", {
+                    weekday: "short",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                  </Tag>
                 </Tag.Group>
 
                 <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
                   <Tag color="dark">Category</Tag>
-                  <Tag>{data?.Category?.charAt(0).toUpperCase() + data?.Category?.slice(1)}</Tag>
+
+                  <Tag>
+                    <Link href={`/posts/${data?.Category}`}>
+                      {data?.Category?.charAt(0).toUpperCase() + data?.Category?.slice(1)}
+                    </Link>
+                  </Tag>
                 </Tag.Group>
               </div>
 

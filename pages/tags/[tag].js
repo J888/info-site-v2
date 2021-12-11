@@ -13,7 +13,7 @@ const PostsByTag = ({ matchingPosts, tag, siteConfig }) => {
         <Columns.Column size={7}>
           <PostListWide
             posts={matchingPosts}
-            heading={`${matchingPosts?.length} Posts Tagged with #${tag}`}
+            heading={`${matchingPosts?.length} Post${matchingPosts?.length > 1 ? 's' : ''} Tagged with #${tag}`}
           />
         </Columns.Column>
         <Columns.Column size={3}></Columns.Column>

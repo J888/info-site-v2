@@ -60,6 +60,9 @@ $breakpoint-mobile: 700px;
   margin-right: auto;
 
   text-align: center;
+  @media (max-width: $breakpoint-mobile) {
+    text-align: left;
+  }
 }
 
 .gridItemTextMeta {
@@ -70,8 +73,8 @@ $breakpoint-mobile: 700px;
   color: #5e5e5e;
   
   @media (max-width: $breakpoint-mobile) {
-    font-size: 1.4rem;
-    margin-bottom: -0.1rem;
+    font-size: 1.2rem;
+    margin-bottom: 0rem;
   }
 }
 
@@ -81,6 +84,6 @@ $breakpoint-mobile: 700px;
   line-height: 1.78rem;
 
   @media (max-width: $breakpoint-mobile) {
-    line-height: 2.5rem;
+    line-height: 2.3rem;
   }
 }
