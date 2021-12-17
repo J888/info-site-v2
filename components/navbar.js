@@ -13,7 +13,7 @@ const Nav = ({ siteName }) => (
             Front Page
           </Link>
           <Link href="/posts" className={styles.navItem}>
-            Posts
+            All Posts
           </Link>
           <Link href="/about" className={styles.navItem}>
             About

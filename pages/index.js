@@ -18,19 +18,20 @@ import PostGrid from "../components/postGrid";
 import styles from "../sass/components/Index.module.scss"
 import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
+const siteMission = `Learn about NFTs and More`;
 
 export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig }) {
   const [visiblePosts, setVisiblePosts] = useState(postsDynamo.slice(0, 8));
 
   return (
     <MainWrapper
-      pageTitle="Home"
+      pageTitle={`Front Page, ${siteMission}`}
       siteName={siteConfig?.site?.name}
-      description={`The front page and home page of the website.`}
+      description={`A blog dedicated to non-fungible tokens, blockchain news, and the metaverse.`}
     >
       <div className={styles.homePageBillboard}>
         <Billboard
-          title={"Learn about NFTs and More"}
+          title={siteMission}
           body={"A Blog Dedicated to Non Fungible Tokens and the Latest Blockchain Technologies"}
         />
       </div>

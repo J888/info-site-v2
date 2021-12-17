@@ -9,7 +9,7 @@ const PostGridItem = ({ link, imageUrl, title, category, createdAt }) => (
     <div className={styles.imageWrapper}>
       <Link href={link} passHref>
         <a>
-          <img src={imageUrl}></img>
+          <img src={imageUrl} alt={title}></img>
         </a>
       </Link>
     </div>
@@ -43,7 +43,7 @@ const PostGridItem = ({ link, imageUrl, title, category, createdAt }) => (
 
       <Link href={link} passHref>
         <a>
-          <h1 className={styles.gridItemTextTitle}>{title}</h1>
+          <h3 className={styles.gridItemTextTitle}>{title}</h3>
         </a>
       </Link>
     </div>
