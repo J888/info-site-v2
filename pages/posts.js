@@ -7,7 +7,7 @@ import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 
 const AllPosts = ({ postsDynamo, siteConfig }) => {
   return (
-    <MainWrapper pageTitle={`There Are ${postsDynamo.length} Blog Posts`} siteName={siteConfig?.site?.name} description={`A grid of all blog posts available on the website`}>
+    <MainWrapper pageTitle={`Read ${postsDynamo.length} Blog Posts About NFTs and More`} siteName={siteConfig?.site?.name} description={`A grid of all blog posts available on the website`}>
       <Columns>
         <Columns.Column size={1}></Columns.Column>
         <Columns.Column size={7} style={{width: '100%'}}>
