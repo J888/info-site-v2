@@ -21,6 +21,7 @@ $breakpoint-mobile: 700px;
   
   h3 {
     font-size: 3.7rem;
+    line-height: 3.8rem;
 
     @media (max-width: $breakpoint-mobile) {
       font-size: 2.7rem;
