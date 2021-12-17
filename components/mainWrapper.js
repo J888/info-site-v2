@@ -29,7 +29,7 @@ export default function MainWrapper(props) {
         @import url('https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap');
         </style> */}
 
-        <meta property="description" content={props.description}/>
+        <meta name="description" content={props.description}/>
 
         <meta property="og:title" content={props.pageTitle}/>
         <meta property="og:description" content={props.description}/>
