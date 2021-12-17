@@ -39,7 +39,7 @@ export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig
       <Columns>
         <Columns.Column size={1}></Columns.Column>
         <Columns.Column size={7}>
-          <Heading className={styles.headingBeforePostGrid}>Recent</Heading>
+          <h2 className={styles.headingBeforePostGrid}>Recent</h2>
         </Columns.Column>
         <Columns.Column size={3}></Columns.Column>
       </Columns>
