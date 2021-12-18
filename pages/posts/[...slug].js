@@ -6,6 +6,7 @@ import {
   Container,
   Content,
   Heading,
+  Image,
   Message,
   Section,
   Tag,
@@ -22,7 +23,6 @@ import LinkWrapper from "../../components/linkWrapper";
 import postContentStyles from "../../sass/components/PostContent.module.scss"
 import useSWR from "swr";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
-import HorizontalGoogleAd from "../../components/google-ads/HorizontalGoogleAd";
 
 const NextPrevButtons = ({ data }) => 
   <Section className={postContentStyles.nextPrevArticleContainer}>
@@ -58,15 +58,15 @@ const PostContent = ({ data, views }) => (
         <Heading className={postContentStyles.mainTitle}>{data?.Title}</Heading>
         <Content>
           <Container className={postContentStyles.mainImageContainer}>
-            {/* <Image src={data?.image?.s3Url} size={2} /> */}
-            <NextImage
+            <Image src={data?.ImageS3Url} size={2} alt={data?.Title} />
+            {/* <NextImage
               objectFit="cover"
               src={data?.ImageS3Url}
               alt={data?.Title}
               height="950"
               width="950"
               priority={true}
-            />
+            /> */}
           </Container>
           <Container className={styles.publishedDate}>
             <div className={styles.viewCountDateContainer}>
@@ -165,10 +165,6 @@ const PostContent = ({ data, views }) => (
 
             {data?.Parts == undefined && <Section>Post has no content</Section>}
           </Section>
-          <Section>
-            <HorizontalGoogleAd/>
-          </Section>
-
           <NextPrevButtons data={data}/>
         </Content>
       </div>
