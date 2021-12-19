@@ -147,13 +147,15 @@ const PostContent = ({ data, views }) => (
               } else if (part.Type == "IMAGE") {
                 toRender = (
                   <Container className={postContentStyles.imagePartContainer}>
-                    <NextImage
+                    {/* <NextImage
                       objectFit="cover"
                       src={part.Contents}
                       alt="pic alt"
                       height="550"
                       width="700"
-                    />
+                    /> */}
+
+                    <Image src={part.Contents} size={2} alt={`image-part-${i}`} />
                   </Container>
                 );
               }
