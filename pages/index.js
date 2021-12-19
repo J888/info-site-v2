@@ -5,7 +5,6 @@ import {
   Message,
   Tag,
   Block,
-  Heading,
 } from "react-bulma-components";
 import MainWrapper from "../components/mainWrapper";
 
@@ -18,36 +17,49 @@ import PostGrid from "../components/postGrid";
 import styles from "../sass/components/Index.module.scss"
 import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
-const siteMission = `Learn about NFTs and More`;
+import { capitalizeWord } from "../util/textUtil";
+const siteMission = `Dive into NFTs, the Meta-Verse, Blockchain News, and More.`;
+const contentDeliveryMission = `We aim to provide information in layman's terms so that anyone can grasp ideas no matter how complex.`;
+const whereWeAreGoingStatement = `Follow along as we make sense of this revolutionary time in technology.`
 
-export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig }) {
+export default function Home({ postsByCategory, postsDynamo, topTags, mostVisitedList, siteConfig }) {
   const [visiblePosts, setVisiblePosts] = useState(postsDynamo.slice(0, 8));
-
   return (
     <MainWrapper
       pageTitle={`Front Page, ${siteMission}`}
       siteName={siteConfig?.site?.name}
-      description={`A blog dedicated to non-fungible tokens, blockchain news, and the metaverse.`}
+      description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
     >
       <div className={styles.homePageBillboard}>
         <Billboard
           title={siteMission}
-          body={"A Blog Dedicated to Non Fungible Tokens and the Latest Blockchain Technologies"}
+          body={`${siteConfig?.site?.name} is a tiny blog started in 2021 to report on news in topics such as NFTs, crypto, and blockchain innovations. ${contentDeliveryMission} ${whereWeAreGoingStatement}`}
         />
       </div>
 
-      <Columns>
-        <Columns.Column size={1}></Columns.Column>
-        <Columns.Column size={7}>
-          <h2 className={styles.headingBeforePostGrid}>Recent</h2>
-        </Columns.Column>
-        <Columns.Column size={3}></Columns.Column>
-      </Columns>
-      <PostGrid posts={visiblePosts} />
+      {
+        ['rarity', 'news', 'gaming', 'learn', 'nft', 'metaverse', 'music'].map(category => 
+            <div>
+              <Columns>
+                <Columns.Column size={1}></Columns.Column>
+                <Columns.Column size={7}>
+                  <h2 className={styles.headingBeforePostGrid}>{capitalizeWord(category)}</h2>
+                </Columns.Column>
+                <Columns.Column size={3}></Columns.Column>
+              </Columns>
+              <PostGrid posts={postsByCategory[category]} />
+              <div className={styles.seeAllLink}>
+                <Link href={`/posts/${category}`} passHref>
+                  <a>{`More `}<i>{capitalizeWord(category)}</i>{` →`}</a>
+                </Link>
+              </div>
+            </div>
+          )
+      }
 
       <div className={styles.seeAllLink}>
         <Link href="/posts" passHref>
-          <a>{"See all posts →"}</a>
+          <a>{"Posts From All Categories →"}</a>
         </Link>
       </div>
 
@@ -61,54 +73,7 @@ export default function Home({ postsDynamo, topTags, mostVisitedList, siteConfig
 
       <Columns>
         <Columns.Column size={1}></Columns.Column>
-        <Columns.Column size={7}>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "space-around",
-            }}
-          >
-            {/* {visiblePosts.map((item, i) => (
-              <LinkWrapper
-                wrapInAnchor={true}
-                href={`/posts/${item.category}/${item.id}`}
-                key={`${item.category}/${item.id}`}
-              >
-                <div>
-                  <Card
-                    style={{ width: "18em", marginBottom: "1em" }}
-                    display={""}
-                    clickable
-                  >
-                    <Card.Image
-                      size="1by4"
-                      src={item.imageUrl}
-                      style={{ objectFit: "cover" }}
-                    />
-                    <Card.Content>
-                      <Media>
-                        <Media.Item>
-                          <Heading size={4}>{item.title}</Heading>
-                          <Heading subtitle size={6}>
-                            {item.subTitle}
-                          </Heading>
-                        </Media.Item>
-                      </Media>
-                      <Content>
-                        {item.description}
-                        <br />
-                        <time dateTime="2016-1-1">{item.createdAt}</time>
-                      </Content>
-                    </Card.Content>
-                  </Card>
-                </div>
-              </LinkWrapper>
-            ))} */}
-          </div>
-
-      
-        </Columns.Column>
+        <Columns.Column size={7}></Columns.Column>
         <Columns.Column size={3}>
           <Card>
             <Message>
@@ -215,8 +180,19 @@ export async function getStaticProps() {
     .slice(0, 10);
   topTags = topTags.map((topTag) => topTag[0]);
 
+  let postsByCategory = {}
+  for (let p of postsDynamo) {
+    let cat = p.Category;
+    if (postsByCategory[cat] === undefined) {
+      postsByCategory[cat] = [p];
+    } else {
+      postsByCategory[cat].push(p)
+    }
+  }
+
   return {
     props: {
+      postsByCategory,
       postsDynamo,
       topTags,
       siteConfig,

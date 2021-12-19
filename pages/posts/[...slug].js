@@ -58,7 +58,7 @@ const PostContent = ({ data, views }) => (
         <Heading className={postContentStyles.mainTitle}>{data?.Title}</Heading>
         <Content>
           <Container className={postContentStyles.mainImageContainer}>
-            <Image src={data?.ImageS3Url} size={2} alt={data?.Title} />
+            <Image src={data?.ImageS3Url} size={1} alt={data?.Title} />
             {/* <NextImage
               objectFit="cover"
               src={data?.ImageS3Url}
@@ -72,22 +72,14 @@ const PostContent = ({ data, views }) => (
             <div className={styles.viewCountDateContainer}>
               <div className={styles.postInfoTagGroupsContainer}>
                 <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
-                  <Tag color="dark">Created</Tag>
-                  <Tag>
-                  
-                  {new Date(data?.CreatedAt).toLocaleTimeString("en-US", {
-                    weekday: "short",
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
+                  <Tag color="dark">
+                    {new Date(data?.CreatedAt).toLocaleDateString("en-US", {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </Tag>
-                </Tag.Group>
-
-                <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
-                  <Tag color="dark">Category</Tag>
 
                   <Tag>
                     <Link href={`/posts/${data?.Category}`}>
@@ -205,13 +197,16 @@ const Post = ({ postData, postsByCategory, category, siteConfig, slug }) => {
     }
   );
 
+  let capitalizedCategory = category?.substring(0,1)?.toUpperCase() + category?.substring(1);
+  let pageTitle = postData?.Title !== undefined ? postData?.Title : `Read ${postsByCategory?.length} ${capitalizedCategory} Posts`
+
   return (
-    <MainWrapper pageTitle={`${postData?.Title || category}`} siteName={siteConfig?.site?.name} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
+    <MainWrapper pageTitle={pageTitle} siteName={siteConfig?.site?.name} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
       {postData && <PostContent data={postData} views={pageViewData?.views} />}
       {postsByCategory && (
         <PostListWide
           posts={postsByCategory}
-          heading={`${postsByCategory.length} posts with category '${category}'`}
+          heading={`Read ${postsByCategory.length} '${capitalizedCategory}' posts`}
         />
       )}
       <Block></Block>

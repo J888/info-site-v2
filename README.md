@@ -2,7 +2,8 @@
 
 - Make author icon and display on post page
 - change the format of the main image so that it is side-by-side to the tags and category
-- 
+- Integration of comments i.e. Disqus
+- "highlighted" tweets section - show a set of tweets 
 
 
 # ENV VARS
