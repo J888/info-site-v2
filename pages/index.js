@@ -19,8 +19,18 @@ import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 import { capitalizeWord } from "../util/textUtil";
 const siteMission = `Dive into NFTs, the Meta-Verse, Blockchain News, and More.`;
-const contentDeliveryMission = `We aim to provide information in layman's terms so that anyone can grasp ideas no matter how complex.`;
-const whereWeAreGoingStatement = `Follow along as we make sense of this revolutionary time in technology.`
+const contentDeliveryMission = `Our aim is to provide information in layman's terms so anyone can grasp concepts that are technical or complex.`;
+const whereWeAreGoingStatement = `Follow along as we cover this revolutionary era of technology.`
+const categoryDescriptions = {
+  // 'rarity', 'news', 'gaming', 'learn', 'nft', 'metaverse', 'music'
+  "rarity": "See the rarest traits of popular NFT collections.",
+  "news": "Recent events in the world of NFTs, crypto, and blockhain.",
+  "gaming": "Crypto gaming projects that we want to play.",
+  "learn": "Key pieces of information on different topics.",
+  "nft": "Everything non-fungible.",
+  "metaverse": "Read about the continually-hyped meta-verse that is predicted to be the \"Next big thing\" for the internet and for humanity.",
+  "music": "Posts about music NFT integrations and how artists are bypassing traditional music business models."
+}
 
 export default function Home({ postsByCategory, postsDynamo, topTags, mostVisitedList, siteConfig }) {
   const [visiblePosts, setVisiblePosts] = useState(postsDynamo.slice(0, 8));
@@ -40,17 +50,24 @@ export default function Home({ postsByCategory, postsDynamo, topTags, mostVisite
       {
         ['rarity', 'news', 'gaming', 'learn', 'nft', 'metaverse', 'music'].map(category => 
             <div>
-              <Columns>
+              {/* <Columns>
                 <Columns.Column size={1}></Columns.Column>
                 <Columns.Column size={7}>
-                  <h2 className={styles.headingBeforePostGrid}>{capitalizeWord(category)}</h2>
+                  <div className={styles.postsByCatHeadingContainer}>
+                    <h2 className={styles.headingBeforePostGrid}>{capitalizeWord(category)}</h2>
+                    <p className={styles.headingBeforePostGridCatDesc}>{categoryDescriptions[category]}</p>
+                  </div>
                 </Columns.Column>
                 <Columns.Column size={3}></Columns.Column>
-              </Columns>
+              </Columns> */}
+              <div className={styles.postsByCatHeadingContainer}>
+                <h2 className={styles.headingBeforePostGrid}>{capitalizeWord(category)}</h2>
+                <p className={styles.headingBeforePostGridCatDesc}>{categoryDescriptions[category]}</p>
+              </div>
               <PostGrid posts={postsByCategory[category]} />
               <div className={styles.seeAllLink}>
                 <Link href={`/posts/${category}`} passHref>
-                  <a>{`More `}<i>{capitalizeWord(category)}</i>{` →`}</a>
+                  <a>{`More in `}<i>{capitalizeWord(category)}</i>{` →`}</a>
                 </Link>
               </div>
             </div>

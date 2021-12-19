@@ -1,3 +1,7 @@
+$breakpoint-tablet: 1000px;
+$two_column_display: 1280px;
+$breakpoint-mobile: 700px;
+
 .postGrid {
   width: 100%;
   padding-left: 6vw;
@@ -5,17 +9,22 @@
   transition: padding 140ms ease-in-out;
 
   display: grid;
-  grid-template-columns: repeat(4,minmax(0,1fr));
-  grid-column-gap: 66px;
+  grid-template-columns: repeat(5,minmax(0,1fr));
+  grid-column-gap: 50px;
   // grid-row-gap: 85px;
-  grid-row-gap: 60px;
+  grid-row-gap: 20px;
 
   grid-auto-rows: min-content;
   min-height: 10rem;
+
+  @media (max-width: 1550px) {
+    grid-template-columns: repeat(4,minmax(0,1fr));
+  }
+  @media (max-width: $two_column_display) {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
 }
 
-$breakpoint-tablet: 1000px;
-$breakpoint-mobile: 700px;
 @media (max-width: $breakpoint-tablet) {
   .postGrid {
 
@@ -34,13 +43,19 @@ $breakpoint-mobile: 700px;
   display: block;
 
   img {
-    height: 22vw;
+    height: 13rem;
+    width: 20vw;
     transition: height 80ms ease-in-out;
     object-fit: cover;
 
-    @media (max-width: $breakpoint-mobile) {
-      height: 35vw;
-      width: 29rem;
+    // @media (max-width: $breakpoint-mobile) {
+    //   height: 35vw;
+    //   width: 29rem;
+    // }
+
+    @media (max-width: $two_column_display) {
+      width: 78vw;
+      
     }
   }
 }
@@ -51,6 +66,14 @@ $breakpoint-mobile: 700px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    &:not(:last-child) {
+      border-bottom: solid #e9e9e9 1.9px;
+      padding-bottom: 0.7rem;
+    }
+  }
+  
 }
 
 .gridItemText {
@@ -63,6 +86,13 @@ $breakpoint-mobile: 700px;
   @media (max-width: $breakpoint-mobile) {
     text-align: left;
   }
+}
+
+.gridItemTextV2 {
+  display: grid;
+  grid-template-columns: 44.8% 1fr;
+
+  
 }
 
 .gridItemTextMeta {
@@ -78,6 +108,21 @@ $breakpoint-mobile: 700px;
   }
 }
 
+.gridItemTextMetaV2 {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.58rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.1rem;
+  color: #5e5e5e;
+  padding-left: 1.1rem;
+  
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 1.2rem;
+    margin-bottom: 0rem;
+  }
+}
+
 .gridItemTextTitle {
   font-size: 1.4rem;
   color: rgb(50, 50, 50);
@@ -85,5 +130,49 @@ $breakpoint-mobile: 700px;
 
   @media (max-width: $breakpoint-mobile) {
     line-height: 2.3rem;
+  }
+}
+
+.gridItemTextTitleV2 {
+  font-size: 1.1rem;
+  color: rgb(50, 50, 50);
+  line-height: 1.4rem;
+
+  // @media (max-width: $breakpoint-mobile) {
+  //   line-height: 2.3rem;
+  // }
+}
+
+.gridItemTextDescV2 {
+  font-size: 0.8rem;
+  color: #9b9999;
+  margin-top: 0.4rem;
+}
+
+.gridItemV2CatAndDateContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.gridItemV2PublishedDate {
+  font-size: 0.7rem;
+  color:  rgb(124, 124, 124);
+}
+
+.postGridItemV2TagGroup {
+  margin-top: 0.27rem;
+  justify-content: flex-end;
+  span {
+    font-size: 0.69rem;
+    margin-right: 0 !important;
+    a {
+      color:rgb(50, 50, 50);
+      &:hover {
+        color:rgb(99, 98, 98);
+      }
+    }
+
   }
 }
