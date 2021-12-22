@@ -76,10 +76,11 @@ const PostGridItemV2 = ({ description, link, imageUrl, tags, title, category, cr
         </TextColoredBackground>
       </div>
 
-      <div>
-        <h3 className={styles.gridItemTextTitleV2}>{firstWords(title, 14)}{`...`}</h3>
-
-      </div>
+      <Link href={link} passHref>
+        <a>
+          <h3 className={styles.gridItemTextTitleV2}>{firstWords(title, 14)}{`...`}</h3>
+        </a>
+      </Link>
 
       <div className={styles.gridItemTextV2}>
         <Link href={link} passHref>
