@@ -1,0 +1,39 @@
+.showMoreToggleContainer {
+  
+}
+
+.showMoreToggleTitle {
+
+  color: rgb(133, 133, 133);
+  line-height: normal;
+  margin-bottom: 0.4rem;
+
+  &-size1 {
+    @extend .showMoreToggleTitle;
+    font-size: 2rem;
+  }
+  &-size2 {
+    @extend .showMoreToggleTitle;
+    font-size: 2.25rem;
+  }
+  &-size3 {
+    @extend .showMoreToggleTitle;
+    font-size: 2.75rem;
+  }
+  &-size4 {
+    @extend .showMoreToggleTitle;
+    font-size: 3rem;
+  }
+  
+}
+
+.showMoreButton {
+  cursor: pointer;
+  &:hover {
+    color:rgb(25, 118, 65);
+  }
+}
+
+.showMoreContent {
+  margin-top: 0.5rem;
+}

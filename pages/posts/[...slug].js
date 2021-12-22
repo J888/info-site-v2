@@ -23,6 +23,7 @@ import LinkWrapper from "../../components/linkWrapper";
 import postContentStyles from "../../sass/components/PostContent.module.scss"
 import useSWR from "swr";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
+import AuthorCredits from "../../components/AuthorCredits";
 
 const NextPrevButtons = ({ data }) => 
   <Section className={postContentStyles.nextPrevArticleContainer}>
@@ -55,21 +56,11 @@ const PostContent = ({ data, views }) => (
         <Container>
           <NextPrevButtons data={data}/>
         </Container>
-        <Heading className={postContentStyles.mainTitle}>{data?.Title}</Heading>
+        {/* <Heading className={postContentStyles.mainTitle}>{data?.Title}</Heading> */}
         <Content>
-          <Container className={postContentStyles.mainImageContainer}>
-            <Image src={data?.ImageS3Url} size={1} alt={data?.Title} />
-            {/* <NextImage
-              objectFit="cover"
-              src={data?.ImageS3Url}
-              alt={data?.Title}
-              height="950"
-              width="950"
-              priority={true}
-            /> */}
-          </Container>
-          <Container className={styles.publishedDate}>
-            <div className={styles.viewCountDateContainer}>
+          <Container className={postContentStyles.imageAndPostInfoContainer}>
+            <div className={postContentStyles['imageAndPostInfoContainer-leftSide']}>
+              <Image src={data?.ImageS3Url} size={1} alt={data?.Title} />
               <div className={styles.postInfoTagGroupsContainer}>
                 <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
                   <Tag color="dark">
@@ -88,39 +79,68 @@ const PostContent = ({ data, views }) => (
                   </Tag>
                 </Tag.Group>
               </div>
+            </div>
+            <div className={postContentStyles['imageAndPostInfoContainer-rightSide']}>
+              <Heading className={postContentStyles.mainTitle}>{data?.Title}</Heading>
+              <Tag.Group>
+                {data?.Tags?.map((tag) => (
+                  <Tag key={tag} clickable>
+                    <LinkWrapper
+                      href={`/tags/${tag}`}
+                      key={tag}
+                      wrapInAnchor={true}
+                    >
+                      {/* {tag} */}
+                      <div className={postContentStyles.tagListItem}>{tag}</div>
+                    </LinkWrapper>
+                  </Tag>
+                ))}
+              </Tag.Group>
+              <AuthorCredits authorName={`NFTMusician`} twitterUsername={`NFTMusician`}/>
+              <div style={{marginTop: `1.6rem`}}>
+                {views !== undefined && (
+                  <div className={styles.viewCount}>
+                    <img src="/icons/eye1.png" className={styles.viewCountIcon} />{" "}
+                    <span>{views < 1 ? 1 : views}</span>
+                  </div>
+                )}
 
-              {views !== undefined && (
-                <div className={styles.viewCount}>
-                  <img src="/icons/eye1.png" className={styles.viewCountIcon} />{" "}
-                  <span>{views < 1 ? 1 : views}</span>
-                </div>
-              )}
+                {/* placeholder */}
+                {views === undefined && (
+                  <div className={styles.viewCount}>
+                    {`Loading views...`}
+                  </div>
+                )}
+              </div>
+            </div>
+          </Container>
+          {/* <Container className={postContentStyles.mainImageContainer}>
+            <Image src={data?.ImageS3Url} size={1} alt={data?.Title} />
+          </Container> */}
+          <Container className={styles.publishedDate}>
+            <div className={styles.viewCountDateContainer}>
+              {/* <div className={styles.postInfoTagGroupsContainer}>
+                <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
+                  <Tag color="dark">
+                    {new Date(data?.CreatedAt).toLocaleDateString("en-US", {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </Tag>
 
-              {/* placeholder */}
-              {views === undefined && (
-                <div className={styles.viewCount}>
-                  {`Loading views...`}
-                </div>
-              )}
+                  <Tag>
+                    <Link href={`/posts/${data?.Category}`}>
+                      {data?.Category?.charAt(0).toUpperCase() + data?.Category?.slice(1)}
+                    </Link>
+                  </Tag>
+                </Tag.Group>
+              </div> */}
+
+              
             </div>
 
-            <Tag.Group>
-              {data?.Tags?.map((tag) => (
-                // <LinkWrapper href={`/tags/${tag}`} key={tag} wrapInAnchor={true}>
-                <Tag key={tag} clickable>
-                  <LinkWrapper
-                    href={`/tags/${tag}`}
-                    key={tag}
-                    wrapInAnchor={true}
-                  >
-                    {/* {tag} */}
-                    <div className={postContentStyles.tagListItem}>{tag}</div>
-                  </LinkWrapper>
-                </Tag>
-
-                // </LinkWrapper>
-              ))}
-            </Tag.Group>
           </Container>
 
           <Section>
@@ -147,7 +167,7 @@ const PostContent = ({ data, views }) => (
                       width="700"
                     /> */}
 
-                    <Image src={part.Contents} size={2} alt={`image-part-${i}`} />
+                    <Image src={part.Contents} size={2} alt={`image-part-${i}`} className={postContentStyles.imageInPost} />
                   </Container>
                 );
               }

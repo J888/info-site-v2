@@ -1,0 +1,21 @@
+.authorCreditsContainer {
+  display: grid;
+  grid-template-columns: 20% 1fr;
+  column-gap: 0.9rem;
+}
+
+.authorImage {
+  border-radius: 50%;
+  max-width: 3.7rem;
+  grid-column: 1 / span 1;
+  justify-self: center;
+  align-self: center;
+}
+
+.authorDescription {
+  grid-column: 2 / span 1;
+
+  p:first-child {
+    margin-bottom: 0.3rem;
+  }
+}

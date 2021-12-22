@@ -18,7 +18,8 @@ import styles from "../sass/components/Index.module.scss"
 import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 import { capitalizeWord } from "../util/textUtil";
-const siteMission = `Dive into NFTs, the Meta-Verse, Blockchain News, and More.`;
+import ShowMoreToggle from "../components/showMoreToggle";
+const siteMission = `Dive into NFTs, Crypto, Metaverse, and More.`;
 const contentDeliveryMission = `Our aim is to provide information in layman's terms so anyone can grasp concepts that are technical or complex.`;
 const whereWeAreGoingStatement = `Follow along as we cover this revolutionary era of technology.`
 const categoryDescriptions = {
@@ -40,12 +41,15 @@ export default function Home({ postsByCategory, postsDynamo, topTags, mostVisite
       siteName={siteConfig?.site?.name}
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
     >
-      <div className={styles.homePageBillboard}>
-        <Billboard
-          title={siteMission}
-          body={`${siteConfig?.site?.name} is a tiny blog started in 2021 to report on news in topics such as NFTs, crypto, and blockchain innovations. ${contentDeliveryMission} ${whereWeAreGoingStatement}`}
-        />
-      </div>
+    <Columns style={{margin: '0 0.5rem 0 0.5rem'}}>
+      <Columns.Column size={3}></Columns.Column>
+      <Columns.Column size={6}>
+        <ShowMoreToggle labelShow={`+ Read more`} labelHide={`- Hide/minimize`} title={siteMission} titleSize={4}>
+          {siteConfig?.site?.name} is a tiny blog started in 2021 to report on news in topics such as NFTs, crypto, and blockchain innovations. {contentDeliveryMission} {whereWeAreGoingStatement}
+        </ShowMoreToggle>
+      </Columns.Column>
+      <Columns.Column size={3}></Columns.Column>
+    </Columns>
 
       {
         ['rarity', 'news', 'gaming', 'learn', 'nft', 'metaverse', 'music'].map(category => 

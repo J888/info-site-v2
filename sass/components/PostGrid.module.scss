@@ -48,6 +48,11 @@ $breakpoint-mobile: 700px;
     transition: height 80ms ease-in-out;
     object-fit: cover;
 
+    &:hover {
+      opacity: 90%;
+      transform:skewY(20)
+    }
+
     // @media (max-width: $breakpoint-mobile) {
     //   height: 35vw;
     //   width: 29rem;
@@ -90,8 +95,7 @@ $breakpoint-mobile: 700px;
 
 .gridItemTextV2 {
   display: grid;
-  grid-template-columns: 44.8% 1fr;
-
+  grid-template-columns: 57.8% 1fr;
   
 }
 
@@ -134,9 +138,11 @@ $breakpoint-mobile: 700px;
 }
 
 .gridItemTextTitleV2 {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: rgb(50, 50, 50);
   line-height: 1.4rem;
+  margin-bottom: 0.2rem;
+  margin-top: 0.4rem;
 
   // @media (max-width: $breakpoint-mobile) {
   //   line-height: 2.3rem;
@@ -144,7 +150,7 @@ $breakpoint-mobile: 700px;
 }
 
 .gridItemTextDescV2 {
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #9b9999;
   margin-top: 0.4rem;
 }
@@ -165,10 +171,14 @@ $breakpoint-mobile: 700px;
   margin-top: 0.27rem;
   justify-content: flex-end;
   span {
+    background-color: rgb(108, 108, 108);
     font-size: 0.69rem;
+    margin-left: 0.3rem !important;
     margin-right: 0 !important;
+
+    
     a {
-      color:rgb(50, 50, 50);
+      color: rgb(250, 250, 250);
       &:hover {
         color:rgb(99, 98, 98);
       }
