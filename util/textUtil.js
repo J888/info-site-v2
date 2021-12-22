@@ -6,4 +6,13 @@ const firstWords = (string, numFirstWords) => {
   return string.split(' ').splice(0, numFirstWords).join(' ')
 }
 
-module.exports = { capitalizeWord, firstWords }
+const firstWordsWithEllipses = (string, numFirstWords) => {
+  const words = string.split(' ');
+  if(words.length <= numFirstWords) {
+    return string;
+  } else {
+    return `${firstWords(string, numFirstWords)}...`
+  }
+}
+
+module.exports = { capitalizeWord, firstWords, firstWordsWithEllipses }

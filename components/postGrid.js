@@ -3,7 +3,7 @@ import Link from "next/link";
 import LinkWrapper from "./linkWrapper";
 import styles from "../sass/components/PostGrid.module.scss";
 import TextColoredBackground from "./textColoredBackground";
-import { firstWords } from "../util/textUtil";
+import { firstWords, firstWordsWithEllipses } from "../util/textUtil";
 
 const PostGridItem = ({ link, imageUrl, title, category, createdAt }) => (
   <article className={styles.gridItem}>
@@ -78,14 +78,14 @@ const PostGridItemV2 = ({ description, link, imageUrl, tags, title, category, cr
 
       <Link href={link} passHref>
         <a>
-          <h3 className={styles.gridItemTextTitleV2}>{firstWords(title, 14)}{`...`}</h3>
+          <h3 className={styles.gridItemTextTitleV2}>{firstWordsWithEllipses(title, 14)}</h3>
         </a>
       </Link>
 
       <div className={styles.gridItemTextV2}>
         <Link href={link} passHref>
           <a>
-            <p className={styles.gridItemTextDescV2}>{firstWords(description, 14)}{`...`}</p>
+            <p className={styles.gridItemTextDescV2}>{firstWordsWithEllipses(description, 14)}</p>
           </a>
         </Link>
         <Link href={link} passHref>
