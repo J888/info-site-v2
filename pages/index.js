@@ -53,7 +53,7 @@ export default function Home({ postsByCategory, postsDynamo, topTags, mostVisite
 
       {
         ['rarity', 'news', 'gaming', 'learn', 'nft', 'metaverse', 'music'].map(category => 
-            <div>
+            <div key={category}>
               {/* <Columns>
                 <Columns.Column size={1}></Columns.Column>
                 <Columns.Column size={7}>

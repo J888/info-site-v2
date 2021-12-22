@@ -1,10 +1,7 @@
 ### ToDo
 
-- Make author icon and display on post page
-- change the format of the main image so that it is side-by-side to the tags and category
 - Integration of comments i.e. Disqus
 - "highlighted" tweets section - show a set of tweets 
-- put long text behind a "read more" clicker
 
 
 # ENV VARS

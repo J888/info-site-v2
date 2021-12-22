@@ -61,47 +61,34 @@ const PostGridItemV2 = ({ description, link, imageUrl, tags, title, category, cr
       </Link>
     </div>
 
-    <div className={styles.gridItemV2CatAndDateContainer}>
-      <span className={styles.gridItemV2PublishedDate}>
-        {new Date(createdAt).toLocaleDateString("en-US", {
-          weekday: "short",
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })}
-      </span>
-      <TextColoredBackground>
-        {category}
-      </TextColoredBackground>
-    </div>
+    <div className={styles.postGridItemV2TextContent}>
+      <div className={styles.gridItemV2CatAndDateContainer}>
+        <span className={styles.gridItemV2PublishedDate}>
+          {new Date(createdAt).toLocaleDateString("en-US", {
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
+        </span>
+        <TextColoredBackground>
+          {category}
+        </TextColoredBackground>
+      </div>
 
-    <div>
-      <h3 className={styles.gridItemTextTitleV2}>{firstWords(title, 14)}{`...`}</h3>
+      <div>
+        <h3 className={styles.gridItemTextTitleV2}>{firstWords(title, 14)}{`...`}</h3>
 
-    </div>
+      </div>
 
-    <div className={styles.gridItemTextV2}>
-      <Link href={link} passHref>
-        <a>
-          {/* <h3 className={styles.gridItemTextTitleV2}>{firstWords(title, 9)}{`...`}</h3> */}
-          <p className={styles.gridItemTextDescV2}>{firstWords(description, 14)}{`...`}</p>
-
-        </a>
-      </Link>
-      <Link href={link} passHref>
-        <a>
+      <div className={styles.gridItemTextV2}>
+        <Link href={link} passHref>
+          <a>
+            <p className={styles.gridItemTextDescV2}>{firstWords(description, 14)}{`...`}</p>
+          </a>
+        </Link>
+        <Link href={link} passHref>
           <div className={styles.gridItemTextMetaV2}>
-            {/* <span style={{marginBottom: '0.2rem'}}>
-              {new Date(createdAt).toLocaleDateString("en-US", {
-                weekday: "short",
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </span>
-            <TextColoredBackground>
-              {category}
-            </TextColoredBackground> */}
             <Tag.Group className={styles.postGridItemV2TagGroup}>
               {tags.map((tag) => (
                 <Tag clickable key={tag}>
@@ -111,19 +98,9 @@ const PostGridItemV2 = ({ description, link, imageUrl, tags, title, category, cr
                 </Tag>
               ))}
             </Tag.Group>
-            
-            {/* {category} |{" "}
-            {new Date(createdAt).toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}{" "} */}
           </div>
-        </a>
-      </Link>
-
-      
+        </Link>
+      </div>
     </div>
   </article>
 );
