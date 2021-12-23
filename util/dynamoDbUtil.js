@@ -3,36 +3,51 @@ const { DynamoDBClient, ScanCommand, UpdateItemCommand, PutItemCommand, DeleteIt
 
 const REGION = 'us-east-2';
 const dynamoClient = new DynamoDBClient({ region: REGION });
+const NUM_DYNAMO_RETRIES = 5;
 
 const getBlogPostsDynamoDb = async (TableName) => {
   return new Promise(async (resolve, reject) => {
 
-    try {
-      const res = await dynamoClient.send(new ScanCommand({
-        TableName
-      }));
+    let retriesCount = 0;
+    while (retriesCount < NUM_DYNAMO_RETRIES) {
+      try {
 
-      const items = res?.Items;
-      let itemsUnmarshalled = items.map(item => unmarshall(item))
-
-      itemsUnmarshalled.sort((a,b) => {
-        if (new Date(a.CreatedAt) < new Date(b.CreatedAt)) {
-          return 1;
+        console.log(`Hitting Dynamo TableName=${TableName}`)
+        const res = await dynamoClient.send(new ScanCommand({
+          TableName
+        }));
+  
+        const items = res?.Items;
+        let itemsUnmarshalled = items.map(item => unmarshall(item))
+  
+        itemsUnmarshalled.sort((a,b) => {
+          if (new Date(a.CreatedAt) < new Date(b.CreatedAt)) {
+            return 1;
+          }
+      
+          if (new Date(a.CreatedAt) > new Date(b.CreatedAt)) {
+            return -1;
+          }
+      
+          return 0;
+        })
+        
+        console.log(`Got ${itemsUnmarshalled.length} itemsUnmarshalled`)
+        return resolve(itemsUnmarshalled);
+  
+      } catch (err) {
+        console.log(err)
+        if (err.name.includes(`ProvisionedThroughputExceededException`)) {
+          retriesCount+=1;
+          setTimeout(() => {
+            console.log(`sleeping 2 seconds`)
+          }, 2000);
         }
-    
-        if (new Date(a.CreatedAt) > new Date(b.CreatedAt)) {
-          return -1;
-        }
-    
-        return 0;
-      })
+      }
 
-      resolve(itemsUnmarshalled);
-
-    } catch (err) {
-      reject(err);
+      console.log(`${NUM_DYNAMO_RETRIES} retries exceeded for getting posts from dynamo db`)
+      return reject(`${NUM_DYNAMO_RETRIES} retries exceeded for getting posts from dynamo db`)
     }
-
   })
 }
 
