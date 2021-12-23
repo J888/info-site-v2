@@ -220,7 +220,9 @@ const Post = ({ postData, postsByCategory, category, siteConfig, slug }) => {
   let pageTitle = postData?.Title !== undefined ? postData?.Title : `Read ${postsByCategory?.length} ${capitalizedCategory} Posts`
 
   return (
-    <MainWrapper pageTitle={pageTitle} siteName={siteConfig?.site?.name} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
+    <MainWrapper 
+    twitterUsername={`NFTMusician`}
+    pageTitle={pageTitle} siteName={siteConfig?.site?.name} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
       {postData && <PostContent data={postData} views={pageViewData?.views} />}
       {postsByCategory && (
         <PostListWide

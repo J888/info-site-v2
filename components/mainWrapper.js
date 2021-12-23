@@ -1,9 +1,6 @@
-// import { Button } from "bootstrap";
 import Head from "next/head";
 import { Block } from "react-bulma-components";
 import Nav from "./navbar";
-// import styles from "../sass/components/MainWrapper.scss"
-
 import styles from "../styles/Home.module.css";
 import { SocialIcon } from "react-social-icons";
 
@@ -46,7 +43,7 @@ export default function MainWrapper(props) {
         <meta name="twitter:image:alt" content={`${props.pageTitle} image`}/>
       </Head>
 
-      <Nav siteName={props.siteName}/>
+      <Nav siteName={props.siteName} twitterUsername={props.twitterUsername}/>
       <Block/>
       <main className={styles.mainSection}>
         {props.children}
@@ -56,7 +53,7 @@ export default function MainWrapper(props) {
         <div>{`© ${new Date().getFullYear()} | Powered by NextJS`}</div>
         <div className={styles.twitterIcon}>
           <SocialIcon
-            url="https://twitter.com/NFTmusician"
+            url={`https://twitter.com/${props.twitterUsername}`}
             bgColor={"rgb(77, 77, 77)"}
             style={{ height: 26, width: 26 }}
           />

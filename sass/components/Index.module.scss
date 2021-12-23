@@ -67,3 +67,17 @@ $breakpoint-mobile: 700px;
     margin-bottom: 0.7rem;
   }
 }
+
+
+/* The animation code */
+@keyframes flashGreenColor {
+  from {background-color: #57f576;}
+  to {background-color: none}
+}
+.newestPostHeading {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+  width: fit-content;
+  animation-name: flashGreenColor;
+  animation-duration: 2s;
+}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import styles from "../sass/components/NavBar.module.scss";
 import { SocialIcon } from 'react-social-icons';
 
-const Nav = ({ siteName }) => (
+const Nav = ({ siteName, twitterUsername }) => (
   <nav className={styles.navBar}>
     <Columns className={styles.navBarItems}>
       <Columns.Column size={3} className={styles.navBarColumn1}>
@@ -31,31 +31,13 @@ const Nav = ({ siteName }) => (
       <Columns.Column size={3} className={styles.navBarColumn3}>
         <div className={styles.section3}>
           <SocialIcon
-            url="https://twitter.com/NFTmusician"
+            url={`https://twitter.com/${twitterUsername}`}
             bgColor={"rgb(77, 77, 77)"}
             style={{ height: 33, width: 33 }}
           />
         </div>
       </Columns.Column>
     </Columns>
-    {/* <div className={styles.section1}>
-      <Link href="/" className={styles.navItem}>
-        Home
-      </Link>
-      <Link href="/categories" className={styles.navItem}>
-        Categories
-      </Link>
-      <Link href="news" className={styles.navItem}>
-        News
-      </Link>
-      <Link href="about" className={styles.navItem}>
-        About
-      </Link>
-    </div>
-    <div className={styles.section2}>
-      <Heading>{siteName}</Heading>
-    </div>
-    <div className={styles.section3}>Socials</div> */}
   </nav>
 );
 

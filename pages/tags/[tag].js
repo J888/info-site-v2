@@ -7,7 +7,9 @@ import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 
 const PostsByTag = ({ matchingPosts, tag, siteConfig }) => {
   return (
-    <MainWrapper pageTitle={`#${tag} posts`} siteName={siteConfig?.site?.name} description={`All posts that are tagged with "${tag}"`}>
+    <MainWrapper 
+    twitterUsername={`NFTMusician`}
+    pageTitle={`#${tag} posts`} siteName={siteConfig?.site?.name} description={`All posts that are tagged with "${tag}"`}>
       <Columns>
         <Columns.Column size={1}></Columns.Column>
         <Columns.Column size={7}>

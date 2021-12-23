@@ -7,18 +7,12 @@ import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 
 const AllPosts = ({ postsDynamo, siteConfig }) => {
   return (
-    <MainWrapper pageTitle={`All Posts, Read ${postsDynamo.length} Blog Posts About NFTs and More`} siteName={siteConfig?.site?.name} description={`A grid of all blog posts available on the website`}>
+    <MainWrapper 
+    twitterUsername={`NFTMusician`}
+    pageTitle={`All Posts, Read ${postsDynamo.length} Blog Posts About NFTs and More`} siteName={siteConfig?.site?.name} description={`A grid of all blog posts available on the website`}>
       <Columns>
         <Columns.Column size={1}></Columns.Column>
         <Columns.Column size={7} style={{width: '100%'}}>
-          {/* {
-            postCategories.map(category => {
-              return <LinkWrapper href={`/posts/${category}`} wrapInAnchor={true}>
-                {category}
-              </LinkWrapper>
-            })
-          } */}
-
           <PostGrid posts={postsDynamo}/>
         </Columns.Column>
         <Columns.Column size={3}></Columns.Column>
@@ -27,13 +21,9 @@ const AllPosts = ({ postsDynamo, siteConfig }) => {
   );
 };
 
-export async function getStaticProps({ params, preview = false, previewData }) {
+export async function getStaticProps() {
   const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
-
   const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
-
-  // const tag = params.tag;
-  // const matchingPosts = posts.filter((post) => post.tags.includes(tag));
 
   return {
     props: {

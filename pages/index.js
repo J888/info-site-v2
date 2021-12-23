@@ -7,9 +7,8 @@ import {
   Block,
 } from "react-bulma-components";
 import MainWrapper from "../components/mainWrapper";
-
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { getSiteFile } from "../util/s3Util";
 import LinkWrapper from "../components/linkWrapper";
 import PostGrid from "../components/postGrid";
@@ -18,56 +17,85 @@ import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 import { capitalizeWord } from "../util/textUtil";
 import ShowMoreToggle from "../components/showMoreToggle";
+import PostGridItemV2 from "../components/postGridItemV2";
 const siteMission = `Dive into NFTs, Crypto, Metaverse, and More.`;
 const contentDeliveryMission = `Our aim is to provide information in layman's terms so anyone can grasp concepts that are technical or complex.`;
 const whereWeAreGoingStatement = `Follow along as we cover this revolutionary era of technology.`
 const categoryDescriptions = {
-  // 'rarity', 'news', 'gaming', 'learn', 'nft', 'metaverse', 'music'
   "rarity": "See the rarest traits of popular NFT collections.",
   "news": "Recent events and general news in the world of NFTs, crypto-currencies, and the blockchain.",
+  "nft": "Everything non-fungible.",
   "gaming": "Crypto gaming projects that we can't wait to play.",
   "learn": "Get key information on a variety of different topics.",
-  "nft": "Everything non-fungible.",
   "metaverse": "Read about the continually-hyped meta-verse that is predicted to be \"the next big thing\" for humans.",
   "music": "Posts about music NFT integrations and how artists are bypassing traditional music business models."
 }
 
-export default function Home({ postsByCategory, postsDynamo, topTags, mostVisitedList, siteConfig }) {
-  const [visiblePosts, setVisiblePosts] = useState(postsDynamo.slice(0, 8));
+const isSameDate = (dateA, dateB) => {
+  // month number (0 - 11)
+  if (dateA.getMonth() !== dateB.getMonth()) {
+    return false;
+  }
+
+  // day of month
+  if (dateA.getDate() !== dateB.getDate()) {
+    return false;
+  }
+
+  // full year, e.g. 2021
+  if (dateA.getFullYear() !== dateB.getFullYear()) {
+    return false;
+  }
+
+  return true;
+};
+
+const newPostHeadingWording = (postCreatedDate) => {
+  return isSameDate(new Date(), new Date(postCreatedDate))
+    ? "Just Posted!"
+    : "New!";
+};
+
+export default function Home({ postsByCategory, newestPost, topTags, mostVisitedList, siteConfig }) {
+  
   return (
     <MainWrapper
+      twitterUsername={`NFTMusician`}
       pageTitle={`Front Page, ${siteMission}`}
       siteName={siteConfig?.site?.name}
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
     >
     <Columns style={{margin: '0 0.5rem 0 0.5rem'}}>
-      <Columns.Column size={3}></Columns.Column>
-      <Columns.Column size={6}>
+      <Columns.Column size={2}></Columns.Column>
+      <Columns.Column size={4}>
         <ShowMoreToggle labelShow={`+ Read more`} labelHide={`- Hide/minimize`} title={siteMission} titleSize={4}>
           {siteConfig?.site?.name} is a tiny blog started in 2021 to report on news in topics such as NFTs, crypto, and blockchain innovations. {contentDeliveryMission} {whereWeAreGoingStatement}
         </ShowMoreToggle>
+      </Columns.Column>
+      <Columns.Column size={3}>
+        <h2 className={styles.newestPostHeading}>{newPostHeadingWording(newestPost.CreatedAt)}</h2>
+        <PostGridItemV2
+           description={newestPost.Description}
+           link={`/posts/${newestPost.Category}/${newestPost.PostId}`}
+           imageUrl={newestPost.ImageS3Url}
+           tags={newestPost.Tags?.slice(0,4).filter(t => t.length <= 17)}
+           title={newestPost.Title}
+           category={newestPost.Category?.charAt(0).toUpperCase() + newestPost.Category?.slice(1)}
+           createdAt={newestPost.CreatedAt}
+           key={newestPost.PostId}
+        ></PostGridItemV2>
       </Columns.Column>
       <Columns.Column size={3}></Columns.Column>
     </Columns>
 
       {
-        ['rarity', 'news', 'gaming', 'learn', 'nft', 'metaverse', 'music'].map(category => 
+        Object.keys(categoryDescriptions).map(category => 
             <div key={category}>
-              {/* <Columns>
-                <Columns.Column size={1}></Columns.Column>
-                <Columns.Column size={7}>
-                  <div className={styles.postsByCatHeadingContainer}>
-                    <h2 className={styles.headingBeforePostGrid}>{capitalizeWord(category)}</h2>
-                    <p className={styles.headingBeforePostGridCatDesc}>{categoryDescriptions[category]}</p>
-                  </div>
-                </Columns.Column>
-                <Columns.Column size={3}></Columns.Column>
-              </Columns> */}
               <div className={styles.postsByCatHeadingContainer}>
                 <h2 className={styles.headingBeforePostGrid}>{capitalizeWord(category)}</h2>
                 <p className={styles.headingBeforePostGridCatDesc}>{categoryDescriptions[category]}</p>
               </div>
-              <PostGrid posts={postsByCategory[category]} />
+              <PostGrid posts={postsByCategory[category].slice(0,8)} />
               <div className={styles.seeAllLink}>
                 <Link href={`/posts/${category}`} passHref>
                   <a>{`More in `}<i>{capitalizeWord(category)}</i>{` →`}</a>
@@ -82,14 +110,6 @@ export default function Home({ postsByCategory, postsDynamo, topTags, mostVisite
           <a>{"Posts From All Categories →"}</a>
         </Link>
       </div>
-
-      <Columns>
-        <Columns.Column size={1}></Columns.Column>
-        <Columns.Column size={7}>
-          <Container>{/* <Heading>Posts</Heading> */}</Container>
-        </Columns.Column>
-        <Columns.Column size={3}></Columns.Column>
-      </Columns>
 
       <Columns>
         <Columns.Column size={1}></Columns.Column>
@@ -133,11 +153,6 @@ export default function Home({ postsByCategory, postsDynamo, topTags, mostVisite
                     </LinkWrapper>
                   </Tag>
                 ))}
-                {/* <Tag>#fall</Tag>
-                <Tag>#pa</Tag>
-                <Tag>#outdoors</Tag>
-                <Tag>#hurricane</Tag>
-                <Tag>#covid</Tag> */}
               </Tag.Group>
             </Card.Content>
           </Card>
@@ -200,8 +215,17 @@ export async function getStaticProps() {
     .slice(0, 10);
   topTags = topTags.map((topTag) => topTag[0]);
 
+  // newest post to display at top of front page
+  let newestPost = postsDynamo[0];
+
   let postsByCategory = {}
   for (let p of postsDynamo) {
+
+    // if the post is the newest one, skip it since it's already displayed
+    // at the top of the front page
+    if (p.PostShortId === newestPost.PostShortId) {
+      continue;
+    }
     let cat = p.Category;
     if (postsByCategory[cat] === undefined) {
       postsByCategory[cat] = [p];
@@ -213,7 +237,7 @@ export async function getStaticProps() {
   return {
     props: {
       postsByCategory,
-      postsDynamo,
+      newestPost,
       topTags,
       siteConfig,
       mostVisitedList

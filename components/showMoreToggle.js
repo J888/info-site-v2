@@ -6,7 +6,7 @@ const ShowMoreToggle = ({ children, labelShow, labelHide, title, titleSize }) =>
   labelHide = labelHide === undefined ? `hide.` : labelHide;
   let [shown, setShown] = useState(false)
   return (
-    <div className={styles.showMoreToggleContainer}>
+    <div>
       <h3 className={styles[`showMoreToggleTitle-size${titleSize}`]}>{title}</h3>
       <span onClick={()=> {
         setShown(!shown);
