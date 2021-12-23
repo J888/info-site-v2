@@ -4,6 +4,12 @@ const { DynamoDBClient, ScanCommand, UpdateItemCommand, PutItemCommand, DeleteIt
 const REGION = 'us-east-2';
 const dynamoClient = new DynamoDBClient({ region: REGION });
 const NUM_DYNAMO_RETRIES = 5;
+const SLEEP_SECONDS_BEFORE_RETRY = 2;
+
+// https://stackoverflow.com/a/39914235
+const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const getBlogPostsDynamoDb = async (TableName) => {
   return new Promise(async (resolve, reject) => {
@@ -12,7 +18,7 @@ const getBlogPostsDynamoDb = async (TableName) => {
     while (retriesCount < NUM_DYNAMO_RETRIES) {
       try {
 
-        console.log(`Hitting Dynamo TableName=${TableName}`)
+        console.log(`[Retry=${retriesCount}] Hitting Dynamo TableName=${TableName}`)
         const res = await dynamoClient.send(new ScanCommand({
           TableName
         }));
@@ -39,9 +45,8 @@ const getBlogPostsDynamoDb = async (TableName) => {
         console.log(err)
         if (err.name.includes(`ProvisionedThroughputExceededException`)) {
           retriesCount+=1;
-          setTimeout(() => {
-            console.log(`sleeping 2 seconds`)
-          }, 2000);
+          console.log(`Sleeping ${SLEEP_SECONDS_BEFORE_RETRY} before retry`);
+          await sleep(SLEEP_SECONDS_BEFORE_RETRY * 1000);
         }
       }
 
