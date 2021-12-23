@@ -24,11 +24,11 @@ const whereWeAreGoingStatement = `Follow along as we cover this revolutionary er
 const categoryDescriptions = {
   // 'rarity', 'news', 'gaming', 'learn', 'nft', 'metaverse', 'music'
   "rarity": "See the rarest traits of popular NFT collections.",
-  "news": "Recent events in the world of NFTs, crypto, and blockhain.",
-  "gaming": "Crypto gaming projects that we want to play.",
-  "learn": "Key pieces of information on different topics.",
+  "news": "Recent events and general news in the world of NFTs, crypto-currencies, and the blockchain.",
+  "gaming": "Crypto gaming projects that we can't wait to play.",
+  "learn": "Get key information on a variety of different topics.",
   "nft": "Everything non-fungible.",
-  "metaverse": "Read about the continually-hyped meta-verse that is predicted to be the \"Next big thing\" for the internet and for humanity.",
+  "metaverse": "Read about the continually-hyped meta-verse that is predicted to be \"the next big thing\" for humans.",
   "music": "Posts about music NFT integrations and how artists are bypassing traditional music business models."
 }
 
