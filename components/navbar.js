@@ -1,6 +1,5 @@
-import { Columns, Heading, Navbar } from "react-bulma-components";
+import { Columns, Heading } from "react-bulma-components";
 import Link from "next/link";
-import LinkWrapper from "./linkWrapper";
 import styles from "../sass/components/NavBar.module.scss";
 import { SocialIcon } from 'react-social-icons';
 

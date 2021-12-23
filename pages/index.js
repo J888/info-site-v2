@@ -12,7 +12,6 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { getSiteFile } from "../util/s3Util";
 import LinkWrapper from "../components/linkWrapper";
-import Billboard from "../components/billboard";
 import PostGrid from "../components/postGrid";
 import styles from "../sass/components/Index.module.scss"
 import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";

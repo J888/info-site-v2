@@ -13,7 +13,6 @@ import {
 } from "react-bulma-components";
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
-import NextImage from "next/image";
 import styles from "../../sass/components/Post.module.scss";
 import PostListWide from "../../components/postListWide";
 import React from "react";
@@ -25,12 +24,12 @@ import useSWR from "swr";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 import AuthorCredits from "../../components/AuthorCredits";
 
-const NextPrevButtons = ({ data }) => 
+const NextPrevButtons = ({ data, hideTitles }) => 
   <Section className={postContentStyles.nextPrevArticleContainer}>
     {data?.PrevPost?.Slug ? (
       <div>
         <Link href={data?.PrevPost?.Slug}>
-          {"< " + data?.PrevPost?.Title}
+          {"< " + (hideTitles ? 'Newer article' : data?.PrevPost?.Title)}
         </Link>
       </div>
     ) : (
@@ -40,7 +39,7 @@ const NextPrevButtons = ({ data }) =>
     {data?.NextPost?.Slug ? (
       <div>
         <Link href={data?.NextPost?.Slug}>
-          {data?.NextPost?.Title + " >"}
+          {(hideTitles ? 'Older article' : data?.NextPost?.Title) + " >"}
         </Link>
       </div>
     ) : (
@@ -54,7 +53,7 @@ const PostContent = ({ data, views }) => (
     <Columns.Column size={8}>
       <div className={postContentStyles.postContent}>
         <Container>
-          <NextPrevButtons data={data}/>
+          <NextPrevButtons data={data} hideTitles/>
         </Container>
         {/* <Heading className={postContentStyles.mainTitle}>{data?.Title}</Heading> */}
         <Content>

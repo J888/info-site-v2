@@ -2,7 +2,8 @@
 
 - Integration of comments i.e. Disqus
 - "highlighted" tweets section - show a set of tweets 
-
+- Display most recent article in its own "New" or "Just Posted" or "Just Added" box on the front page
+- how to embed tweets in the articles
 
 # ENV VARS
 
