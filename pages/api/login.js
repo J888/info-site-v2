@@ -1,6 +1,6 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../lib/session/sessionOptions";
-import { getSiteFile } from "../../util/s3Util";
+import { getSiteUsers } from "../../util/s3Util";
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const crypto = require("crypto");
 
@@ -14,8 +14,7 @@ export default withIronSessionApiRoute(
 
     switch (method) {
       case 'POST':
-        const usersByUsername = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `users/users.json`);
-
+        const usersByUsername = await getSiteUsers();
         const userConfig = usersByUsername[username];
 
         if (!userConfig) {

@@ -14,9 +14,9 @@
 export AWS_ACCESS_KEY_ID= \
        AWS_SECRET_ACCESS_KEY= \
        S3_REGION=us-east-2 \
-       SITE_FOLDER_S3=nftblog1 \
-       STATIC_FILES_S3_BUCKET=nftblog1-static-files \
-       IMG_S3_BUCKET=nftblog1-images \
+       SITE_FOLDER_S3= \
+       STATIC_FILES_S3_BUCKET= \
+       IMG_S3_BUCKET= \
        GOOGLE_ANALYTICS_PROPERTY_ID=G-XBBRM7C9ZE
 
 ```

@@ -3,15 +3,16 @@ import { appCache, siteFileCacheKey } from "./nodeCache";
 const { S3Client, GetObjectCommand, S3, ListObjectsV2Command, PutObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
 const REGION = 'us-east-2';
 const client = new S3Client({ region: REGION });
+import yaml from "js-yaml";
 
 /**
- * Returns json data file from S3 site configuration
+ * Returns data contents as string from S3 site-specific path
  * @param {*} Bucket 
  * @param {*} sitename 
  * @param {*} relativePath 
  * @returns 
  */
-const getSiteFile = async (Bucket, sitename, relativePath) => {
+const getSiteFileContents = async (Bucket, sitename, relativePath) => {
   return new Promise(async (resolve, reject) => {
 
     let cachedSiteFileKey = siteFileCacheKey(relativePath);
@@ -33,9 +34,8 @@ const getSiteFile = async (Bucket, sitename, relativePath) => {
     });
 
     readStream.on('close', () => {
-      let jsonData = JSON.parse(dataStr);
-      appCache.set(cachedSiteFileKey, jsonData);
-      resolve(jsonData);
+      appCache.set(cachedSiteFileKey, dataStr);
+      resolve(dataStr);
     })
 
     readStream.on('error', (err) => {
@@ -73,7 +73,16 @@ const getImagesByPostId = async (Bucket, PostShortId) => {
   }
 
   return images;
-
 }
 
-export { getSiteFile, getImagesByPostId }
+const getSiteConfig = async () => {
+  const configStr = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.yml`);
+  return yaml.load(configStr);
+}
+
+const getSiteUsers = async () => {
+  const configStr = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `users/users.yml`);
+  return yaml.load(configStr);
+}
+
+export { getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers }

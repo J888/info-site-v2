@@ -17,7 +17,7 @@ import styles from "../../sass/components/Post.module.scss";
 import PostListWide from "../../components/postListWide";
 import React from "react";
 import rehypeRaw from 'rehype-raw'
-import { getSiteFile } from "../../util/s3Util";
+import { getSiteConfig } from "../../util/s3Util";
 import LinkWrapper from "../../components/linkWrapper";
 import postContentStyles from "../../sass/components/PostContent.module.scss"
 import useSWR from "swr";
@@ -47,7 +47,7 @@ const NextPrevButtons = ({ data, hideTitles }) =>
     )}
   </Section>
 
-const PostContent = ({ data, views }) => (
+const PostContent = ({ data, views, twitterUsername }) => (
   <Columns>
     <Columns.Column size={2}></Columns.Column>
     <Columns.Column size={8}>
@@ -95,7 +95,7 @@ const PostContent = ({ data, views }) => (
                   </Tag>
                 ))}
               </Tag.Group>
-              <AuthorCredits authorName={`NFTMusician`} twitterUsername={`NFTMusician`}/>
+              <AuthorCredits authorName={twitterUsername} twitterUsername={twitterUsername}/>
               <div style={{marginTop: `1.6rem`}}>
                 {views !== undefined && (
                   <div className={styles.viewCount}>
@@ -206,7 +206,7 @@ const PostContent = ({ data, views }) => (
   </Columns>
 );
 
-const Post = ({ postData, postsByCategory, category, siteConfig, slug }) => {
+const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, slug }) => {
 
   const { data: pageViewData, error } = useSWR(
     `/api/page-views?slug=${encodeURIComponent(slug)}`,
@@ -221,9 +221,9 @@ const Post = ({ postData, postsByCategory, category, siteConfig, slug }) => {
 
   return (
     <MainWrapper 
-    twitterUsername={`NFTMusician`}
-    pageTitle={pageTitle} siteName={siteConfig?.site?.name} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
-      {postData && <PostContent data={postData} views={pageViewData?.views} />}
+    twitterUsername={twitterUsername}
+    pageTitle={pageTitle} siteName={siteName} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
+      {postData && <PostContent data={postData} views={pageViewData?.views} twitterUsername={twitterUsername} />}
       {postsByCategory && (
         <PostListWide
           posts={postsByCategory}
@@ -239,7 +239,9 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
 
   const [category, id] = params.slug;
-  const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
+  const siteConfig = await getSiteConfig();
+  const siteName = siteConfig.site.name;
+  const twitterUsername = siteConfig.socialMedia.username.twitter;
 
   if (category && !id) {
     // if no post id is given e.g. /posts/category/
@@ -247,7 +249,8 @@ export async function getStaticProps({ params, preview = false, previewData }) {
       props: {
         postsByCategory: postsDynamo.filter((post) => post.Category == category),
         category,
-        siteConfig
+        siteName,
+        twitterUsername
       },
     };
   }
@@ -255,7 +258,8 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   return {
     props: {
       postData: postsDynamo.filter((post) => post.PostId == id)[0],
-      siteConfig,
+      siteName,
+      twitterUsername,
       slug: `/posts/${params.slug[0]}/${params.slug[1]}`
     },
   };

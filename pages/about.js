@@ -1,13 +1,12 @@
 import React from "react";
 import MainWrapper from "../components/mainWrapper";
-import { getSiteFile } from "../util/s3Util";
+import { getSiteConfig } from "../util/s3Util";
 import Billboard from "../components/billboard";
 
-const About = ({ siteConfig }) => {
-  const { site, pageData } = siteConfig;
+const About = ({ site, pageData, socialMedia }) => {
   return (
     <MainWrapper
-      twitterUsername={`NFTMusician`}
+      twitterUsername={socialMedia.username.twitter}
       pageTitle={`About`}
       siteName={site.name}
       description={`The about page for ${site.name}`}
@@ -18,15 +17,12 @@ const About = ({ siteConfig }) => {
 };
 
 export async function getStaticProps({ params, preview = false, previewData }) {
-  const siteConfig = await getSiteFile(
-    process.env.STATIC_FILES_S3_BUCKET,
-    process.env.SITE_FOLDER_S3,
-    `siteConfig.json`
-  );
+  const siteConfig = await getSiteConfig();
+  const { site, pageData, socialMedia } = siteConfig;
 
   return {
     props: {
-      siteConfig,
+      site, pageData, socialMedia,
     },
   };
 }

@@ -1,19 +1,22 @@
 import { Columns } from "react-bulma-components";
 import React from "react";
 import MainWrapper from "../components/mainWrapper";
-import { getSiteFile } from "../util/s3Util";
+import { getSiteConfig } from "../util/s3Util";
 import PostGrid from "../components/postGrid";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 
-const AllPosts = ({ postsDynamo, siteConfig }) => {
+const AllPosts = ({ postsDynamo, siteSubject, siteName, twitterUsername }) => {
   return (
-    <MainWrapper 
-    twitterUsername={`NFTMusician`}
-    pageTitle={`All Posts, Read ${postsDynamo.length} Blog Posts About NFTs and More`} siteName={siteConfig?.site?.name} description={`A grid of all blog posts available on the website`}>
+    <MainWrapper
+      twitterUsername={twitterUsername}
+      pageTitle={`All Posts, Read ${postsDynamo.length} Posts About ${siteSubject}`}
+      siteName={siteName}
+      description={`A grid of all blog posts available on the website`}
+    >
       <Columns>
         <Columns.Column size={1}></Columns.Column>
-        <Columns.Column size={7} style={{width: '100%'}}>
-          <PostGrid posts={postsDynamo}/>
+        <Columns.Column size={7} style={{ width: "100%" }}>
+          <PostGrid posts={postsDynamo} />
         </Columns.Column>
         <Columns.Column size={3}></Columns.Column>
       </Columns>
@@ -22,13 +25,20 @@ const AllPosts = ({ postsDynamo, siteConfig }) => {
 };
 
 export async function getStaticProps() {
-  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
-  const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
+  const postsDynamo = await getBlogPostsWithPrevNext(
+    process.env.BLOG_POSTS_DYNAMO_TABLE_NAME
+  );
+  const siteConfig = await getSiteConfig();
+  const twitterUsername = siteConfig.socialMedia.username.twitter;
+  const siteSubject = siteConfig.site.subject;
+  const siteName = siteConfig.site.name;
 
   return {
     props: {
       postsDynamo,
-      siteConfig
+      siteSubject,
+      siteName,
+      twitterUsername,
     },
   };
 }

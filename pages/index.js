@@ -8,7 +8,7 @@ import {
 import MainWrapper from "../components/mainWrapper";
 import Link from "next/link";
 import React from "react";
-import { getSiteFile } from "../util/s3Util";
+import { getSiteConfig } from "../util/s3Util";
 import LinkWrapper from "../components/linkWrapper";
 import PostGrid from "../components/postGrid";
 import styles from "../sass/components/Index.module.scss"
@@ -17,18 +17,6 @@ import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 import { capitalizeWord } from "../util/textUtil";
 import ShowMoreToggle from "../components/showMoreToggle";
 import PostGridItemV2 from "../components/postGridItemV2";
-const siteMission = `Dive into NFTs, Crypto, Metaverse, and More.`;
-const contentDeliveryMission = `Our aim is to provide information in layman's terms so anyone can grasp concepts that are technical or complex.`;
-const whereWeAreGoingStatement = `Follow along as we cover this revolutionary era of technology.`
-const categoryDescriptions = {
-  "rarity": "See the rarest traits of popular NFT collections.",
-  "news": "Recent events and general news in the world of NFTs, crypto-currencies, and the blockchain.",
-  "nft": "Everything non-fungible.",
-  "gaming": "Crypto gaming projects that we can't wait to play.",
-  "learn": "Get key information on a variety of different topics.",
-  "metaverse": "Read about the continually-hyped meta-verse that is predicted to be \"the next big thing\" for humans.",
-  "music": "Posts about music NFT integrations and how artists are bypassing traditional music business models."
-}
 
 const isSameDate = (dateA, dateB) => {
   // month number (0 - 11)
@@ -55,54 +43,79 @@ const newPostHeadingWording = (postCreatedDate) => {
     : "New!";
 };
 
-export default function Home({ postsByCategory, newestPost, topTags, mostVisitedList, siteName }) {
-  
+export default function Home({
+  postsByCategory,
+  newestPost,
+  topTags,
+  mostVisitedList,
+  siteName,
+  siteStatementsPurposeLong,
+  siteStatementsPurposeShort,
+  categoryDescriptions,
+  twitterUsername,
+}) {
   return (
     <MainWrapper
-      twitterUsername={`NFTMusician`}
-      pageTitle={`Front Page, ${siteMission}`}
+      twitterUsername={twitterUsername}
+      pageTitle={`Front Page, ${siteStatementsPurposeShort}`}
       siteName={siteName}
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
     >
-    <Columns style={{margin: '0 0.5rem 0 0.5rem'}}>
-      <Columns.Column size={2}></Columns.Column>
-      <Columns.Column size={4}>
-        <ShowMoreToggle labelShow={`+ Read more`} labelHide={`- Hide/minimize`} title={siteMission} titleSize={4}>
-          {siteName} is a tiny blog started in 2021 to report on news in topics such as NFTs, crypto, and blockchain innovations. {contentDeliveryMission} {whereWeAreGoingStatement}
-        </ShowMoreToggle>
-      </Columns.Column>
-      <Columns.Column size={3}>
-        <h2 className={styles.newestPostHeading}>{newPostHeadingWording(newestPost.CreatedAt)}</h2>
-        <PostGridItemV2
-           description={newestPost.Description}
-           link={`/posts/${newestPost.Category}/${newestPost.PostId}`}
-           imageUrl={newestPost.ImageS3Url}
-           tags={newestPost.Tags?.slice(0,4).filter(t => t.length <= 17)}
-           title={newestPost.Title}
-           category={newestPost.Category?.charAt(0).toUpperCase() + newestPost.Category?.slice(1)}
-           createdAt={newestPost.CreatedAt}
-           key={newestPost.PostId}
-        ></PostGridItemV2>
-      </Columns.Column>
-      <Columns.Column size={3}></Columns.Column>
-    </Columns>
+      <Columns style={{ margin: "0 0.5rem 0 0.5rem" }}>
+        <Columns.Column size={2}></Columns.Column>
+        <Columns.Column size={4}>
+          <ShowMoreToggle
+            labelShow={`+ Read more`}
+            labelHide={`- Hide/minimize`}
+            title={siteStatementsPurposeShort}
+            titleSize={4}
+          >
+            {siteStatementsPurposeLong}
+          </ShowMoreToggle>
+        </Columns.Column>
+        <Columns.Column size={3}>
+          <h2 className={styles.newestPostHeading}>
+            {newPostHeadingWording(newestPost.CreatedAt)}
+          </h2>
+          <PostGridItemV2
+            description={newestPost.Description}
+            link={`/posts/${newestPost.Category}/${newestPost.PostId}`}
+            imageUrl={newestPost.ImageS3Url}
+            tags={newestPost.Tags?.slice(0, 4).filter((t) => t.length <= 17)}
+            title={newestPost.Title}
+            category={
+              newestPost.Category?.charAt(0).toUpperCase() +
+              newestPost.Category?.slice(1)
+            }
+            createdAt={newestPost.CreatedAt}
+            key={newestPost.PostId}
+          ></PostGridItemV2>
+        </Columns.Column>
+        <Columns.Column size={3}></Columns.Column>
+      </Columns>
 
-      {
-        Object.keys(categoryDescriptions).map(category => 
-            <div key={category}>
-              <div className={styles.postsByCatHeadingContainer}>
-                <h2 className={styles.headingBeforePostGrid}>{capitalizeWord(category)}</h2>
-                <p className={styles.headingBeforePostGridCatDesc}>{categoryDescriptions[category]}</p>
-              </div>
-              <PostGrid posts={postsByCategory[category].slice(0,8)} />
-              <div className={styles.seeAllLink}>
-                <Link href={`/posts/${category}`} passHref>
-                  <a>{`More in `}<i>{capitalizeWord(category)}</i>{` →`}</a>
-                </Link>
-              </div>
-            </div>
-          )
-      }
+      {Object.keys(categoryDescriptions).map((category) => (
+        <div key={category}>
+          <div className={styles.postsByCatHeadingContainer}>
+            <h2 className={styles.headingBeforePostGrid}>
+              {capitalizeWord(category)}
+            </h2>
+            <p className={styles.headingBeforePostGridCatDesc}>
+              {categoryDescriptions[category]}
+            </p>
+          </div>
+          <PostGrid posts={postsByCategory[category].slice(0, 8)} />
+          <div className={styles.seeAllLink}>
+            <Link href={`/posts/${category}`} passHref>
+              <a>
+                {`More in `}
+                <i>{capitalizeWord(category)}</i>
+                {` →`}
+              </a>
+            </Link>
+          </div>
+        </div>
+      ))}
 
       <div className={styles.seeAllLink}>
         <Link href="/posts" passHref>
@@ -121,7 +134,10 @@ export default function Home({ postsByCategory, newestPost, topTags, mostVisited
             {mostVisitedList?.length > 0 && (
               <div className={styles.mostVisitedCard}>
                 {mostVisitedList.slice(0, 5).map((mostVisitedItem) => (
-                  <Card.Content key={mostVisitedItem.slug} className={styles.mostVisitedCardItem}>
+                  <Card.Content
+                    key={mostVisitedItem.slug}
+                    className={styles.mostVisitedCardItem}
+                  >
                     <Link href={mostVisitedItem.slug}>
                       {mostVisitedItem.title}
                     </Link>
@@ -163,9 +179,7 @@ export default function Home({ postsByCategory, newestPost, topTags, mostVisited
 
 export async function getStaticProps() {
   const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
-
-  const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
-
+  const siteConfig = await getSiteConfig();
   const pageViewsMappedBySlug = await getPageViewsBySlug("2021-11-25");
 
   /**
@@ -241,13 +255,23 @@ export async function getStaticProps() {
     }
   }
 
+  let { categoryDescriptions } = siteConfig;
+  let siteStatementsPurposeLong = siteConfig.site.statements.purpose.long;
+  let siteStatementsPurposeShort = siteConfig.site.statements.purpose.short;
+  let twitterUsername = siteConfig.socialMedia.username.twitter;
+  let siteName = siteConfig.site.name;
+
   return {
     props: {
       postsByCategory,
       newestPost,
       topTags,
-      siteName: siteConfig?.site?.name,
-      mostVisitedList
+      siteName,
+      siteStatementsPurposeLong,
+      siteStatementsPurposeShort,
+      categoryDescriptions,
+      mostVisitedList,
+      twitterUsername
     },
   };
 }
