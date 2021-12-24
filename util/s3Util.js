@@ -1,9 +1,26 @@
+import { appCache, siteFileCacheKey } from "./nodeCache";
+
 const { S3Client, GetObjectCommand, S3, ListObjectsV2Command, PutObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
 const REGION = 'us-east-2';
 const client = new S3Client({ region: REGION });
 
+/**
+ * Returns json data file from S3 site configuration
+ * @param {*} Bucket 
+ * @param {*} sitename 
+ * @param {*} relativePath 
+ * @returns 
+ */
 const getSiteFile = async (Bucket, sitename, relativePath) => {
   return new Promise(async (resolve, reject) => {
+
+    let cachedSiteFileKey = siteFileCacheKey(relativePath);
+    let cachedSiteFile = appCache.get(cachedSiteFileKey);
+    if (cachedSiteFile) {
+      console.log(`[CACHE-HIT][Key=${cachedSiteFileKey}]`)
+      return resolve(cachedSiteFile);
+    }
+
     let Key = `websites/${sitename}/${relativePath}`;
     let ContentType = 'application/json';
     console.log(`Getting posts from s3 at path ${Key} with ContentType=${ContentType}`);
@@ -16,7 +33,9 @@ const getSiteFile = async (Bucket, sitename, relativePath) => {
     });
 
     readStream.on('close', () => {
-      resolve(JSON.parse(dataStr));
+      let jsonData = JSON.parse(dataStr);
+      appCache.set(cachedSiteFileKey, jsonData);
+      resolve(jsonData);
     })
 
     readStream.on('error', (err) => {

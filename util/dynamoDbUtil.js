@@ -1,6 +1,7 @@
+import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "./nodeCache";
+
 const { unmarshall } = require("@aws-sdk/util-dynamodb");
 const { DynamoDBClient, ScanCommand, UpdateItemCommand, PutItemCommand, DeleteItemCommand } = require("@aws-sdk/client-dynamodb");
-
 const REGION = 'us-east-2';
 const dynamoClient = new DynamoDBClient({ region: REGION });
 const NUM_DYNAMO_RETRIES = 5;
@@ -13,6 +14,12 @@ const sleep = (ms) => {
 
 const getBlogPostsDynamoDb = async (TableName) => {
   return new Promise(async (resolve, reject) => {
+
+    let cachedPosts = appCache.get(DYNAMO_BLOG_POSTS_CACHE_KEY);
+    if (appCache.get(DYNAMO_BLOG_POSTS_CACHE_KEY)) {
+      console.log(`[CACHE-HIT][Key=${DYNAMO_BLOG_POSTS_CACHE_KEY}]`)
+      return resolve(cachedPosts);
+    }
 
     let retriesCount = 0;
     while (retriesCount < NUM_DYNAMO_RETRIES) {
@@ -38,7 +45,8 @@ const getBlogPostsDynamoDb = async (TableName) => {
           return 0;
         })
         
-        console.log(`Got ${itemsUnmarshalled.length} itemsUnmarshalled`)
+        console.log(`Got ${itemsUnmarshalled.length} itemsUnmarshalled.\nCaching them in appCache`);
+        appCache.set(DYNAMO_BLOG_POSTS_CACHE_KEY, itemsUnmarshalled);
         return resolve(itemsUnmarshalled);
   
       } catch (err) {

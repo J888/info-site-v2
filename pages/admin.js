@@ -756,8 +756,6 @@ const Admin = ({}) => {
 };
 
 export async function getStaticProps({ params, preview = false, previewData }) {
-  // const siteConfig = await getSiteFile(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.json`);
-
   return {
     props: {},
   };
