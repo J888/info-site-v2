@@ -55,20 +55,20 @@ const newPostHeadingWording = (postCreatedDate) => {
     : "New!";
 };
 
-export default function Home({ postsByCategory, newestPost, topTags, mostVisitedList, siteConfig }) {
+export default function Home({ postsByCategory, newestPost, topTags, mostVisitedList, siteName }) {
   
   return (
     <MainWrapper
       twitterUsername={`NFTMusician`}
       pageTitle={`Front Page, ${siteMission}`}
-      siteName={siteConfig?.site?.name}
+      siteName={siteName}
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
     >
     <Columns style={{margin: '0 0.5rem 0 0.5rem'}}>
       <Columns.Column size={2}></Columns.Column>
       <Columns.Column size={4}>
         <ShowMoreToggle labelShow={`+ Read more`} labelHide={`- Hide/minimize`} title={siteMission} titleSize={4}>
-          {siteConfig?.site?.name} is a tiny blog started in 2021 to report on news in topics such as NFTs, crypto, and blockchain innovations. {contentDeliveryMission} {whereWeAreGoingStatement}
+          {siteName} is a tiny blog started in 2021 to report on news in topics such as NFTs, crypto, and blockchain innovations. {contentDeliveryMission} {whereWeAreGoingStatement}
         </ShowMoreToggle>
       </Columns.Column>
       <Columns.Column size={3}>
@@ -214,11 +214,19 @@ export async function getStaticProps() {
     .slice(0, 10);
   topTags = topTags.map((topTag) => topTag[0]);
 
+  // Strip down the posts because we don't wanna pass too much (or any) data to props
+  // that won't be used.
+  let postsStrippedDown = postsDynamo.map((p) => {
+    // Separate out the Parts array.. it's not needed for the front page.
+    let {Parts, ...stripped} = p;
+    return stripped;
+  });
+
   // newest post to display at top of front page
-  let newestPost = postsDynamo[0];
+  let newestPost = postsStrippedDown[0];
 
   let postsByCategory = {}
-  for (let p of postsDynamo) {
+  for (let p of postsStrippedDown) {
 
     // if the post is the newest one, skip it since it's already displayed
     // at the top of the front page
@@ -238,7 +246,7 @@ export async function getStaticProps() {
       postsByCategory,
       newestPost,
       topTags,
-      siteConfig,
+      siteName: siteConfig?.site?.name,
       mostVisitedList
     },
   };

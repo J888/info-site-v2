@@ -6,7 +6,7 @@
 - Comments i.e. Disqus
 - Warning: data for page "/" is 201 kB, this amount of data can reduce performance.
        -  https://nextjs.org/docs/messages/large-page-data 
-- 
+- new "all posts in category" page that is a grid of photos because that's more eye pleasing
 
 # ENV VARS
 
