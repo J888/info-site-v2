@@ -14,7 +14,6 @@ import {
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import styles from "../../sass/components/Post.module.scss";
-import PostListWide from "../../components/postListWide";
 import React from "react";
 import rehypeRaw from 'rehype-raw'
 import { getSiteConfig } from "../../util/s3Util";
@@ -23,6 +22,8 @@ import postContentStyles from "../../sass/components/PostContent.module.scss"
 import useSWR from "swr";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 import AuthorCredits from "../../components/AuthorCredits";
+import ImagePostGrid from "../../components/imagePostGrid";
+import { firstWordsWithEllipses } from "../../util/textUtil";
 
 const NextPrevButtons = ({ data, hideTitles }) => 
   <Section className={postContentStyles.nextPrevArticleContainer}>
@@ -225,9 +226,9 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
     pageTitle={pageTitle} siteName={siteName} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
       {postData && <PostContent data={postData} views={pageViewData?.views} twitterUsername={twitterUsername} />}
       {postsByCategory && (
-        <PostListWide
+        <ImagePostGrid
           posts={postsByCategory}
-          heading={`Read ${postsByCategory.length} '${capitalizedCategory}' posts`}
+          heading={`${postsByCategory.length} '${capitalizedCategory}' posts`}
         />
       )}
       <Block></Block>
@@ -237,17 +238,27 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
 
 export async function getStaticProps({ params, preview = false, previewData }) {
   const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
-
   const [category, id] = params.slug;
+  const postData = postsDynamo.filter((post) => post.PostId == id)[0];
   const siteConfig = await getSiteConfig();
   const siteName = siteConfig.site.name;
   const twitterUsername = siteConfig.socialMedia.username.twitter;
+
+  let postsByCategory = postsDynamo
+                          .filter(post => post.Category == category)
+                          // trim down posts to only what is needed for the 'all posts in category' page
+                          .map(post => ({ 
+                            ImageS3Url: post.ImageS3Url,
+                            Title: firstWordsWithEllipses(post.Title, 12),
+                            PostId: post.PostId,
+                            Category: post.Category
+                          }))
 
   if (category && !id) {
     // if no post id is given e.g. /posts/category/
     return {
       props: {
-        postsByCategory: postsDynamo.filter((post) => post.Category == category),
+        postsByCategory,
         category,
         siteName,
         twitterUsername
@@ -257,7 +268,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
 
   return {
     props: {
-      postData: postsDynamo.filter((post) => post.PostId == id)[0],
+      postData,
       siteName,
       twitterUsername,
       slug: `/posts/${params.slug[0]}/${params.slug[1]}`

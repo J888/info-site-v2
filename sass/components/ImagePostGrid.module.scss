@@ -1,0 +1,50 @@
+$breakpoint-mobile: 500px;
+.imagePostGrid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.gridItem {
+  cursor: pointer;
+  display: flex;
+
+  position: relative;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+
+  min-width: 10rem;
+  min-height: 12rem;
+  max-height: 15vw;
+  max-width: 15vw;
+  @media (max-width: $breakpoint-mobile) {
+    min-width: 96vw;
+  }
+  
+}
+
+.gridItemTitle {
+  align-self: flex-end;
+
+  position: relative;
+  color: white;
+  background-color: black;
+  width: fit-content;
+  opacity: 74%;
+  font-size: 0.85rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 1.2rem;
+  }
+}
+
+.gridHeading {
+  font-size: 2rem;
+  margin-bottom: 1.4rem;
+}
+
+.image {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
