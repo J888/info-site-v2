@@ -218,7 +218,7 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
   );
 
   let capitalizedCategory = category?.substring(0,1)?.toUpperCase() + category?.substring(1);
-  let pageTitle = postData?.Title !== undefined ? postData?.Title : `Read ${postsByCategory?.length} ${capitalizedCategory} Posts`
+  let pageTitle = postData?.Title !== undefined ? postData?.Title : `${capitalizedCategory} posts - ${postsByCategory?.length} results`
 
   return (
     <MainWrapper 

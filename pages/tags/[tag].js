@@ -1,30 +1,23 @@
 import MainWrapper from "../../components/mainWrapper";
-import { Columns } from "react-bulma-components";
 import React from "react";
-import PostListWide from "../../components/postListWide";
 import { getSiteConfig } from "../../util/s3Util";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
+import ImagePostGrid from "../../components/imagePostGrid";
 
 const PostsByTag = ({ matchingPosts, tag, siteName, twitterUsername }) => {
   return (
     <MainWrapper
       twitterUsername={twitterUsername}
-      pageTitle={`#${tag} posts`}
+      pageTitle={`#${tag} posts - ${matchingPosts?.length} results`}
       siteName={siteName}
-      description={`All posts that are tagged with "${tag}"`}
+      description={`All posts tagged with "${tag}"`}
     >
-      <Columns>
-        <Columns.Column size={1}></Columns.Column>
-        <Columns.Column size={7}>
-          <PostListWide
-            posts={matchingPosts}
-            heading={`${matchingPosts?.length} Post${
-              matchingPosts?.length > 1 ? "s" : ""
-            } Tagged with #${tag}`}
-          />
-        </Columns.Column>
-        <Columns.Column size={3}></Columns.Column>
-      </Columns>
+      <ImagePostGrid
+        posts={matchingPosts}
+        heading={`${matchingPosts?.length} post${
+          matchingPosts?.length > 1 ? "s" : ""
+        } tagged #${tag}`}
+      />
     </MainWrapper>
   );
 };
