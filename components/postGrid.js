@@ -2,6 +2,7 @@ import Link from "next/link";
 import styles from "../sass/components/PostGrid.module.scss";
 import TextColoredBackground from "./textColoredBackground";
 import PostGridItemV2 from "./postGridItemV2";
+import React from "react";
 
 const PostGridItem = ({ link, imageUrl, title, category, createdAt }) => (
   <article className={styles.gridItem}>
@@ -49,8 +50,11 @@ const PostGridItem = ({ link, imageUrl, title, category, createdAt }) => (
   </article>
 );
 
-const PostGrid = ({ posts }) => (
-  <div className={styles.postGrid}>
+const PostGrid = ({ posts, heading, subHeading }) => (
+  <React.Fragment>
+    {heading && <h2 className={styles.heading}>{heading}</h2>}
+    {subHeading && <p>{subHeading}</p>}
+    <div className={styles.postGrid}>
     {posts.map((post) => (
       <PostGridItemV2
         description={post.Description}
@@ -64,6 +68,8 @@ const PostGrid = ({ posts }) => (
       />
     ))}
   </div>
+  </React.Fragment>
+  
 );
 
 export default PostGrid;

@@ -37,10 +37,10 @@ const isSameDate = (dateA, dateB) => {
   return true;
 };
 
-const newPostHeadingWording = (postCreatedDate) => {
+const newPostHeadingWording = (postCreatedDate, category) => {
   return isSameDate(new Date(), new Date(postCreatedDate))
-    ? "Just Posted!"
-    : "New!";
+    ? `Just Posted in ${category}`
+    : `New in ${category}`;
 };
 
 export default function Home({
@@ -73,9 +73,9 @@ export default function Home({
             {siteStatementsPurposeLong}
           </ShowMoreToggle>
         </Columns.Column>
-        <Columns.Column size={3}>
+        <Columns.Column size={4}>
           <h2 className={styles.newestPostHeading}>
-            {newPostHeadingWording(newestPost.CreatedAt)}
+            {newPostHeadingWording(newestPost.CreatedAt, capitalizeWord(newestPost.Category))}
           </h2>
           <PostGridItemV2
             description={newestPost.Description}
@@ -84,37 +84,37 @@ export default function Home({
             tags={newestPost.Tags?.slice(0, 4).filter((t) => t.length <= 17)}
             title={newestPost.Title}
             category={
-              newestPost.Category?.charAt(0).toUpperCase() +
-              newestPost.Category?.slice(1)
+              capitalizeWord(newestPost.Category)
             }
             createdAt={newestPost.CreatedAt}
             key={newestPost.PostId}
           ></PostGridItemV2>
         </Columns.Column>
-        <Columns.Column size={3}></Columns.Column>
+        <Columns.Column size={2}></Columns.Column>
       </Columns>
 
       {Object.keys(categoryDescriptions).map((category) => (
-        <div key={category}>
-          <div className={styles.postsByCatHeadingContainer}>
-            <h2 className={styles.headingBeforePostGrid}>
-              {capitalizeWord(category)}
-            </h2>
-            <p className={styles.headingBeforePostGridCatDesc}>
-              {categoryDescriptions[category]}
-            </p>
-          </div>
-          <PostGrid posts={postsByCategory[category].slice(0, 8)} />
-          <div className={styles.seeAllLink}>
-            <Link href={`/posts/${category}`} passHref>
-              <a>
-                {`More in `}
-                <i>{capitalizeWord(category)}</i>
-                {` →`}
-              </a>
-            </Link>
-          </div>
-        </div>
+        <Columns key={category}>
+          <Columns.Column size={2}>
+          </Columns.Column>
+
+          <Columns.Column size={8}>
+            <PostGrid posts={postsByCategory[category].slice(0, 8)} heading={capitalizeWord(category)} subHeading={categoryDescriptions[category]} />
+            <div className={styles.seeAllLink}>
+              <Link href={`/posts/${category}`} passHref>
+                <a>
+                  {`More in `}
+                  <i>{capitalizeWord(category)}</i>
+                  {` →`}
+                </a>
+              </Link>
+            </div>
+          </Columns.Column>
+
+          <Columns.Column size={2}>
+          </Columns.Column>
+        </Columns>
+        
       ))}
 
       <div className={styles.seeAllLink}>

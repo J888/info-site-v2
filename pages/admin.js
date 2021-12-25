@@ -3,6 +3,7 @@ import axios from "axios";
 import { Button, Card, Columns, Container, Image, Section, Tag } from "react-bulma-components";
 import shortUUID from "short-uuid";
 import styles from "../sass/components/Admin.module.scss"
+import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "../util/nodeCache";
 const ADD_CONTENT = "Add content. . .";
 
 const LogIn = ({ loginButtonClickHandler }) => {
@@ -468,6 +469,7 @@ const Admin = ({}) => {
 
       if (updateStatusCodes.includes(200)) {
         setCurrentSaveState("SUCCESS");
+        appCache.del(DYNAMO_BLOG_POSTS_CACHE_KEY);
       } else {
         setCurrentSaveState("FAIL");
       }
@@ -482,6 +484,8 @@ const Admin = ({}) => {
 
       if (updateStatusCodes.includes(200)) {
         setCurrentSaveState("SUCCESS");
+        appCache.del(DYNAMO_BLOG_POSTS_CACHE_KEY);
+
       } else {
         setCurrentSaveState("FAIL");
       }

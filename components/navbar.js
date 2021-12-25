@@ -14,6 +14,12 @@ const Nav = ({ siteName, twitterUsername }) => (
           <Link href="/posts/news" className={styles.navItem}>
             News
           </Link>
+          <Link href="/posts/rarity" className={styles.navItem}>
+            Rarity
+          </Link>
+          <Link href="/posts" className={styles.navItem}>
+            All
+          </Link>
           <Link href="/about" className={styles.navItem}>
             About
           </Link>

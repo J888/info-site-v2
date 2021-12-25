@@ -16,7 +16,7 @@ const AllPosts = ({ postsDynamo, siteSubject, siteName, twitterUsername }) => {
       <Columns>
         <Columns.Column size={1}></Columns.Column>
         <Columns.Column size={7} style={{ width: "100%" }}>
-          <PostGrid posts={postsDynamo} />
+          <PostGrid posts={postsDynamo} heading={`All Posts`}/>
         </Columns.Column>
         <Columns.Column size={3}></Columns.Column>
       </Columns>

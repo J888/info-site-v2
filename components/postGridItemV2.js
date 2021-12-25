@@ -25,9 +25,14 @@ const PostGridItemV2 = ({ description, link, imageUrl, tags, title, category, cr
             day: "numeric",
           })}
         </span>
-        <TextColoredBackground>
-          {category}
-        </TextColoredBackground>
+        <Link href={`/posts/${category.toLowerCase()}`} passHref>
+          <a>
+            <TextColoredBackground>
+              {category}
+            </TextColoredBackground>
+          </a>
+        </Link>
+        
       </div>
 
       <Link href={link} passHref>

@@ -31,6 +31,7 @@ $breakpoint-mobile: 500px;
   width: fit-content;
   opacity: 74%;
   font-size: 0.85rem;
+  padding-left: 0.5rem;
 
   @media (max-width: $breakpoint-mobile) {
     font-size: 1.2rem;
