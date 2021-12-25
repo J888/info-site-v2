@@ -8,7 +8,7 @@ const ImagePostGrid = ({ posts, heading }) => (
     <Columns.Column size={7}>
       <h2 className={styles.gridHeading}>{heading}</h2>
       <div className={styles.imagePostGrid}>
-        {posts.map((post) => (
+        {posts?.map((post) => (
           <Link
             href={`/posts/${post.Category}/${post.PostId}`}
             key={post.Title.replace(/\s/g, "")}
