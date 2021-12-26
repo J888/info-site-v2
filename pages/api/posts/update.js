@@ -1,6 +1,7 @@
 import { updateBlogPostsDynamoDb } from "../../../util/dynamoDbUtil";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
+import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "../../../util/nodeCache";
 
 export default withIronSessionApiRoute(async function updateRoute(req, res) {
   const {
@@ -24,6 +25,7 @@ export default withIronSessionApiRoute(async function updateRoute(req, res) {
           posts
         );
 
+        appCache.del(DYNAMO_BLOG_POSTS_CACHE_KEY);
         res.status(200).json({ updateStatusCodes: awsRes });
       } catch (err) {
         console.log(err);

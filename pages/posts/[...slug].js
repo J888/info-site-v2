@@ -24,6 +24,7 @@ import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 import AuthorCredits from "../../components/AuthorCredits";
 import ImagePostGrid from "../../components/imagePostGrid";
 import { firstWordsWithEllipses } from "../../util/textUtil";
+import { Tweet } from "react-twitter-widgets";
 
 const NextPrevButtons = ({ data, hideTitles }) => 
   <Section className={postContentStyles.nextPrevArticleContainer}>
@@ -90,7 +91,6 @@ const PostContent = ({ data, views, twitterUsername }) => (
                       key={tag}
                       wrapInAnchor={true}
                     >
-                      {/* {tag} */}
                       <div className={postContentStyles.tagListItem}>{tag}</div>
                     </LinkWrapper>
                   </Tag>
@@ -113,34 +113,6 @@ const PostContent = ({ data, views, twitterUsername }) => (
                 )}
               </div>
             </div>
-          </Container>
-          {/* <Container className={postContentStyles.mainImageContainer}>
-            <Image src={data?.ImageS3Url} size={1} alt={data?.Title} />
-          </Container> */}
-          <Container className={styles.publishedDate}>
-            <div className={styles.viewCountDateContainer}>
-              {/* <div className={styles.postInfoTagGroupsContainer}>
-                <Tag.Group hasAddons className={styles.publishedDateTagGroup}>
-                  <Tag color="dark">
-                    {new Date(data?.CreatedAt).toLocaleDateString("en-US", {
-                      weekday: "short",
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </Tag>
-
-                  <Tag>
-                    <Link href={`/posts/${data?.Category}`}>
-                      {data?.Category?.charAt(0).toUpperCase() + data?.Category?.slice(1)}
-                    </Link>
-                  </Tag>
-                </Tag.Group>
-              </div> */}
-
-              
-            </div>
-
           </Container>
 
           <Section>
@@ -170,6 +142,13 @@ const PostContent = ({ data, views, twitterUsername }) => (
                     <Image src={part.Contents} size={2} alt={`image-part-${i}`} className={postContentStyles.imageInPost} />
                   </Container>
                 );
+              } else if (part.Type == "TWEET_SINGLE") {
+                toRender = (
+                  <Tweet
+                    tweetId={part.Contents}
+                    options={{ align: "center", width: "40rem" }}
+                  />
+                )
               }
 
               return (

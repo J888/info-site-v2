@@ -79,6 +79,25 @@
   margin-bottom: 1.3rem;
 }
 
+.tweetSinglePartEditor {
+  label {
+    display: block;
+  }
+
+  input {
+    &::placeholder {
+      color: rgb(61, 194, 255);
+    }
+    color: rgb(117, 204, 255);
+    background-color: rgb(37, 37, 37);
+    margin-right: 0.6rem;
+    width: 300px;
+    padding-left: 0.4rem;
+    padding-bottom: 0.4rem;
+    padding-top: 0.4rem;
+  }
+}
+
 $dot-size: 0.9rem;
 .redDotDeleteMdPart {
   height: $dot-size;
@@ -104,6 +123,19 @@ $dot-size: 0.9rem;
   position: relative;
   top: 1.2rem;
   left: 0.1rem;
+}
+
+.redDotDeleteTweetPart{
+  height: $dot-size;
+  width: $dot-size;
+  background-color: rgb(248, 66, 66);
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+
+  position: relative;
+  top: 0.1rem;
+  left: -0.4rem;
 }
 
 .textAreaEditor {

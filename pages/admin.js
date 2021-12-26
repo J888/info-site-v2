@@ -3,7 +3,6 @@ import axios from "axios";
 import { Button, Card, Columns, Container, Image, Section, Tag } from "react-bulma-components";
 import shortUUID from "short-uuid";
 import styles from "../sass/components/Admin.module.scss"
-import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "../util/nodeCache";
 const ADD_CONTENT = "Add content. . .";
 
 const LogIn = ({ loginButtonClickHandler }) => {
@@ -86,6 +85,24 @@ const BlogPostEditor = ({
         }}
       >
         + text
+      </button>
+      <button
+        onClick={() => {
+          let newParts = [...initialData.Parts];
+
+          newParts.splice(insertPartAfterIndex + 1, 0, {
+            Type: "TWEET_SINGLE",
+            Contents: '',
+          });
+
+          let newBlogPostData = {};
+          Object.assign(newBlogPostData, initialData);
+          newBlogPostData.Parts = newParts;
+
+          updatePostHandler(postIndex, newBlogPostData);
+        }}
+      >
+        + tweet
       </button>
     </React.Fragment>
   );
@@ -372,6 +389,50 @@ const BlogPostEditor = ({
               <AddPartButtons insertPartAfterIndex={i} />
             </div>
           );
+        } else if (part.Type === "TWEET_SINGLE") {
+          return (
+            <div
+              key={`${i}-${initialData.PostId}-tweet-single-part`}
+              className={styles.tweetSinglePartEditor}
+            >
+              <label>Tweet Single: </label>
+              <span
+                className={styles.redDotDeleteTweetPart}
+                onClick={() => {
+                  let newParts = [...initialData.Parts];
+                  newParts.splice(i, 1); // .splice(index, howManyToDelete)
+
+                  let newBlogPostData = {};
+                  Object.assign(newBlogPostData, initialData);
+                  newBlogPostData.Parts = newParts;
+
+                  console.log(`new parts`)
+                  console.log(newBlogPostData.Parts)
+
+                  updatePostHandler(postIndex, newBlogPostData);
+                }}
+              ></span>
+              <input
+                placeholder={"Tweet-Id"}
+                // className={styles.categoryInput}
+                value={part.Contents}
+                onChange={(e) => {
+                  let newParts = [...initialData.Parts];
+                  newParts[i].Contents = e.target.value;
+
+                  let newBlogPostData = {};
+                  Object.assign(newBlogPostData, initialData);
+                  newBlogPostData.Parts = newParts;
+
+                  updatePostHandler(postIndex, newBlogPostData);
+                }}
+              ></input>
+
+              <AddPartButtons insertPartAfterIndex={i} />
+
+              <br />
+            </div>
+          );
         }
       })}
     </div>
@@ -451,9 +512,9 @@ const Admin = ({}) => {
     newPosts[atIndex] = newValue;
     setBlogPosts(newPosts);
 
-    let newEditedPostIndexes = [...editedPostIndexes]
-    newEditedPostIndexes.push(atIndex)
-    setEditedPostIndexes(newEditedPostIndexes)
+    let newEditedPostIndexes = [...editedPostIndexes];
+    newEditedPostIndexes.push(atIndex);
+    setEditedPostIndexes(newEditedPostIndexes);
   }
 
   const savePostHandler = async (postId) => {
@@ -469,7 +530,6 @@ const Admin = ({}) => {
 
       if (updateStatusCodes.includes(200)) {
         setCurrentSaveState("SUCCESS");
-        appCache.del(DYNAMO_BLOG_POSTS_CACHE_KEY);
       } else {
         setCurrentSaveState("FAIL");
       }
@@ -484,8 +544,6 @@ const Admin = ({}) => {
 
       if (updateStatusCodes.includes(200)) {
         setCurrentSaveState("SUCCESS");
-        appCache.del(DYNAMO_BLOG_POSTS_CACHE_KEY);
-
       } else {
         setCurrentSaveState("FAIL");
       }
