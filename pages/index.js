@@ -53,6 +53,7 @@ export default function Home({
   siteStatementsPurposeShort,
   categoryDescriptions,
   twitterUsername,
+  navLinks,
 }) {
   return (
     <MainWrapper
@@ -60,6 +61,7 @@ export default function Home({
       pageTitle={`Front Page, ${siteStatementsPurposeShort}`}
       siteName={siteName}
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
+      navLinks={navLinks}
     >
       <Columns style={{ margin: "0 0.5rem 0 0.5rem" }}>
         <Columns.Column size={2}></Columns.Column>
@@ -260,6 +262,7 @@ export async function getStaticProps() {
   let siteStatementsPurposeShort = siteConfig.site.statements.purpose.short;
   let twitterUsername = siteConfig.socialMedia.username.twitter;
   let siteName = siteConfig.site.name;
+  const navLinks = siteConfig.nav.links;
 
   return {
     props: {
@@ -271,7 +274,8 @@ export async function getStaticProps() {
       siteStatementsPurposeShort,
       categoryDescriptions,
       mostVisitedList,
-      twitterUsername
+      twitterUsername,
+      navLinks
     },
   };
 }

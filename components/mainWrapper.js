@@ -43,7 +43,7 @@ export default function MainWrapper(props) {
         <meta name="twitter:image:alt" content={`${props.pageTitle} image`}/>
       </Head>
 
-      <Nav siteName={props.siteName} twitterUsername={props.twitterUsername}/>
+      <Nav siteName={props.siteName} twitterUsername={props.twitterUsername} navLinks={props.navLinks}/>
       <Block/>
       <main className={styles.mainSection}>
         {props.children}

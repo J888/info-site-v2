@@ -186,7 +186,7 @@ const PostContent = ({ data, views, twitterUsername }) => (
   </Columns>
 );
 
-const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, slug }) => {
+const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, slug, navLinks }) => {
 
   const { data: pageViewData, error } = useSWR(
     `/api/page-views?slug=${encodeURIComponent(slug)}`,
@@ -202,7 +202,7 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
   return (
     <MainWrapper 
     twitterUsername={twitterUsername}
-    pageTitle={pageTitle} siteName={siteName} description={postData?.Description} imageUrl={postData?.ImageS3Url}>
+    pageTitle={pageTitle} siteName={siteName} description={postData?.Description} imageUrl={postData?.ImageS3Url} navLinks={navLinks}>
       {postData && <PostContent data={postData} views={pageViewData?.views} twitterUsername={twitterUsername} />}
       {postsByCategory && (
         <ImagePostGrid
@@ -222,6 +222,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   const siteConfig = await getSiteConfig();
   const siteName = siteConfig.site.name;
   const twitterUsername = siteConfig.socialMedia.username.twitter;
+  const navLinks = siteConfig.nav.links;
 
   let postsByCategory = postsDynamo
                           .filter(post => post.Category == category)
@@ -240,7 +241,8 @@ export async function getStaticProps({ params, preview = false, previewData }) {
         postsByCategory,
         category,
         siteName,
-        twitterUsername
+        twitterUsername,
+        navLinks
       },
     };
   }
@@ -250,7 +252,8 @@ export async function getStaticProps({ params, preview = false, previewData }) {
       postData,
       siteName,
       twitterUsername,
-      slug: `/posts/${params.slug[0]}/${params.slug[1]}`
+      slug: `/posts/${params.slug[0]}/${params.slug[1]}`,
+      navLinks
     },
   };
 }
