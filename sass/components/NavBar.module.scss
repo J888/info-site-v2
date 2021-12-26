@@ -29,6 +29,13 @@ $breakpoint-mobile: 700px;
 
     @media (max-width: $breakpoint-mobile) {
       font-size: 1.7rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      a:not(:last-child) {
+        border-bottom: solid rgb(228, 228, 228) 0.1rem;
+      }
     }
 
     a {
