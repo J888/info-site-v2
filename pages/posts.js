@@ -9,7 +9,7 @@ const AllPosts = ({ postsDynamo, siteSubject, siteName, twitterUsername }) => {
   return (
     <MainWrapper
       twitterUsername={twitterUsername}
-      pageTitle={`All Posts, Read ${postsDynamo.length} Posts About ${siteSubject}`}
+      pageTitle={`All - ${postsDynamo.length} Results - ${siteSubject}`}
       siteName={siteName}
       description={`A grid of all blog posts available on the website`}
     >

@@ -73,6 +73,11 @@ $breakpoint-mobile: 700px;
 
     @media (max-width: $breakpoint-mobile) { 
       grid-column: 1 / span 1;
+
+      $img-corner-radius: 0.4rem;
+      border-top-left-radius: $img-corner-radius;
+      border-bottom-left-radius: $img-corner-radius;
+
     }
   }
 }

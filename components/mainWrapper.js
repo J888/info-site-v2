@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Block } from "react-bulma-components";
 import Nav from "./navbar";
-import styles from "../styles/Home.module.css";
+import styles from "../sass/components/MainWrapper.module.scss"
 import { SocialIcon } from "react-social-icons";
 
 export default function MainWrapper(props) {
