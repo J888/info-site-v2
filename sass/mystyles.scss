@@ -12,7 +12,6 @@ $breakpoint-mobile: 800px;
 
 html,
 body {
-  margin: 0.5em 1em 0 1em;
 
   @media (max-width: $breakpoint-mobile) {
     margin: 0.5em 0.2rem 0 0.2rem;
