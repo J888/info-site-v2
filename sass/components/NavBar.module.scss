@@ -1,6 +1,130 @@
 $breakpoint-large-mobile: 735px;
 $breakpoint-mobile: 700px;
 
+
+// V2 ------>
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  padding-top: 2rem;
+
+  .siteName {
+    color: #303030;
+    font-size: 3.4rem;
+    font-family: 'Bebas Neue', cursive;
+
+    a {
+      color: #303030;
+    }
+  }
+
+  .menuButton {
+    width: 2.5rem;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 80%;
+    }
+  }
+}
+
+$slide-transition-time: 350ms;
+
+.navBarV2 {
+  position: fixed;
+  top: 0;
+  right: -597.9px;
+  bottom: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 14000;
+  width: 100vw;
+  background: rgb(44, 44, 44);
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  transition: all $slide-transition-time linear;
+
+  @media (max-width: $breakpoint-mobile) {
+    right: -50vw;
+    width: 20vw;
+  }
+
+  @media (min-width: $breakpoint-mobile) {
+    left: -20rem;
+    width: 20rem;
+  }
+
+}
+
+.slideIntoView {
+
+  @media (max-width: $breakpoint-mobile) {
+    right: 0;
+    width: 100%;
+    transition: right $slide-transition-time linear;
+  }
+  @media (min-width: $breakpoint-mobile) {
+    left: 0;
+    // width: 100%;
+    transition: left $slide-transition-time linear;
+  }
+  
+
+  @media (min-width: 1000px) {
+    left: 0rem;
+    width: 20rem;
+    transition: left $slide-transition-time linear;
+  }
+
+}
+
+.navCloseButton {
+  position: absolute;
+  // top: 11px;
+  // right: 11.4px;
+  // top: 5.1vw;
+  // right: 6.3vw;
+  top: 1.1rem;
+  right: 1.6rem;
+  font-size: 1.5rem;
+  opacity: 0.85;
+  color: #fff;
+  cursor: pointer;
+  width: 2.3rem;
+}
+
+.navBarV2Content {
+  padding: 12% 3% 16% 8.5%;
+}
+
+.navBarV2Items {
+  a {
+    display: block;
+    // font-family: "neuzeit-grotesk";
+    font-size: 2rem;
+    line-height: 3.3rem;
+    font-weight: 900;
+    letter-spacing: -0.94px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    // -webkit-font-smoothing: antialiased;
+
+    &:hover {
+      color: #fff781;
+      transition: background-color .6s linear,color .2s linear;
+    }
+  }
+}
+
+// ------> V2
+
 .navBar { 
   background-color: rgb(23, 23, 23);
   padding-bottom: 1.9rem;

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Columns, Heading } from "react-bulma-components";
 import Link from "next/link";
 import styles from "../sass/components/NavBar.module.scss";
@@ -39,4 +40,45 @@ const Nav = ({ siteName, twitterUsername, navLinks }) => (
   </nav>
 );
 
-export default Nav;
+const NavV2 = ({ siteName, twitterUsername, navLinks }) => {
+  const [showNav, setShowNav] = useState(false);
+  // alert(siteName)
+  console.log(`siteName: ${siteName}`)
+  
+  return (
+  <div>
+    <div className={styles.header}>
+      <h1 className={styles.siteName}>
+        <Link href="/">{siteName || 'Loading..'}</Link>
+      </h1>
+      <img  src="/icons/burger-menu.png" className={styles.menuButton} onClick={() => { setShowNav(!showNav) }}/>
+    </div>
+
+    <nav className={`${styles.navBarV2} ${showNav ? styles.slideIntoView : ''}`}>
+      <div className={styles.navBarV2Content}>
+        <div>
+          <img src="/icons/white-close-window-icon.png" className={styles.navCloseButton} onClick={() => {setShowNav(false) }}/>
+        </div>
+
+        {
+          navLinks && 
+          <div className={styles.navBarV2Items}>
+          {
+            navLinks.map(navLink => 
+              <Link href={navLink.href} className={styles.navItem} key={`nav-link-${navLink.href}`}>
+                {navLink.label}
+              </Link>
+            )
+          }
+        </div>
+        }
+        
+      </div>
+    </nav>
+
+  </div>
+
+  
+)};
+
+export default NavV2;
