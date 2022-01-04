@@ -42,7 +42,6 @@ const Nav = ({ siteName, twitterUsername, navLinks }) => (
 
 const NavV2 = ({ siteName, twitterUsername, navLinks }) => {
   const [showNav, setShowNav] = useState(false);
-  // alert(siteName)
   console.log(`siteName: ${siteName}`)
   
   return (
