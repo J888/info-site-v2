@@ -1,9 +1,12 @@
 import styles from "../sass/components/Billboard.module.scss";
 
-const Billboard = ({ title, body }) => (
+const Billboard = ({ title, body, bodyComponent }) => (
   <div className={styles.billboard}>
     <h3>{title}</h3>
-    <p>{body}</p>
+    {
+      body && <p>{body}</p>
+    }
+    {bodyComponent}
   </div>
 );
 
