@@ -17,6 +17,7 @@ import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 import { capitalizeWord } from "../util/textUtil";
 import ShowMoreToggle from "../components/showMoreToggle";
 import PostGridItemV2 from "../components/postGridItemV2";
+import FeaturedSection from "../components/featuredSection";
 
 const isSameDate = (dateA, dateB) => {
   // month number (0 - 11)
@@ -54,6 +55,8 @@ export default function Home({
   categoryDescriptions,
   twitterUsername,
   navLinks,
+  featuredPosts,
+  featuredSection
 }) {
   return (
     <MainWrapper
@@ -71,6 +74,7 @@ export default function Home({
             labelHide={`- Hide/minimize`}
             title={siteStatementsPurposeShort}
             titleSize={4}
+            className={styles.frontPageBillboard}
           >
             {siteStatementsPurposeLong}
           </ShowMoreToggle>
@@ -94,6 +98,15 @@ export default function Home({
         </Columns.Column>
         <Columns.Column size={2}></Columns.Column>
       </Columns>
+
+      <Columns className={styles.featuredSectionContainer}>
+        <Columns.Column size={2}></Columns.Column>
+        <Columns.Column size={8}>
+          <FeaturedSection posts={featuredPosts} titleText={featuredSection.titleText}/>
+        </Columns.Column>
+        <Columns.Column size={2}></Columns.Column>
+      </Columns>
+
 
       {Object.keys(categoryDescriptions).map((category) => (
         <Columns key={category}>
@@ -263,6 +276,8 @@ export async function getStaticProps() {
   let twitterUsername = siteConfig.socialMedia.username.twitter;
   let siteName = siteConfig.site.name;
   const navLinks = siteConfig.nav.links;
+  const featuredSection = siteConfig.featuredSection;
+  const featuredPosts = postsStrippedDown.filter(p => featuredSection.postIds.includes(p.PostId))
 
   return {
     props: {
@@ -275,7 +290,9 @@ export async function getStaticProps() {
       categoryDescriptions,
       mostVisitedList,
       twitterUsername,
-      navLinks
+      navLinks,
+      featuredPosts,
+      featuredSection
     },
   };
 }

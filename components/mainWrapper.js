@@ -16,7 +16,7 @@ export default function MainWrapper(props) {
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={"true"}/>
         {/* <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet"></link> */}
-        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond&display=swap" rel="stylesheet"></link>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond&family=Teko:wght@500&family=Lora:wght@500&display=swap" rel="stylesheet"></link>
 
         <meta
           name="viewport"

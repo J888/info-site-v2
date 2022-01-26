@@ -1,12 +1,12 @@
 import { useState } from "react";
 import styles from "../sass/components/ShowMoreToggle.module.scss";
 
-const ShowMoreToggle = ({ children, labelShow, labelHide, title, titleSize }) => {
+const ShowMoreToggle = ({ children, labelShow, labelHide, title, titleSize, className}) => {
 
   labelHide = labelHide === undefined ? `hide.` : labelHide;
   let [shown, setShown] = useState(false)
   return (
-    <div>
+    <div className={className}>
       <h3 className={styles[`showMoreToggleTitle-size${titleSize}`]}>{title}</h3>
       <span onClick={()=> {
         setShown(!shown);
