@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, Columns, Container, Image, Section, Tag } from "react-bulma-components";
+import PostContent from "../components/postContent";
 import shortUUID from "short-uuid";
 import styles from "../sass/components/Admin.module.scss"
 const ADD_CONTENT = "Add content. . .";
@@ -47,6 +48,9 @@ const BlogPostEditor = ({
   saveState,
   savePostHandler
 }) => {
+
+  const [showPreview, setShowPreview] = useState(false);
+
   const AddPartButtons = ({ insertPartAfterIndex }) => (
     <React.Fragment>
       <button
@@ -121,37 +125,28 @@ const BlogPostEditor = ({
           {initialData.Title}
           {initialData.IsNewPost ? " [NEW]" : ""}
         </h1>
-        <Button
-          id={styles.editorSaveButton}
-          onClick={() => {
-            savePostHandler(initialData.PostId);
-          }}
-        >
-          Save
-        </Button>
+
+        <div>
+          <Button
+            id={styles.editorSaveButton}
+            onClick={() => {
+              savePostHandler(initialData.PostId);
+            }}
+          >
+            Save
+          </Button>
+          <Button
+            id={styles.previewButton}
+            onClick={() => {
+              setShowPreview(!showPreview);
+            }}
+          >
+            {showPreview == false ? 'Preview' : 'Edit'}
+          </Button>
+
+        </div>
+       
       </div>
-{/* 
-      {saveState === "NONE" && (
-        <div className={styles.postSaveStateTag}>
-          {isEdited ? (
-            <Tag color="warning">Edited</Tag>
-          ) : (
-            <Tag color="white">Not Edited</Tag>
-          )}
-        </div>
-      )}
-
-      {saveState === "SUCCESS" && (
-        <div className={styles.postSaveStateTag}>
-          <Tag color="success">Saved</Tag>
-        </div>
-      )}
-      {saveState === "FAIL" && (
-        <div className={styles.postSaveStateTag}>
-          <Tag color="danger">Save Failed</Tag>
-        </div>
-      )} */}
-
       <div className={styles.editorPostShortIdTagGroup}>
         <Tag.Group hasAddons>
             {isEdited && saveState==="NONE" && <Tag color="warning">Edited</Tag>}
@@ -159,282 +154,292 @@ const BlogPostEditor = ({
             {saveState === "SUCCESS" && <Tag color="success">Saved!</Tag>}
             {saveState === "FAIL" && <Tag color="danger">Save Failed</Tag>}
           <Tag color="light">{initialData.PostShortId}</Tag>
-
         </Tag.Group>
       </div>
+      {
+        showPreview == true &&
+        <PostContent data={initialData} views={0} twitterUsername={'Preview'}/>
+      }
 
-      <label>Title</label>
-      <input
-        placeholder={"Edit Title"}
-        className={styles.titleInput}
-        value={initialData.Title}
-        onChange={(e) => {
-          genericOnChangeAttrUpdater(e, "Title");
-        }}
-      ></input>
+      {
+        !(showPreview == true) &&
+        <div className={styles.editorForm}>
+          <label>Title</label>
+          <input
+            placeholder={"Edit Title"}
+            className={styles.titleInput}
+            value={initialData.Title}
+            onChange={(e) => {
+              genericOnChangeAttrUpdater(e, "Title");
+            }}
+          ></input>
 
-      <div className={styles.editorIsDraftCheckbox}>
-        <label>Draft</label>
-        <input
-          type="checkbox"
-          checked={initialData.IsDraft === true}
-          onChange={()=> {
-            isDraftChangeHandler(postIndex);
-          }}
-        ></input>
-      </div>
+          <div className={styles.editorIsDraftCheckbox}>
+            <label>Draft</label>
+            <input
+              type="checkbox"
+              checked={initialData.IsDraft === true}
+              onChange={()=> {
+                isDraftChangeHandler(postIndex);
+              }}
+            ></input>
+          </div>
 
-      <label>SubTitle</label>
-      <input
-        placeholder={"Edit SubTitle"}
-        className={styles.titleInput}
-        value={initialData.SubTitle}
-        onChange={(e) => {
-          genericOnChangeAttrUpdater(e, "SubTitle");
-        }}
-      ></input>
+          <label>SubTitle</label>
+          <input
+            placeholder={"Edit SubTitle"}
+            className={styles.titleInput}
+            value={initialData.SubTitle}
+            onChange={(e) => {
+              genericOnChangeAttrUpdater(e, "SubTitle");
+            }}
+          ></input>
 
-      <label>Description</label>
-      <input
-        placeholder={"Edit Description"}
-        className={styles.titleInput}
-        value={initialData.Description}
-        onChange={(e) => {
-          genericOnChangeAttrUpdater(e, "Description");
-        }}
-      ></input>
+          <label>Description</label>
+          <input
+            placeholder={"Edit Description"}
+            className={styles.titleInput}
+            value={initialData.Description}
+            onChange={(e) => {
+              genericOnChangeAttrUpdater(e, "Description");
+            }}
+          ></input>
 
-      <label>Category</label>
-      <input
-        placeholder={"Edit Category"}
-        className={styles.categoryInput}
-        value={initialData.Category}
-        onChange={(e) => {
-          genericOnChangeAttrUpdater(e, "Category");
-        }}
-      ></input>
+          <label>Category</label>
+          <input
+            placeholder={"Edit Category"}
+            className={styles.categoryInput}
+            value={initialData.Category}
+            onChange={(e) => {
+              genericOnChangeAttrUpdater(e, "Category");
+            }}
+          ></input>
 
-      <label>PostId / slug</label>
-      <input
-        placeholder={"Edit PostId"}
-        className={styles.categoryInput}
-        value={initialData.PostId}
-        onChange={(e) => {
-          genericOnChangeAttrUpdater(e, "PostId");
-        }}
-      ></input>
+          <label>PostId / slug</label>
+          <input
+            placeholder={"Edit PostId"}
+            className={styles.categoryInput}
+            value={initialData.PostId}
+            onChange={(e) => {
+              genericOnChangeAttrUpdater(e, "PostId");
+            }}
+          ></input>
 
-      <label>Tags</label>
-      <input
-        placeholder={"Edit Tags"}
-        className={styles.categoryInput}
-        value={initialData.Tags.join(",")}
-        onChange={(e) => {
-          let newBlogPostData = {};
-          Object.assign(newBlogPostData, initialData);
-          newBlogPostData.Tags = e.target.value.split(",");
-          updatePostHandler(postIndex, newBlogPostData);
-        }}
-        onBlur={(e) => {
-          let newBlogPostData = {};
-          Object.assign(newBlogPostData, initialData);
-          newBlogPostData.Tags = e.target.value
-            .split(",")
-            .filter((tag) => tag != "");
-          updatePostHandler(postIndex, newBlogPostData);
-        }}
-      ></input>
+          <label>Tags</label>
+          <input
+            placeholder={"Edit Tags"}
+            className={styles.categoryInput}
+            value={initialData.Tags.join(",")}
+            onChange={(e) => {
+              let newBlogPostData = {};
+              Object.assign(newBlogPostData, initialData);
+              newBlogPostData.Tags = e.target.value.split(",");
+              updatePostHandler(postIndex, newBlogPostData);
+            }}
+            onBlur={(e) => {
+              let newBlogPostData = {};
+              Object.assign(newBlogPostData, initialData);
+              newBlogPostData.Tags = e.target.value
+                .split(",")
+                .filter((tag) => tag != "");
+              updatePostHandler(postIndex, newBlogPostData);
+            }}
+          ></input>
 
-      <label>CreatedAt</label>
-      <input
-        placeholder={"Edit CreatedAt - MM/DD/YYYY, HH:MM:SS AM/PM"}
-        className={styles.categoryInput}
-        value={initialData.CreatedAt}
-        onChange={(e) => {
-          genericOnChangeAttrUpdater(e, "CreatedAt");
-        }}
-      ></input>
+          <label>CreatedAt</label>
+          <input
+            placeholder={"Edit CreatedAt - MM/DD/YYYY, HH:MM:SS AM/PM"}
+            className={styles.categoryInput}
+            value={initialData.CreatedAt}
+            onChange={(e) => {
+              genericOnChangeAttrUpdater(e, "CreatedAt");
+            }}
+          ></input>
 
-      <div className={styles.editorMainImageContainer}>
-        <label>Main image:</label>
-        <select
-          name="images"
-          id="images"
-          onChange={(event) => {
-            if (!event.target.value) {
-              return;
-            }
-
-            let url = images.find(
-              (image) => image.Key === event.target.value
-            ).Url;
-
-            let newBlogPostData = {};
-            Object.assign(newBlogPostData, initialData);
-            newBlogPostData.ImageS3Url = url;
-            newBlogPostData.ImageKey = event.target.value;
-
-            updatePostHandler(postIndex, newBlogPostData);
-          }}
-        >
-          <option key={"blank-option"}></option>
-          {images?.map((image) => (
-            <option value={image.Key} key={image.Key}>
-              {image.Key}
-            </option>
-          ))}
-        </select>
-        <Image
-          src={initialData.ImageS3Url}
-          alt={initialData.ImageKey}
-          className={styles.editorMainImage}
-        />
-      </div>
-
-      <AddPartButtons insertPartAfterIndex={-1} />
-
-      {initialData.Parts.map((part, i) => {
-        if (part.Type === "MARKDOWN") {
-          return (
-            <div
-              key={`${i}-${initialData.PostId}-md-part`}
-              className={styles.mdPartEditor}
-            >
-              <span
-                className={styles.redDotDeleteMdPart}
-                onClick={() => {
-                  let newParts = [...initialData.Parts];
-                  newParts.splice(i, 1); // .splice(index, howManyToDelete)
-
-                  let newBlogPostData = {};
-                  Object.assign(newBlogPostData, initialData);
-                  newBlogPostData.Parts = newParts;
-
-                  updatePostHandler(postIndex, newBlogPostData);
-                }}
-              ></span>
-              <textarea
-                className={styles.textAreaEditor}
-                value={part.Contents != ADD_CONTENT ? part.Contents : undefined}
-                placeholder={
-                  part.Contents == ADD_CONTENT ? ADD_CONTENT : undefined
+          <div className={styles.editorMainImageContainer}>
+            <label>Main image:</label>
+            <select
+              name="images"
+              id="images"
+              onChange={(event) => {
+                if (!event.target.value) {
+                  return;
                 }
-                onChange={(e) => {
-                  let newParts = [...initialData.Parts];
-                  newParts[i].Contents = e.target.value;
 
-                  let newBlogPostData = {};
-                  Object.assign(newBlogPostData, initialData);
-                  newBlogPostData.Parts = newParts;
+                let url = images.find(
+                  (image) => image.Key === event.target.value
+                ).Url;
 
-                  updatePostHandler(postIndex, newBlogPostData);
-                }}
-              ></textarea>
+                let newBlogPostData = {};
+                Object.assign(newBlogPostData, initialData);
+                newBlogPostData.ImageS3Url = url;
+                newBlogPostData.ImageKey = event.target.value;
 
-              <AddPartButtons insertPartAfterIndex={i} />
-
-              <br />
-            </div>
-          );
-        } else if (part.Type === "IMAGE") {
-          return (
-            <div
-              className={styles.imagePartSelect}
-              key={`${i}-${initialData.PostId}-image-part`}
+                updatePostHandler(postIndex, newBlogPostData);
+              }}
             >
-              <span
-                className={styles.redDotDeleteImgPart}
-                onClick={() => {
-                  let newParts = [...initialData.Parts];
-                  newParts.splice(i, 1); // .splice(index, howManyToDelete)
+              <option key={"blank-option"}></option>
+              {images?.map((image) => (
+                <option value={image.Key} key={image.Key}>
+                  {image.Key}
+                </option>
+              ))}
+            </select>
+            <Image
+              src={initialData.ImageS3Url}
+              alt={initialData.ImageKey}
+              className={styles.editorMainImage}
+            />
+          </div>
 
-                  let newBlogPostData = {};
-                  Object.assign(newBlogPostData, initialData);
-                  newBlogPostData.Parts = newParts;
+          <AddPartButtons insertPartAfterIndex={-1} />
 
-                  updatePostHandler(postIndex, newBlogPostData);
-                }}
-              ></span>
-              <p className={styles.selectImageLabel}>Select image: </p>
-              <select
-                name="images"
-                id="images"
-                onChange={(event) => {
-                  if (!event.target.value) {
-                    return;
-                  }
+          {initialData.Parts.map((part, i) => {
+            if (part.Type === "MARKDOWN") {
+              return (
+                <div
+                  key={`${i}-${initialData.PostId}-md-part`}
+                  className={styles.mdPartEditor}
+                >
+                  <span
+                    className={styles.redDotDeleteMdPart}
+                    onClick={() => {
+                      let newParts = [...initialData.Parts];
+                      newParts.splice(i, 1); // .splice(index, howManyToDelete)
 
-                  let url = images.find(
-                    (image) => image.Key === event.target.value
-                  ).Url;
+                      let newBlogPostData = {};
+                      Object.assign(newBlogPostData, initialData);
+                      newBlogPostData.Parts = newParts;
 
-                  let newParts = [...initialData.Parts];
-                  newParts[i].Contents = url;
+                      updatePostHandler(postIndex, newBlogPostData);
+                    }}
+                  ></span>
+                  <textarea
+                    className={styles.textAreaEditor}
+                    value={part.Contents != ADD_CONTENT ? part.Contents : undefined}
+                    placeholder={
+                      part.Contents == ADD_CONTENT ? ADD_CONTENT : undefined
+                    }
+                    onChange={(e) => {
+                      let newParts = [...initialData.Parts];
+                      newParts[i].Contents = e.target.value;
 
-                  let newBlogPostData = {};
-                  Object.assign(newBlogPostData, initialData);
-                  newBlogPostData.Parts = newParts;
+                      let newBlogPostData = {};
+                      Object.assign(newBlogPostData, initialData);
+                      newBlogPostData.Parts = newParts;
 
-                  updatePostHandler(postIndex, newBlogPostData);
-                }}
-              >
-                <option></option>
-                {images?.map((image) => (
-                  <option value={image.Key} key={image.Key}>
-                    {image.Key}
-                  </option>
-                ))}
-              </select>
-              <img src={part.Contents} style={{ maxWidth: "20rem" }} />
-              <AddPartButtons insertPartAfterIndex={i} />
-            </div>
-          );
-        } else if (part.Type === "TWEET_SINGLE") {
-          return (
-            <div
-              key={`${i}-${initialData.PostId}-tweet-single-part`}
-              className={styles.tweetSinglePartEditor}
-            >
-              <label>Tweet Single: </label>
-              <span
-                className={styles.redDotDeleteTweetPart}
-                onClick={() => {
-                  let newParts = [...initialData.Parts];
-                  newParts.splice(i, 1); // .splice(index, howManyToDelete)
+                      updatePostHandler(postIndex, newBlogPostData);
+                    }}
+                  ></textarea>
 
-                  let newBlogPostData = {};
-                  Object.assign(newBlogPostData, initialData);
-                  newBlogPostData.Parts = newParts;
+                  <AddPartButtons insertPartAfterIndex={i} />
 
-                  console.log(`new parts`)
-                  console.log(newBlogPostData.Parts)
+                  <br />
+                </div>
+              );
+            } else if (part.Type === "IMAGE") {
+              return (
+                <div
+                  className={styles.imagePartSelect}
+                  key={`${i}-${initialData.PostId}-image-part`}
+                >
+                  <span
+                    className={styles.redDotDeleteImgPart}
+                    onClick={() => {
+                      let newParts = [...initialData.Parts];
+                      newParts.splice(i, 1); // .splice(index, howManyToDelete)
 
-                  updatePostHandler(postIndex, newBlogPostData);
-                }}
-              ></span>
-              <input
-                placeholder={"Tweet-Id"}
-                // className={styles.categoryInput}
-                value={part.Contents}
-                onChange={(e) => {
-                  let newParts = [...initialData.Parts];
-                  newParts[i].Contents = e.target.value;
+                      let newBlogPostData = {};
+                      Object.assign(newBlogPostData, initialData);
+                      newBlogPostData.Parts = newParts;
 
-                  let newBlogPostData = {};
-                  Object.assign(newBlogPostData, initialData);
-                  newBlogPostData.Parts = newParts;
+                      updatePostHandler(postIndex, newBlogPostData);
+                    }}
+                  ></span>
+                  <p className={styles.selectImageLabel}>Select image: </p>
+                  <select
+                    name="images"
+                    id="images"
+                    onChange={(event) => {
+                      if (!event.target.value) {
+                        return;
+                      }
 
-                  updatePostHandler(postIndex, newBlogPostData);
-                }}
-              ></input>
+                      let url = images.find(
+                        (image) => image.Key === event.target.value
+                      ).Url;
 
-              <AddPartButtons insertPartAfterIndex={i} />
+                      let newParts = [...initialData.Parts];
+                      newParts[i].Contents = url;
 
-              <br />
-            </div>
-          );
-        }
-      })}
+                      let newBlogPostData = {};
+                      Object.assign(newBlogPostData, initialData);
+                      newBlogPostData.Parts = newParts;
+
+                      updatePostHandler(postIndex, newBlogPostData);
+                    }}
+                  >
+                    <option></option>
+                    {images?.map((image) => (
+                      <option value={image.Key} key={image.Key}>
+                        {image.Key}
+                      </option>
+                    ))}
+                  </select>
+                  <img src={part.Contents} style={{ maxWidth: "20rem" }} />
+                  <AddPartButtons insertPartAfterIndex={i} />
+                </div>
+              );
+            } else if (part.Type === "TWEET_SINGLE") {
+              return (
+                <div
+                  key={`${i}-${initialData.PostId}-tweet-single-part`}
+                  className={styles.tweetSinglePartEditor}
+                >
+                  <label>Tweet Single: </label>
+                  <span
+                    className={styles.redDotDeleteTweetPart}
+                    onClick={() => {
+                      let newParts = [...initialData.Parts];
+                      newParts.splice(i, 1); // .splice(index, howManyToDelete)
+
+                      let newBlogPostData = {};
+                      Object.assign(newBlogPostData, initialData);
+                      newBlogPostData.Parts = newParts;
+
+                      console.log(`new parts`)
+                      console.log(newBlogPostData.Parts)
+
+                      updatePostHandler(postIndex, newBlogPostData);
+                    }}
+                  ></span>
+                  <input
+                    placeholder={"Tweet-Id"}
+                    // className={styles.categoryInput}
+                    value={part.Contents}
+                    onChange={(e) => {
+                      let newParts = [...initialData.Parts];
+                      newParts[i].Contents = e.target.value;
+
+                      let newBlogPostData = {};
+                      Object.assign(newBlogPostData, initialData);
+                      newBlogPostData.Parts = newParts;
+
+                      updatePostHandler(postIndex, newBlogPostData);
+                    }}
+                  ></input>
+
+                  <AddPartButtons insertPartAfterIndex={i} />
+
+                  <br />
+                </div>
+              );
+            }
+          })}
+
+        </div>
+      }
+      
     </div>
   );
 };
@@ -580,7 +585,7 @@ const Admin = ({}) => {
       {loginFailed && <div>Login Failed </div>}
 
       {loggedInAdmin && (
-        <Columns>
+        <Columns className={styles.mainWrapper}>
           <Columns.Column size={3}>
             <h1 className={styles.postsHeader}>Posts</h1>
             <Button

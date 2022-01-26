@@ -6,6 +6,7 @@
 - Warning: data for page "/" is 201 kB, this amount of data can reduce performance.
        -  https://nextjs.org/docs/messages/large-page-data 
 - configure-ize the navbar links, text and href
+- make a spotlight section for articles (carousel)
 
 # ENV VARS
 

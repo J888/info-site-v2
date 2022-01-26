@@ -1,3 +1,8 @@
+.mainWrapper {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
 .deploymentIdTagGroup {
   margin-top: 2rem;
 }
@@ -54,6 +59,9 @@
   display: flex;
   justify-content: space-between;
   #editorSaveButton {
+    font-size: 0.8rem;
+  }
+  #previewButton {
     font-size: 0.8rem;
   }
 }
