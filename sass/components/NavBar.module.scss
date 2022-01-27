@@ -1,8 +1,25 @@
 $breakpoint-large-mobile: 735px;
 $breakpoint-mobile: 700px;
-
-
+$linkhover-color: #fff781;
 // V2 ------>
+
+$margin-lr: 15vw;
+.mainWrapper {
+  margin-right: $margin-lr;
+  margin-left: $margin-lr;
+
+  @media (max-width: $breakpoint-mobile) {
+    $margin-lr: 0.2vw;
+    margin-right: $margin-lr;
+    margin-left: $margin-lr;
+  }
+}
+
+.siteNameInPanel {
+  a {
+    color: $linkhover-color !important;
+  }
+}
 
 .header {
   display: flex;
@@ -45,7 +62,7 @@ $slide-transition-time: 230ms;
   flex-direction: column;
   z-index: 14000;
   width: 100vw;
-  background: rgb(44, 44, 44);
+  background: #1c1c1cf7;
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   transition: all $slide-transition-time linear;
@@ -117,7 +134,7 @@ $slide-transition-time: 230ms;
     // -webkit-font-smoothing: antialiased;
 
     &:hover {
-      color: #fff781;
+      color: $linkhover-color;
       transition: background-color .6s linear,color .2s linear;
     }
   }

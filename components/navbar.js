@@ -45,39 +45,41 @@ const NavV2 = ({ siteName, twitterUsername, navLinks }) => {
   console.log(`siteName: ${siteName}`)
   
   return (
-  <div>
-    <div className={styles.header}>
-      <h1 className={styles.siteName}>
-        <Link href="/">{siteName || 'Loading..'}</Link>
-      </h1>
-      <img  src="/icons/burger-menu.png" className={styles.menuButton} onClick={() => { setShowNav(!showNav) }}/>
-    </div>
-
-    <nav className={`${styles.navBarV2} ${showNav ? styles.slideIntoView : ''}`}>
-      <div className={styles.navBarV2Content}>
-        <div>
-          <img src="/icons/white-close-window-icon.png" className={styles.navCloseButton} onClick={() => {setShowNav(false) }}/>
-        </div>
-
-        {
-          navLinks && 
-          <div className={styles.navBarV2Items}>
-          {
-            navLinks.map(navLink => 
-              <Link href={navLink.href} className={styles.navItem} key={`nav-link-${navLink.href}`}>
-                {navLink.label}
-              </Link>
-            )
-          }
-        </div>
-        }
-        
+    <div className={styles.mainWrapper}>
+      <div className={styles.header}>
+        <h1 className={styles.siteName}>
+          <Link href="/">{siteName || 'Loading..'}</Link>
+        </h1>
+        <img  src="/icons/icons8-menu-48.png" className={styles.menuButton} onClick={() => { setShowNav(!showNav) }}/>
       </div>
-    </nav>
 
-  </div>
+      <nav className={`${styles.navBarV2} ${showNav ? styles.slideIntoView : ''}`}>
+        <div className={styles.navBarV2Content}>
+          <div>
+            <img src="/icons/white-close-window-icon.png" className={styles.navCloseButton} onClick={() => {setShowNav(false) }}/>
+          </div>
 
-  
-)};
+          {
+            navLinks && 
+            <div className={styles.navBarV2Items}>
+              <h1 className={styles.siteNameInPanel}>
+                <Link href="/">{siteName || 'Loading..'}</Link>
+              </h1>
+              {
+                navLinks.map(navLink => 
+                  <Link href={navLink.href} className={styles.navItem} key={`nav-link-${navLink.href}`}>
+                    {navLink.label}
+                  </Link>
+                )
+              }
+            </div>
+          }
+          
+        </div>
+      </nav>
+
+    </div>    
+  )
+};
 
 export default NavV2;

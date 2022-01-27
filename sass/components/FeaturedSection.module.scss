@@ -25,20 +25,21 @@
   opacity: 100%;
 }
 
+$border-color: #4e4e4e;
 .item {
   position: relative;
   text-align: center;
 
-  border-right: solid #4e4e4e 0.2rem;
-  border-top: solid #4e4e4e 0.2rem;
-  // border-left: solid #4e4e4e 0.2rem;
-
+  border-right: solid $border-color 0.2rem;
+  border-top: solid $border-color 0.2rem;
   &:first-child {
-    border-left: solid #4e4e4e 0.2rem;
+    border-left: solid $border-color 0.2rem;
   }
 
   &:hover {
     opacity: 80%;
+    $border-color: #d091da;
+    border-top: solid $border-color 0.2rem;
   }
 
 }
