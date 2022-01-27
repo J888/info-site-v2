@@ -3,7 +3,6 @@ import {
   Columns,
   Message,
   Tag,
-  Block,
 } from "react-bulma-components";
 import MainWrapper from "../components/mainWrapper";
 import Link from "next/link";
@@ -107,6 +106,56 @@ export default function Home({
         <Columns.Column size={2}></Columns.Column>
       </Columns>
 
+      <Columns>
+        <Columns.Column size={2}></Columns.Column>
+        <Columns.Column size={5}>
+          <Card>
+            <Message>
+              <Message.Header className={styles.popularListHeaders}>Most Viewed This Month</Message.Header>
+            </Message>
+            {mostVisitedList?.length > 0 && (
+              <div className={styles.mostVisitedCard}>
+                {mostVisitedList.slice(0, 5).map((mostVisitedItem) => (
+                  <Card.Content
+                    key={mostVisitedItem.slug}
+                    className={styles.mostVisitedCardItem}
+                  >
+                    <Link href={mostVisitedItem.slug}>
+                      {mostVisitedItem.title}
+                    </Link>
+                  </Card.Content>
+                ))}
+              </div>
+            )}
+
+            {mostVisitedList?.length == 0 && (
+              <React.Fragment>
+                <Card.Content>No data</Card.Content>
+              </React.Fragment>
+            )}
+          </Card>
+        </Columns.Column>
+        <Columns.Column size={3}>
+          <Card>
+            <Message>
+              <Message.Header className={styles.popularListHeaders}>Popular Hashtags</Message.Header>
+            </Message>
+
+            <Card.Content>
+              <Tag.Group>
+                {topTags.map((tag) => (
+                  <Tag clickable key={tag} className={styles.popularTags}>
+                    <LinkWrapper wrapInAnchor={true} href={`/tags/${tag}`}>
+                      #{tag}
+                    </LinkWrapper>
+                  </Tag>
+                ))}
+              </Tag.Group>
+            </Card.Content>
+          </Card>
+        </Columns.Column>
+        <Columns.Column size={2}></Columns.Column>
+      </Columns>
 
       {Object.keys(categoryDescriptions).map((category) => (
         <Columns key={category}>
@@ -134,60 +183,9 @@ export default function Home({
 
       <div className={styles.seeAllLink}>
         <Link href="/posts" passHref>
-          <a>{"Posts From All Categories →"}</a>
+          <a>{"All Posts →"}</a>
         </Link>
       </div>
-
-      <Columns>
-        <Columns.Column size={1}></Columns.Column>
-        <Columns.Column size={7}></Columns.Column>
-        <Columns.Column size={3}>
-          <Card>
-            <Message>
-              <Message.Header>Most Viewed This Month</Message.Header>
-            </Message>
-            {mostVisitedList?.length > 0 && (
-              <div className={styles.mostVisitedCard}>
-                {mostVisitedList.slice(0, 5).map((mostVisitedItem) => (
-                  <Card.Content
-                    key={mostVisitedItem.slug}
-                    className={styles.mostVisitedCardItem}
-                  >
-                    <Link href={mostVisitedItem.slug}>
-                      {mostVisitedItem.title}
-                    </Link>
-                  </Card.Content>
-                ))}
-              </div>
-            )}
-
-            {mostVisitedList?.length == 0 && (
-              <React.Fragment>
-                <Card.Content>No data</Card.Content>
-              </React.Fragment>
-            )}
-          </Card>
-
-          <Block />
-          <Card>
-            <Message>
-              <Message.Header>Popular Hashtags</Message.Header>
-            </Message>
-
-            <Card.Content>
-              <Tag.Group>
-                {topTags.map((tag) => (
-                  <Tag clickable key={tag} className={styles.popularTags}>
-                    <LinkWrapper wrapInAnchor={true} href={`/tags/${tag}`}>
-                      #{tag}
-                    </LinkWrapper>
-                  </Tag>
-                ))}
-              </Tag.Group>
-            </Card.Content>
-          </Card>
-        </Columns.Column>
-      </Columns>
     </MainWrapper>
   );
 }

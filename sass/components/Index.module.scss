@@ -64,6 +64,7 @@ $breakpoint-mobile: 700px;
   .mostVisitedCardItem {
     border-bottom: solid #ebebeb 0.1rem;
     margin-bottom: 0.7rem;
+    font-size: 1rem;
   }
 }
 
@@ -88,4 +89,9 @@ $breakpoint-mobile: 700px;
 
 .frontPageBillboard {
   font-family: 'Lora', serif;
+}
+
+.popularListHeaders {
+  font-family: 'Teko', sans-serif;
+  font-size: 1.7rem;
 }
