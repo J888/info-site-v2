@@ -9,8 +9,9 @@ import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 import ImagePostGrid from "../../components/imagePostGrid";
 import PostContent from "../../components/postContent";
 import { firstWordsWithEllipses } from "../../util/textUtil";
+import { DiscussionEmbed } from "disqus-react";
 
-const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, slug, navLinks }) => {
+const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, slug, navLinks, articleUrl, disqusShortname }) => {
 
   const { data: pageViewData, error } = useSWR(
     `/api/page-views?slug=${encodeURIComponent(slug)}`,
@@ -35,6 +36,20 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
         />
       )}
       <Block></Block>
+      {
+        articleUrl &&
+          <DiscussionEmbed
+            shortname={disqusShortname}
+            config={
+                {
+                    url: articleUrl,
+                    identifier: slug,
+                    title: pageTitle,
+                    language: 'en_US'
+                }
+            }
+        />
+      }
     </MainWrapper>
   );
 };
@@ -71,13 +86,16 @@ export async function getStaticProps({ params, preview = false, previewData }) {
     };
   }
 
+  let slug = `/posts/${params.slug[0]}/${params.slug[1]}`;
   return {
     props: {
       postData,
       siteName,
       twitterUsername,
-      slug: `/posts/${params.slug[0]}/${params.slug[1]}`,
-      navLinks
+      slug,
+      navLinks,
+      disqusShortname: process.env.DISQUS_SHORTNAME,
+      articleUrl: `${process.env.SITE_BASE_URL}${slug}`
     },
   };
 }
