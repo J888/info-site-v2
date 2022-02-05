@@ -30,6 +30,10 @@ $margin-lr: 15vw;
   padding-left: 3rem;
   padding-right: 3rem;
   padding-top: 2rem;
+  @media (max-width: $breakpoint-mobile) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 
   .siteName {
     // color: #303030;
@@ -39,7 +43,11 @@ $margin-lr: 15vw;
     // a {
     //   color: #303030;
     // }
-    height: 75px;
+    // height: 75px;
+    width: 320px;
+    @media (max-width: $breakpoint-mobile) {
+      width: 250px;
+    }
   }
 
   .menuButton {

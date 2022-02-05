@@ -48,7 +48,9 @@ const NavV2 = ({ siteName, twitterUsername, navLinks, navLogoUrl }) => {
   return (
     <div className={styles.mainWrapper}>
       <div className={styles.header}>
-        <Logo logoUrl={navLogoUrl}/>
+        <div className={styles.siteName}>
+          <Logo logoUrl={navLogoUrl}/>
+        </div>
         
         {/* <h1 className={styles.siteName}>
           <Link href="/">{siteName || 'Loading..'}</Link>

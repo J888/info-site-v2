@@ -57,7 +57,7 @@ export default function MainWrapper(props) {
       </main>
 
       <footer className={styles.footer}>
-        <div>
+        <div className={styles.footerLogo}>
           <Logo logoUrl={props.navLogoUrl}/>
         </div>
         <div>{`© ${new Date().getFullYear()} - Made With NextJS`}</div>
