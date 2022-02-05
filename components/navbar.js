@@ -3,6 +3,7 @@ import { Columns, Heading } from "react-bulma-components";
 import Link from "next/link";
 import styles from "../sass/components/NavBar.module.scss";
 import { SocialIcon } from 'react-social-icons';
+import Logo from "../components/logo";
 
 const Nav = ({ siteName, twitterUsername, navLinks }) => (
   <nav className={styles.navBar}>
@@ -40,16 +41,18 @@ const Nav = ({ siteName, twitterUsername, navLinks }) => (
   </nav>
 );
 
-const NavV2 = ({ siteName, twitterUsername, navLinks }) => {
+const NavV2 = ({ siteName, twitterUsername, navLinks, navLogoUrl }) => {
   const [showNav, setShowNav] = useState(false);
   console.log(`siteName: ${siteName}`)
-  
+
   return (
     <div className={styles.mainWrapper}>
       <div className={styles.header}>
-        <h1 className={styles.siteName}>
+        <Logo logoUrl={navLogoUrl}/>
+        
+        {/* <h1 className={styles.siteName}>
           <Link href="/">{siteName || 'Loading..'}</Link>
-        </h1>
+        </h1> */}
         <img  src="/icons/icons8-menu-48.png" className={styles.menuButton} onClick={() => { setShowNav(!showNav) }}/>
       </div>
 
@@ -62,9 +65,9 @@ const NavV2 = ({ siteName, twitterUsername, navLinks }) => {
           {
             navLinks && 
             <div className={styles.navBarV2Items}>
-              <h1 className={styles.siteNameInPanel}>
-                <Link href="/">{siteName || 'Loading..'}</Link>
-              </h1>
+              <div className={styles.siteNameInPanel}>
+                <Logo logoUrl={navLogoUrl}/>
+              </div>
               {
                 navLinks.map(navLink => 
                   <Link href={navLink.href} className={styles.navItem} key={`nav-link-${navLink.href}`}>

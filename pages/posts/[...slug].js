@@ -11,7 +11,7 @@ import PostContent from "../../components/postContent";
 import { firstWordsWithEllipses } from "../../util/textUtil";
 import { DiscussionEmbed } from "disqus-react";
 
-const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, slug, navLinks, articleUrl, disqusShortname }) => {
+const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, slug, navLinks, navLogoUrl, articleUrl, disqusShortname }) => {
 
   const { data: pageViewData, error } = useSWR(
     `/api/page-views?slug=${encodeURIComponent(slug)}`,
@@ -27,7 +27,7 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
   return (
     <MainWrapper 
     twitterUsername={twitterUsername}
-    pageTitle={pageTitle} siteName={siteName} description={postData?.Description} imageUrl={postData?.ImageS3Url} navLinks={navLinks}>
+    pageTitle={pageTitle} siteName={siteName} description={postData?.Description} imageUrl={postData?.ImageS3Url} navLinks={navLinks} navLogoUrl={navLogoUrl}>
       {postData && <PostContent data={postData} views={pageViewData?.views} twitterUsername={twitterUsername} />}
       {postsByCategory && (
         <ImagePostGrid
@@ -42,10 +42,10 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
             shortname={disqusShortname}
             config={
                 {
-                    url: articleUrl,
-                    identifier: slug,
-                    title: pageTitle,
-                    language: 'en_US'
+                  url: articleUrl,
+                  identifier: slug,
+                  title: pageTitle,
+                  language: 'en_US'
                 }
             }
         />
@@ -62,6 +62,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   const siteName = siteConfig.site.name;
   const twitterUsername = siteConfig.socialMedia.username.twitter;
   const navLinks = siteConfig.nav.links;
+  const navLogoUrl = siteConfig.nav.logoUrl;
 
   let postsByCategory = postsDynamo
                           .filter(post => post.Category == category)
@@ -81,7 +82,8 @@ export async function getStaticProps({ params, preview = false, previewData }) {
         category,
         siteName,
         twitterUsername,
-        navLinks
+        navLinks,
+        navLogoUrl
       },
     };
   }
@@ -94,6 +96,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
       twitterUsername,
       slug,
       navLinks,
+      navLogoUrl,
       disqusShortname: process.env.DISQUS_SHORTNAME,
       articleUrl: `${process.env.SITE_BASE_URL}${slug}`
     },

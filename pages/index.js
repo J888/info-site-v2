@@ -54,6 +54,7 @@ export default function Home({
   categoryDescriptions,
   twitterUsername,
   navLinks,
+  navLogoUrl,
   featuredPosts,
   featuredSection
 }) {
@@ -64,6 +65,7 @@ export default function Home({
       siteName={siteName}
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
       navLinks={navLinks}
+      navLogoUrl={navLogoUrl}
     >
       <Columns style={{ margin: "0 0.5rem 0 0.5rem" }}>
         <Columns.Column size={2}></Columns.Column>
@@ -274,6 +276,7 @@ export async function getStaticProps() {
   let twitterUsername = siteConfig.socialMedia.username.twitter;
   let siteName = siteConfig.site.name;
   const navLinks = siteConfig.nav.links;
+  const navLogoUrl = siteConfig.nav.logoUrl;
   const featuredSection = siteConfig.featuredSection;
   const featuredPosts = postsStrippedDown.filter(p => featuredSection.postIds.includes(p.PostId))
 
@@ -289,6 +292,7 @@ export async function getStaticProps() {
       mostVisitedList,
       twitterUsername,
       navLinks,
+      navLogoUrl,
       featuredPosts,
       featuredSection
     },

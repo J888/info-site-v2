@@ -4,7 +4,7 @@ import { getSiteConfig } from "../../util/s3Util";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 import ImagePostGrid from "../../components/imagePostGrid";
 
-const PostsByTag = ({ matchingPosts, tag, siteName, twitterUsername, navLinks }) => {
+const PostsByTag = ({ matchingPosts, tag, siteName, twitterUsername, navLinks, navLogoUrl }) => {
   return (
     <MainWrapper
       twitterUsername={twitterUsername}
@@ -12,6 +12,7 @@ const PostsByTag = ({ matchingPosts, tag, siteName, twitterUsername, navLinks })
       siteName={siteName}
       description={`All posts tagged with "${tag}"`}
       navLinks={navLinks}
+      navLogoUrl={navLogoUrl}
     >
       <ImagePostGrid
         posts={matchingPosts}
@@ -34,6 +35,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   const siteName = siteConfig.site.name;
   const twitterUsername = siteConfig.socialMedia.username.twitter;
   const navLinks = siteConfig.nav.links;
+  const navLogoUrl = siteConfig.nav.logoUrl;
 
   return {
     props: {
@@ -41,7 +43,8 @@ export async function getStaticProps({ params, preview = false, previewData }) {
       matchingPosts,
       siteName,
       twitterUsername,
-      navLinks
+      navLinks,
+      navLogoUrl
     },
   };
 }

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { Block } from "react-bulma-components";
 import Nav from "./navbar";
+import Logo from "./logo";
 import styles from "../sass/components/MainWrapper.module.scss"
 import { SocialIcon } from "react-social-icons";
 
@@ -44,14 +45,22 @@ export default function MainWrapper(props) {
         <meta name="twitter:image:alt" content={`${props.pageTitle} image`}/>
       </Head>
 
-      <Nav siteName={props.siteName} twitterUsername={props.twitterUsername} navLinks={props.navLinks}/>
+      <Nav
+        siteName={props.siteName}
+        twitterUsername={props.twitterUsername}
+        navLinks={props.navLinks}
+        navLogoUrl={props.navLogoUrl}
+        />
       <Block/>
       <main className={styles.mainSection}>
         {props.children}
       </main>
 
       <footer className={styles.footer}>
-        <div>{`© ${new Date().getFullYear()} | Powered by NextJS`}</div>
+        <div>
+          <Logo logoUrl={props.navLogoUrl}/>
+        </div>
+        <div>{`© ${new Date().getFullYear()} - Made With NextJS`}</div>
         <div className={styles.twitterIcon}>
           <SocialIcon
             url={`https://twitter.com/${props.twitterUsername}`}
@@ -59,6 +68,7 @@ export default function MainWrapper(props) {
             style={{ height: 26, width: 26 }}
           />
         </div>
+        
       </footer>
     </div>
   );

@@ -19,6 +19,7 @@ $margin-lr: 15vw;
   a {
     color: $linkhover-color !important;
   }
+  width: 200px;
 }
 
 .header {
@@ -31,13 +32,14 @@ $margin-lr: 15vw;
   padding-top: 2rem;
 
   .siteName {
-    color: #303030;
-    font-size: 3.4rem;
-    font-family: 'Bebas Neue', cursive;
+    // color: #303030;
+    // font-size: 3.4rem;
+    // font-family: 'Bebas Neue', cursive;
 
-    a {
-      color: #303030;
-    }
+    // a {
+    //   color: #303030;
+    // }
+    height: 75px;
   }
 
   .menuButton {
