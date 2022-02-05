@@ -1,6 +1,6 @@
 import { getPageViewsBySlug } from "../../lib/google_analytics/pageViewRetrieval";
 
-export default async (req, res) => {
+const PageViews = async (req, res) => {
   const slug = req.query.slug;
 
   try {
@@ -12,3 +12,5 @@ export default async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+
+export default PageViews;

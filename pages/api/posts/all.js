@@ -1,6 +1,6 @@
 import { getBlogPostsDynamoDb } from "../../../util/dynamoDbUtil";
 
-export default async (req, res) => {
+const All = async (req, res) => {
 
   try {
     const items = await getBlogPostsDynamoDb(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
@@ -10,3 +10,5 @@ export default async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+
+export default All;

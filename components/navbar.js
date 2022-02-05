@@ -51,17 +51,23 @@ const NavV2 = ({ siteName, twitterUsername, navLinks, navLogoUrl }) => {
         <div className={styles.siteName}>
           <Logo logoUrl={navLogoUrl}/>
         </div>
-        
-        {/* <h1 className={styles.siteName}>
-          <Link href="/">{siteName || 'Loading..'}</Link>
-        </h1> */}
-        <img  src="/icons/icons8-menu-48.png" className={styles.menuButton} onClick={() => { setShowNav(!showNav) }}/>
+        <img
+          src="/icons/icons8-menu-48.png"
+          className={styles.menuButton}
+          onClick={() => { setShowNav(!showNav) }}
+          alt={"Menu open icon"}
+        />
       </div>
 
       <nav className={`${styles.navBarV2} ${showNav ? styles.slideIntoView : ''}`}>
         <div className={styles.navBarV2Content}>
           <div>
-            <img src="/icons/white-close-window-icon.png" className={styles.navCloseButton} onClick={() => {setShowNav(false) }}/>
+            <img
+              src="/icons/white-close-window-icon.png"
+              className={styles.navCloseButton}
+              onClick={() => {setShowNav(false) }}
+              alt={"Menu close icon"}
+            />
           </div>
 
           {

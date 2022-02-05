@@ -72,7 +72,7 @@ const PostContent = ({ data, views, twitterUsername }) => (
               <div style={{marginTop: `1.6rem`}}>
                 {views !== undefined && (
                   <div className={styles.viewCount}>
-                    <img src="/icons/eye1.png" className={styles.viewCountIcon} />{" "}
+                    <img src="/icons/eye1.png" className={styles.viewCountIcon} alt={"View count icon"}/>{" "}
                     <span>{views < 1 ? 1 : views}</span>
                   </div>
                 )}
@@ -147,7 +147,7 @@ const PostContent = ({ data, views, twitterUsername }) => (
       <Block>
         <Card>
           <Message>
-            <Message.Header>Trending in "{data?.Category}"</Message.Header>
+            <Message.Header>Trending in &quot;{data?.Category}&quot;</Message.Header>
           </Message>
 
           <Card.Content>No data</Card.Content>

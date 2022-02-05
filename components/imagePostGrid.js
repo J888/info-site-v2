@@ -16,7 +16,7 @@ const ImagePostGrid = ({ posts, heading }) => (
           >
             <a>
               <div className={styles.gridItem}>
-                <img src={post.ImageS3Url} className={styles.image} />
+                <img src={post.ImageS3Url} className={styles.image} alt={`Image for ${post.Title}`}/>
 
                 <h3 className={styles.gridItemTitle}>{post.Title}</h3>
               </div>

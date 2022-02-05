@@ -4,7 +4,7 @@ import Link from "next/link";
 const Logo = ({logoUrl}) => (
   <Link href="/" passHref>
     <a>
-      <img className={styles.logoImg} src={logoUrl}/>
+      <img className={styles.logoImg} src={logoUrl} alt={"Site Logo"}/>
     </a>
   </Link>
 );

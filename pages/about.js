@@ -8,7 +8,7 @@ const About = ({ site, pageData, socialMedia, navLinks, navLogoUrl }) => {
   const AboutParagraphs = 
     <React.Fragment>
       {
-        pageData.about.description.map(part => <p>{part}</p>)
+        pageData.about.description.map(part, i => <p key={`part-${i}`}>{part}</p>)
       }
     </React.Fragment>
 

@@ -1,6 +1,6 @@
 import { getImagesByPostId } from "../../../util/s3Util";
 
-export default async (req, res) => {
+const Images = async (req, res) => {
   const { PostShortId } = req.query;
 
   try {
@@ -11,3 +11,5 @@ export default async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+
+export default Images;

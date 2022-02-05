@@ -3,7 +3,7 @@ import { getSiteUsers } from "../../util/s3Util";
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const crypto = require("crypto");
 
-export default async (req, res) => {
+const AuthorizeAdmin = async (req, res) => {
   const {
     method,
     body: { username, password }
@@ -42,3 +42,5 @@ export default async (req, res) => {
 
   res.status(200).json({ method  })
 }
+
+export default AuthorizeAdmin;

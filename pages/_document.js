@@ -32,6 +32,8 @@ class MyDocument extends Document {
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9518590056813467"
             crossOrigin="anonymous"
           ></script>
+          <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond&family=Teko:wght@500&family=Lora:wght@500&display=swap"
+                rel="stylesheet"/>
         </Head>
         <body>
           <Main />

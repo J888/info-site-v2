@@ -386,7 +386,7 @@ const BlogPostEditor = ({
                       </option>
                     ))}
                   </select>
-                  <img src={part.Contents} style={{ maxWidth: "20rem" }} />
+                  <img src={part.Contents} style={{ maxWidth: "20rem" }} alt={`Image for part ${i}`} />
                   <AddPartButtons insertPartAfterIndex={i} />
                 </div>
               );
@@ -466,19 +466,23 @@ const Admin = ({}) => {
   // Controls what post to show images for, if any
   const [showImagesIndex, setShowImagesIndex] = useState(undefined);
 
-  useEffect(async () => {
+  useEffect(() => {
 
-    if(!loggedInAdmin) {
+    async function callGetCurrentUser() {
       let user = await getCurrentUser();
       if (user?.admin) {
         setLoggedInAdmin(true)
       }
     }
 
+    if(!loggedInAdmin) {
+      callGetCurrentUser();
+    }
+
     if (blogPosts.length == 0) {
       getBlogPosts();
     }
-  });
+  }, [loggedInAdmin, blogPosts.length]);
 
   const loginButtonClickHandler = async (providedUsername, password) => {
     await axios.post(`/api/login`, {
@@ -684,6 +688,7 @@ const Admin = ({}) => {
                         <img
                           src="/icons/trash-24px.png"
                           className={styles.viewCountIcon}
+                          alt={"Trash icon"}
                         />{" "}
                       </Button>
 
@@ -800,14 +805,14 @@ const Admin = ({}) => {
 
             {showImagesIndex !== undefined && (
               <Section>
-                <h1>Images for "{blogPosts[showImagesIndex]?.Title}"</h1>
+                <h1>Images for &quot;{blogPosts[showImagesIndex]?.Title}&quot;</h1>
                 <Container className={styles.postImagesContainer}>
                   {imagesByPostShortId[blogPosts[showImagesIndex]?.PostShortId]?.map(
                     (image) => {
                       
                       return (
                         <div key={image.Key}>
-                          <Image src={image.Url} size={128} />
+                          <Image src={image.Url} size={128} alt={`Image for ${image.Key}`} />
                         </div>
                       );
                     }

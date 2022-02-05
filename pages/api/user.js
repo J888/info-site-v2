@@ -1,7 +1,7 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../lib/session/sessionOptions";
 
-export default withIronSessionApiRoute(
+const User = withIronSessionApiRoute(
   async function loginRoute(req, res) {
     const {
       method,
@@ -26,3 +26,5 @@ export default withIronSessionApiRoute(
   },
   sessionOptions
 );
+
+export default User;

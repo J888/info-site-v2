@@ -4,7 +4,7 @@ import { getSiteUsers } from "../../util/s3Util";
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const crypto = require("crypto");
 
-export default withIronSessionApiRoute(
+const Login = withIronSessionApiRoute(
   async function loginRoute(req, res) {
     const {
       method,
@@ -44,3 +44,5 @@ export default withIronSessionApiRoute(
   },
   sessionOptions
 );
+
+export default Login;
