@@ -84,35 +84,36 @@ export async function getStaticProps({ params, preview = false, previewData }) {
                             Category: post.Category
                           }))
 
+  let baseProps = {
+    siteName,
+    twitterUsername,
+    navLinks,
+    navLogoUrl,
+    navBackground,
+    footerTagline
+  }
+
+  // This is the case when only a category is given
+  // e.g. /posts/{category}/
   if (category && !id) {
-    // if no post id is given e.g. /posts/category/
     return {
       props: {
         postsByCategory,
         category,
-        siteName,
-        twitterUsername,
-        navLinks,
-        navLogoUrl,
-        navBackground,
-        footerTagline
+        ...baseProps
       },
     };
   }
 
+  // Otherwise, the post id is expected to be given.
+  // e.g. /posts/{category}/{PostId}
   let slug = `/posts/${params.slug[0]}/${params.slug[1]}`;
   return {
     props: {
       postData,
-      siteName,
-      twitterUsername,
-      slug,
-      navLinks,
-      navLogoUrl,
-      navBackground,
-      footerTagline,
       disqusShortname: process.env.DISQUS_SHORTNAME,
-      articleUrl: `${process.env.SITE_BASE_URL}${slug}`
+      articleUrl: `${process.env.SITE_BASE_URL}${slug}`,
+      ...baseProps
     },
   };
 }
