@@ -4,7 +4,16 @@ import { getSiteConfig } from "../../util/s3Util";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 import ImagePostGrid from "../../components/imagePostGrid";
 
-const PostsByTag = ({ matchingPosts, tag, siteName, twitterUsername, navLinks, navLogoUrl, navBackground, footerTagline }) => {
+const PostsByTag = ({
+  matchingPosts,
+  tag,
+  siteName,
+  twitterUsername,
+  navLinks,
+  navLogoUrl,
+  navBackground,
+  footerTagline,
+}) => {
   return (
     <MainWrapper
       twitterUsername={twitterUsername}
@@ -50,7 +59,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
       navLinks,
       navLogoUrl,
       navBackground,
-      footerTagline
+      footerTagline,
     },
   };
 }

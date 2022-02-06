@@ -1,7 +1,5 @@
 import MainWrapper from "../../components/mainWrapper";
-import {
-  Block
-} from "react-bulma-components";
+import { Block } from "react-bulma-components";
 import React from "react";
 import { getSiteConfig } from "../../util/s3Util";
 import useSWR from "swr";
@@ -11,8 +9,20 @@ import PostContent from "../../components/postContent";
 import { firstWordsWithEllipses } from "../../util/textUtil";
 import { DiscussionEmbed } from "disqus-react";
 
-const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, slug, navLinks, navLogoUrl, navBackground, footerTagline, articleUrl, disqusShortname }) => {
-
+const Post = ({
+  postData,
+  postsByCategory,
+  category,
+  siteName,
+  twitterUsername,
+  slug,
+  navLinks,
+  navLogoUrl,
+  navBackground,
+  footerTagline,
+  articleUrl,
+  disqusShortname,
+}) => {
   const { data: pageViewData, error } = useSWR(
     `/api/page-views?slug=${encodeURIComponent(slug)}`,
     async (url) => {
@@ -21,11 +31,15 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
     }
   );
 
-  let capitalizedCategory = category?.substring(0,1)?.toUpperCase() + category?.substring(1);
-  let pageTitle = postData?.Title !== undefined ? postData?.Title : `${capitalizedCategory} posts - ${postsByCategory?.length} results`
+  let capitalizedCategory =
+    category?.substring(0, 1)?.toUpperCase() + category?.substring(1);
+  let pageTitle =
+    postData?.Title !== undefined
+      ? postData?.Title
+      : `${capitalizedCategory} posts - ${postsByCategory?.length} results`;
 
   return (
-    <MainWrapper 
+    <MainWrapper
       twitterUsername={twitterUsername}
       pageTitle={pageTitle}
       siteName={siteName}
@@ -36,7 +50,13 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
       navBackground={navBackground}
       footerTagline={footerTagline}
     >
-      {postData && <PostContent data={postData} views={pageViewData?.views} twitterUsername={twitterUsername} />}
+      {postData && (
+        <PostContent
+          data={postData}
+          views={pageViewData?.views}
+          twitterUsername={twitterUsername}
+        />
+      )}
       {postsByCategory && (
         <ImagePostGrid
           posts={postsByCategory}
@@ -44,26 +64,25 @@ const Post = ({ postData, postsByCategory, category, siteName, twitterUsername, 
         />
       )}
       <Block></Block>
-      {
-        articleUrl &&
-          <DiscussionEmbed
-            shortname={disqusShortname}
-            config={
-                {
-                  url: articleUrl,
-                  identifier: slug,
-                  title: pageTitle,
-                  language: 'en_US'
-                }
-            }
+      {articleUrl && (
+        <DiscussionEmbed
+          shortname={disqusShortname}
+          config={{
+            url: articleUrl,
+            identifier: slug,
+            title: pageTitle,
+            language: "en_US",
+          }}
         />
-      }
+      )}
     </MainWrapper>
   );
 };
 
 export async function getStaticProps({ params, preview = false, previewData }) {
-  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
+  const postsDynamo = await getBlogPostsWithPrevNext(
+    process.env.BLOG_POSTS_DYNAMO_TABLE_NAME
+  );
   const [category, id] = params.slug;
   const postData = postsDynamo.filter((post) => post.PostId == id)[0];
   const siteConfig = await getSiteConfig();
@@ -75,14 +94,14 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   const footerTagline = siteConfig.footer.tagline;
 
   let postsByCategory = postsDynamo
-                          .filter(post => post.Category == category)
-                          // trim down posts to only what is needed for the 'all posts in category' page
-                          .map(post => ({ 
-                            ImageS3Url: post.ImageS3Url,
-                            Title: firstWordsWithEllipses(post.Title, 12),
-                            PostId: post.PostId,
-                            Category: post.Category
-                          }))
+    .filter((post) => post.Category == category)
+    // trim down posts to only what is needed for the 'all posts in category' page
+    .map((post) => ({
+      ImageS3Url: post.ImageS3Url,
+      Title: firstWordsWithEllipses(post.Title, 12),
+      PostId: post.PostId,
+      Category: post.Category,
+    }));
 
   let baseProps = {
     siteName,
@@ -90,8 +109,8 @@ export async function getStaticProps({ params, preview = false, previewData }) {
     navLinks,
     navLogoUrl,
     navBackground,
-    footerTagline
-  }
+    footerTagline,
+  };
 
   // This is the case when only a category is given
   // e.g. /posts/{category}/
@@ -100,7 +119,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
       props: {
         postsByCategory,
         category,
-        ...baseProps
+        ...baseProps,
       },
     };
   }
@@ -113,16 +132,19 @@ export async function getStaticProps({ params, preview = false, previewData }) {
       postData,
       disqusShortname: process.env.DISQUS_SHORTNAME,
       articleUrl: `${process.env.SITE_BASE_URL}${slug}`,
-      ...baseProps
+      ...baseProps,
     },
   };
 }
 
 export async function getStaticPaths() {
-  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
+  const postsDynamo = await getBlogPostsWithPrevNext(
+    process.env.BLOG_POSTS_DYNAMO_TABLE_NAME
+  );
 
   return {
-    paths: postsDynamo.map((post) => `/posts/${post.Category}/${post.PostId}`) || [],
+    paths:
+      postsDynamo.map((post) => `/posts/${post.Category}/${post.PostId}`) || [],
     fallback: true,
   };
 }

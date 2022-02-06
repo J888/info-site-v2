@@ -1,16 +1,11 @@
-import {
-  Card,
-  Columns,
-  Message,
-  Tag,
-} from "react-bulma-components";
+import { Card, Columns, Message, Tag } from "react-bulma-components";
 import MainWrapper from "../components/mainWrapper";
 import Link from "next/link";
 import React from "react";
 import { getSiteConfig } from "../util/s3Util";
 import LinkWrapper from "../components/linkWrapper";
 import PostGrid from "../components/postGrid";
-import styles from "../sass/components/Index.module.scss"
+import styles from "../sass/components/Index.module.scss";
 import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 import { capitalizeWord } from "../util/textUtil";
@@ -58,7 +53,7 @@ export default function Home({
   navBackground,
   featuredPosts,
   featuredSection,
-  footerTagline
+  footerTagline,
 }) {
   return (
     <MainWrapper
@@ -86,7 +81,10 @@ export default function Home({
         </Columns.Column>
         <Columns.Column size={4}>
           <h2 className={styles.newestPostHeading}>
-            {newPostHeadingWording(newestPost.CreatedAt, capitalizeWord(newestPost.Category))}
+            {newPostHeadingWording(
+              newestPost.CreatedAt,
+              capitalizeWord(newestPost.Category)
+            )}
           </h2>
           <PostGridItemV2
             description={newestPost.Description}
@@ -94,9 +92,7 @@ export default function Home({
             imageUrl={newestPost.ImageS3Url}
             tags={newestPost.Tags?.slice(0, 4).filter((t) => t.length <= 17)}
             title={newestPost.Title}
-            category={
-              capitalizeWord(newestPost.Category)
-            }
+            category={capitalizeWord(newestPost.Category)}
             createdAt={newestPost.CreatedAt}
             key={newestPost.PostId}
           ></PostGridItemV2>
@@ -107,7 +103,10 @@ export default function Home({
       <Columns className={styles.featuredSectionContainer}>
         <Columns.Column size={2}></Columns.Column>
         <Columns.Column size={8}>
-          <FeaturedSection posts={featuredPosts} titleText={featuredSection.titleText}/>
+          <FeaturedSection
+            posts={featuredPosts}
+            titleText={featuredSection.titleText}
+          />
         </Columns.Column>
         <Columns.Column size={2}></Columns.Column>
       </Columns>
@@ -117,7 +116,9 @@ export default function Home({
         <Columns.Column size={5}>
           <Card>
             <Message>
-              <Message.Header className={styles.popularListHeaders}>Most Viewed This Month</Message.Header>
+              <Message.Header className={styles.popularListHeaders}>
+                Most Viewed This Month
+              </Message.Header>
             </Message>
             {mostVisitedList?.length > 0 && (
               <div className={styles.mostVisitedCard}>
@@ -144,7 +145,9 @@ export default function Home({
         <Columns.Column size={3}>
           <Card>
             <Message>
-              <Message.Header className={styles.popularListHeaders}>Popular Hashtags</Message.Header>
+              <Message.Header className={styles.popularListHeaders}>
+                Popular Hashtags
+              </Message.Header>
             </Message>
 
             <Card.Content>
@@ -165,11 +168,14 @@ export default function Home({
 
       {Object.keys(categoryDescriptions).map((category) => (
         <Columns key={category}>
-          <Columns.Column size={2}>
-          </Columns.Column>
+          <Columns.Column size={2}></Columns.Column>
 
           <Columns.Column size={8}>
-            <PostGrid posts={postsByCategory[category].slice(0, 8)} heading={capitalizeWord(category)} subHeading={categoryDescriptions[category]} />
+            <PostGrid
+              posts={postsByCategory[category].slice(0, 8)}
+              heading={capitalizeWord(category)}
+              subHeading={categoryDescriptions[category]}
+            />
             <div className={styles.seeAllLink}>
               <Link href={`/posts/${category}`} passHref>
                 <a>
@@ -181,10 +187,8 @@ export default function Home({
             </div>
           </Columns.Column>
 
-          <Columns.Column size={2}>
-          </Columns.Column>
+          <Columns.Column size={2}></Columns.Column>
         </Columns>
-        
       ))}
 
       <div className={styles.seeAllLink}>
@@ -197,7 +201,9 @@ export default function Home({
 }
 
 export async function getStaticProps() {
-  const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
+  const postsDynamo = await getBlogPostsWithPrevNext(
+    process.env.BLOG_POSTS_DYNAMO_TABLE_NAME
+  );
   const siteConfig = await getSiteConfig();
   const pageViewsMappedBySlug = await getPageViewsBySlug("2021-11-25");
 
@@ -212,10 +218,13 @@ export async function getStaticProps() {
   let mostVisitedList = [];
   for (let slug in pageViewsMappedBySlug) {
     if (slug.includes("/posts/")) {
-      let title = postsDynamo.filter(p => `/posts/${p.Category}/${p.PostId}` === slug)[0]?.Title
+      let title = postsDynamo.filter(
+        (p) => `/posts/${p.Category}/${p.PostId}` === slug
+      )[0]?.Title;
 
-      if (title) { //  title could be undefined if the page id changes after google analytics already recorded it
-        mostVisitedList.push({ slug, title })
+      if (title) {
+        //  title could be undefined if the page id changes after google analytics already recorded it
+        mostVisitedList.push({ slug, title });
       }
     }
   }
@@ -251,16 +260,15 @@ export async function getStaticProps() {
   // that won't be used.
   let postsStrippedDown = postsDynamo.map((p) => {
     // Separate out the Parts array.. it's not needed for the front page.
-    let {Parts, ...stripped} = p;
+    let { Parts, ...stripped } = p;
     return stripped;
   });
 
   // newest post to display at top of front page
   let newestPost = postsStrippedDown[0];
 
-  let postsByCategory = {}
+  let postsByCategory = {};
   for (let p of postsStrippedDown) {
-
     // if the post is the newest one, skip it since it's already displayed
     // at the top of the front page
     if (p.PostShortId === newestPost.PostShortId) {
@@ -270,7 +278,7 @@ export async function getStaticProps() {
     if (postsByCategory[cat] === undefined) {
       postsByCategory[cat] = [p];
     } else {
-      postsByCategory[cat].push(p)
+      postsByCategory[cat].push(p);
     }
   }
 
@@ -284,7 +292,9 @@ export async function getStaticProps() {
   const navBackground = siteConfig.nav.background;
   const featuredSection = siteConfig.featuredSection;
   const footerTagline = siteConfig.footer.tagline;
-  const featuredPosts = postsStrippedDown.filter(p => featuredSection.postIds.includes(p.PostId))
+  const featuredPosts = postsStrippedDown.filter((p) =>
+    featuredSection.postIds.includes(p.PostId)
+  );
 
   return {
     props: {
@@ -302,7 +312,7 @@ export async function getStaticProps() {
       navBackground,
       featuredPosts,
       featuredSection,
-      footerTagline
+      footerTagline,
     },
   };
 }
