@@ -4,6 +4,7 @@
 - Warning: data for page "/" is 201 kB, this amount of data can reduce performance.
        -  https://nextjs.org/docs/messages/large-page-data 
 - Add "Back to top" button on articles. Useful if article is long.
+- Transfer this to a generic repo.
 
 # ENV VARS
 
@@ -14,7 +15,7 @@ export AWS_ACCESS_KEY_ID= \
        SITE_FOLDER_S3= \
        STATIC_FILES_S3_BUCKET= \
        IMG_S3_BUCKET= \
-       GOOGLE_ANALYTICS_PROPERTY_ID=G-XBBRM7C9ZE
+       GOOGLE_ANALYTICS_PROPERTY_ID=
 
 ```
 
@@ -38,10 +39,27 @@ npm run start
 
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 - Bulma-React
-- S3 for static file storage
+- S3 for file storage
+- Dynamo DB for storing articles (content and metadata both)
 
-## To-Do:
+## Authentication - Derive hash
 
-- Create S3 bucket and read/write role
-- Upload markdown files to S3
-- Read from S3 at build time
+```javascript
+
+// Generate salt + hash
+const crypto = require("crypto");
+const args = process.argv.slice(2);
+const salt = crypto.randomBytes(16).toString("hex");
+const derived = crypto.scryptSync(args[0], salt, 64).toString("hex");
+// store the salt and derived hash somewhere safe
+
+
+// Check if there's a match
+const hash = 'hash stored somewhere'
+const salt = 'salt stored somewhere'
+const derived = crypto.scryptSync(password, salt, 64).toString("hex");
+
+if (derived === hash) {
+       // you've got a match
+}
+```
