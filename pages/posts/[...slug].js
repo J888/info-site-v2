@@ -129,6 +129,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   let slug = `/posts/${params.slug[0]}/${params.slug[1]}`;
   return {
     props: {
+      slug,
       postData,
       disqusShortname: process.env.DISQUS_SHORTNAME,
       articleUrl: `${process.env.SITE_BASE_URL}${slug}`,
