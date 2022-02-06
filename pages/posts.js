@@ -5,7 +5,7 @@ import { getSiteConfig } from "../util/s3Util";
 import PostGrid from "../components/postGrid";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 
-const AllPosts = ({ postsDynamo, siteSubject, siteName, twitterUsername, navLinks, navLogoUrl }) => {
+const AllPosts = ({ postsDynamo, siteSubject, siteName, twitterUsername, navLinks, navLogoUrl, navBackground, footerTagline}) => {
   return (
     <MainWrapper
       twitterUsername={twitterUsername}
@@ -14,6 +14,8 @@ const AllPosts = ({ postsDynamo, siteSubject, siteName, twitterUsername, navLink
       description={`A grid of all blog posts available on the website`}
       navLinks={navLinks}
       navLogoUrl={navLogoUrl}
+      navBackground={navBackground}
+      footerTagline={footerTagline}
     >
       <Columns>
         <Columns.Column size={1}></Columns.Column>
@@ -36,6 +38,8 @@ export async function getStaticProps() {
   const siteName = siteConfig.site.name;
   const navLinks = siteConfig.nav.links;
   const navLogoUrl = siteConfig.nav.logoUrl;
+  const navBackground = siteConfig.nav.background;
+  const footerTagline = siteConfig.footer.tagline;
 
   return {
     props: {
@@ -44,7 +48,9 @@ export async function getStaticProps() {
       siteName,
       twitterUsername,
       navLinks,
-      navLogoUrl
+      navLogoUrl,
+      navBackground,
+      footerTagline
     },
   };
 }

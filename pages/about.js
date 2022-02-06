@@ -3,7 +3,7 @@ import MainWrapper from "../components/mainWrapper";
 import { getSiteConfig } from "../util/s3Util";
 import Billboard from "../components/billboard";
 
-const About = ({ site, pageData, socialMedia, navLinks, navLogoUrl }) => {
+const About = ({ site, pageData, socialMedia, navLinks, navLogoUrl, footerTagline, navBackground }) => {
   
   const AboutParagraphs = 
     <React.Fragment>
@@ -20,6 +20,8 @@ const About = ({ site, pageData, socialMedia, navLinks, navLogoUrl }) => {
       description={`The about page for ${site.name}`}
       navLinks={navLinks}
       navLogoUrl={navLogoUrl}
+      footerTagline={footerTagline}
+      navBackground={navBackground}
     >
       <Billboard title={"About"} bodyComponent={AboutParagraphs}/>
     </MainWrapper>
@@ -31,10 +33,12 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   const { site, pageData, socialMedia } = siteConfig;
   const navLinks = siteConfig.nav.links;
   const navLogoUrl = siteConfig.nav.logoUrl;
+  const footerTagline = siteConfig.footer.tagline;
+  const navBackground = siteConfig.nav.background;
 
   return {
     props: {
-      site, pageData, socialMedia, navLinks, navLogoUrl
+      site, pageData, socialMedia, navLinks, navLogoUrl, footerTagline, navBackground
     },
   };
 }

@@ -1,9 +1,8 @@
 import Head from "next/head";
 import { Block } from "react-bulma-components";
 import Nav from "./navbar";
-import Logo from "./logo";
+import Footer from "./footer";
 import styles from "../sass/components/MainWrapper.module.scss"
-import { SocialIcon } from "react-social-icons";
 
 export default function MainWrapper(props) {
 
@@ -48,26 +47,18 @@ export default function MainWrapper(props) {
         twitterUsername={props.twitterUsername}
         navLinks={props.navLinks}
         navLogoUrl={props.navLogoUrl}
-        />
+        background={props.navBackground}
+      />
       <Block/>
       <main className={styles.mainSection}>
         {props.children}
       </main>
 
-      <footer className={styles.footer}>
-        <div className={styles.footerLogo}>
-          <Logo logoUrl={props.navLogoUrl}/>
-        </div>
-        <div>{`© ${new Date().getFullYear()} - Made With NextJS`}</div>
-        <div className={styles.twitterIcon}>
-          <SocialIcon
-            url={`https://twitter.com/${props.twitterUsername}`}
-            bgColor={"rgb(77, 77, 77)"}
-            style={{ height: 26, width: 26 }}
-          />
-        </div>
-        
-      </footer>
+      <Footer
+        logoUrl={props.navLogoUrl}
+        twitterUsername={props.twitterUsername}
+        tagline={props.footerTagline}
+      />
     </div>
   );
 }

@@ -55,8 +55,10 @@ export default function Home({
   twitterUsername,
   navLinks,
   navLogoUrl,
+  navBackground,
   featuredPosts,
-  featuredSection
+  featuredSection,
+  footerTagline
 }) {
   return (
     <MainWrapper
@@ -66,6 +68,8 @@ export default function Home({
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
       navLinks={navLinks}
       navLogoUrl={navLogoUrl}
+      navBackground={navBackground}
+      footerTagline={footerTagline}
     >
       <Columns style={{ margin: "0 0.5rem 0 0.5rem" }}>
         <Columns.Column size={2}></Columns.Column>
@@ -277,7 +281,9 @@ export async function getStaticProps() {
   let siteName = siteConfig.site.name;
   const navLinks = siteConfig.nav.links;
   const navLogoUrl = siteConfig.nav.logoUrl;
+  const navBackground = siteConfig.nav.background;
   const featuredSection = siteConfig.featuredSection;
+  const footerTagline = siteConfig.footer.tagline;
   const featuredPosts = postsStrippedDown.filter(p => featuredSection.postIds.includes(p.PostId))
 
   return {
@@ -293,8 +299,10 @@ export async function getStaticProps() {
       twitterUsername,
       navLinks,
       navLogoUrl,
+      navBackground,
       featuredPosts,
-      featuredSection
+      featuredSection,
+      footerTagline
     },
   };
 }
