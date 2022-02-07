@@ -1,10 +1,16 @@
 ### ToDo
 
 - "highlighted" tweets section - show a set of tweets (with react twitter embed component)
+  - configurable in site config. And if they're not present then don't display anything.
 - Warning: data for page "/" is 201 kB, this amount of data can reduce performance.
        -  https://nextjs.org/docs/messages/large-page-data 
 - Add "Back to top" button on articles. Useful if article is long.
-- Transfer this to a generic repo.
+- Transfer this to a generic repo
+  - update host app config
+- Make the background color of the navbar a config item.
+- Admin
+  - drag/drop picture upload that also compresses it.
+  - Make article list searchable/filterable by title on admin page.
 
 # ENV VARS
 
