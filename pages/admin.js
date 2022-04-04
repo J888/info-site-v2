@@ -5,6 +5,7 @@ import PostContent from "../components/postContent";
 import shortUUID from "short-uuid";
 import styles from "../sass/components/Admin.module.scss"
 const ADD_CONTENT = "Add content. . .";
+import FD from "form-data";
 
 const LogIn = ({ loginButtonClickHandler }) => {
   const [username, setUsername] = useState("");
@@ -817,6 +818,27 @@ const Admin = ({}) => {
                       );
                     }
                   )}
+                </Container>
+                <Container>
+                  <h1>Upload image</h1>
+                  <input type="file"
+                          id="avatar" name="imagebuff"
+                          accept="image/png, image/jpeg"
+                          onInput={async (e) => {
+                            console.log(e.target.value);
+                            const fd = new FD();
+                            fd.append("imagefile", e.target.files[0]);
+                            fd.append("PostShortId", blogPosts[showImagesIndex]?.PostShortId)
+                            const res = await fetch(`/api/posts/uploadImageV2`,
+                              {
+                                method: 'POST',
+                                body: fd
+                              });
+                            console.log(res);
+                          }}>
+                          
+                  </input>
+
                 </Container>
               </Section>
             )}

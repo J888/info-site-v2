@@ -85,4 +85,17 @@ const getSiteUsers = async () => {
   return yaml.load(configStr);
 }
 
-export { getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers }
+const uploadImgObjectToS3 = async (Bucket, Key, Body) => {
+  const command = new PutObjectCommand({ Bucket, Key, Body, Tagging: "public=TRUE", ContentType: 'image/jpeg' });
+  const response = await client.send(command);
+  return response;
+}
+
+const uploadImage = async (Bucket, PostShortId, imageBuff, fileName) => {
+  let objKey = `posts/${PostShortId}/${fileName}`
+  let response = await uploadImgObjectToS3(Bucket, objKey, imageBuff);
+  // console.log(response);
+  return response;
+}
+
+export { getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage }

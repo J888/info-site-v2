@@ -1,5 +1,5 @@
 {
-  "name": "general-info-site",
+  "name": "info-site-v2",
   "version": "0.1.0",
   "engines": {
     "node": "15.11.0"
@@ -24,7 +24,9 @@
     "disqus-react": "^1.1.2",
     "form-data": "^2.3.3",
     "iron-session": "^6.0.2",
+    "multer": "^1.4.4",
     "next": "^12.0.3",
+    "next-connect": "^0.12.1",
     "node-cache": "^5.1.2",
     "react": "^17.0.2",
     "react-bottom-scroll-listener": "^5.0.0",
