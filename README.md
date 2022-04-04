@@ -8,9 +8,11 @@
 - Make the background color of the navbar a config item.
 - Admin
   - break it out into components
-  - compress photos before upload.
-  - make list of photos look better.
-  - add delete button for items in list of photos 
+  - image upload:
+    - show success/fail status of upload
+    - compress photos before upload
+    - make list of photos look better.
+    - add delete button for items in list of photos 
   - Make article list searchable/filterable by title on admin page.
 
 # ENV VARS
@@ -45,9 +47,12 @@ npm run start
 ## Stack
 
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-- Bulma-React
+- Bulma-React component library
 - S3 for file storage
 - Dynamo DB for storing articles (content and metadata both)
+- Iron-session for storing session info
+- Disqus for comments
+- Google Analytics for view count
 
 ## Authentication - Derive hash
 
@@ -70,3 +75,7 @@ if (derived === hash) {
        // you've got a match
 }
 ```
+
+## Disqus
+- Disqus will auto-close discussions after 30 days.
+   - To disable this, go into the site config and change 30 to 0.
