@@ -6,6 +6,7 @@ import shortUUID from "short-uuid";
 import styles from "../sass/components/Admin.module.scss"
 const ADD_CONTENT = "Add content. . .";
 import FD from "form-data";
+import ActionableImageList from "../components/actionableImageList";
 
 const LogIn = ({ loginButtonClickHandler }) => {
   const [username, setUsername] = useState("");
@@ -461,6 +462,8 @@ const Admin = ({}) => {
   const [currentSaveState, setCurrentSaveState] = useState('NONE');
   const [deploymentId, setDeploymentId] = useState(null);
   const [deploymentDetails, setDeploymentDetails] = useState(null);
+  const [imageFileToBeUploaded, setImageFileToBeUploaded] = useState(null);
+  const [imageUploadSuccess, setImageUploadSuccess] = useState(false);
   
   const [imageFile, setImageFile] = useState(null);
 
@@ -806,39 +809,75 @@ const Admin = ({}) => {
 
             {showImagesIndex !== undefined && (
               <Section>
-                <h1>Images for &quot;{blogPosts[showImagesIndex]?.Title}&quot;</h1>
+                <h1 style={{marginBottom: '2rem'}}>Images for &quot;{blogPosts[showImagesIndex]?.Title}&quot;</h1>
                 <Container className={styles.postImagesContainer}>
-                  {imagesByPostShortId[blogPosts[showImagesIndex]?.PostShortId]?.map(
-                    (image) => {
-                      
-                      return (
-                        <div key={image.Key}>
-                          <Image src={image.Url} size={128} alt={`Image for ${image.Key}`} />
-                        </div>
-                      );
-                    }
-                  )}
+                  <ActionableImageList
+                    images={imagesByPostShortId[blogPosts[showImagesIndex]?.PostShortId]}
+                    actionHandler={async (imageKey, action) => {
+                      if (action === `DELETE`) {
+                        const deleteRes = await axios.delete(`/api/images/${blogPosts[showImagesIndex]?.PostShortId}/${imageKey}`);
+                        if (deleteRes.status === 204) {
+                          await fetchImagesHandler(blogPosts[showImagesIndex]?.PostShortId);
+                        }
+                      }
+                    }}
+                  />
                 </Container>
                 <Container>
                   <h1>Upload image</h1>
-                  <input type="file"
-                          id="avatar" name="imagebuff"
-                          accept="image/png, image/jpeg"
-                          onInput={async (e) => {
-                            console.log(e.target.value);
-                            const fd = new FD();
-                            fd.append("imagefile", e.target.files[0]);
-                            fd.append("PostShortId", blogPosts[showImagesIndex]?.PostShortId)
-                            const res = await fetch(`/api/posts/uploadImageV2`,
-                              {
-                                method: 'POST',
-                                body: fd
-                              });
-                            console.log(res);
+                  {
+                    imageFileToBeUploaded &&
+                    <p>{imageFileToBeUploaded.name}</p>
+                  }
+                  {
+                    imageFileToBeUploaded == null &&
+                    <input type="file"
+                           id="avatar" name="imagebuff"
+                           accept="image/png, image/jpeg"
+                           onInput={async (e) => {
+                            setImageUploadSuccess(false);
+                            setImageFileToBeUploaded(e.target.files[0]);
                           }}>
                           
                   </input>
+                  }
+                  
+                  {
+                    imageFileToBeUploaded &&
+                    <div>
+                      <Button onClick={async () => {
 
+                        const fd = new FD();
+                        fd.append("imagefile", imageFileToBeUploaded);
+                        fd.append("PostShortId", blogPosts[showImagesIndex]?.PostShortId)
+                        const res = await fetch(`/api/posts/uploadImageV2`,
+                          {
+                            method: 'POST',
+                            body: fd
+                          });
+                        setImageUploadSuccess(res.status === 200)
+                        if (res.status === 200) {
+                          await fetchImagesHandler(blogPosts[showImagesIndex]?.PostShortId);
+                          setImageFileToBeUploaded(null);
+                        }
+                      }}>
+                        {"Upload"}
+                      </Button>
+                      <Button onClick={() => {
+                        setImageFileToBeUploaded(null);
+                      }}>
+                        {"Cancel"}
+                      </Button>
+                    </div>
+                  }
+
+                  {
+                    imageUploadSuccess &&
+                    <div>
+                      <span style={{color: 'green'}}>Upload successful!</span>
+                    </div>
+                  }
+                  
                 </Container>
               </Section>
             )}

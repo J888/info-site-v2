@@ -1,0 +1,33 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(5,minmax(0,1fr));
+  grid-column-gap: 11px;
+  grid-row-gap: 13px;
+
+}
+
+.itemContainer {
+  // to push everything to bottom of container
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  border: 0.1rem solid #e1e1e1;
+
+  padding: 0.2rem;
+}
+
+.image {
+  height: 10rem;
+  width: 100%;
+  object-fit: cover;
+}
+
+.deleteButton {
+  font-size: 0.7rem;
+  width: fit-content;
+  padding: 0rem;
+  padding-right: 0.3rem;
+  padding-left: 0.3rem;
+  height: fit-content;
+}

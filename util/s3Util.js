@@ -1,6 +1,6 @@
 import { appCache, siteFileCacheKey } from "./nodeCache";
 
-const { S3Client, GetObjectCommand, S3, ListObjectsV2Command, PutObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
+const { S3Client, GetObjectCommand, S3, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
 const REGION = 'us-east-2';
 const client = new S3Client({ region: REGION });
 import yaml from "js-yaml";
@@ -85,6 +85,13 @@ const getSiteUsers = async () => {
   return yaml.load(configStr);
 }
 
+const deleteFileS3 = async (Bucket, PostShortId, fileName) => {
+  const Key = `posts/${PostShortId}/${fileName}`;
+  const command = new DeleteObjectCommand({ Bucket, Key });
+  const response = await client.send(command);
+  return response;
+}
+
 const uploadImgObjectToS3 = async (Bucket, Key, Body) => {
   const command = new PutObjectCommand({ Bucket, Key, Body, Tagging: "public=TRUE", ContentType: 'image/jpeg' });
   const response = await client.send(command);
@@ -94,8 +101,7 @@ const uploadImgObjectToS3 = async (Bucket, Key, Body) => {
 const uploadImage = async (Bucket, PostShortId, imageBuff, fileName) => {
   let objKey = `posts/${PostShortId}/${fileName}`
   let response = await uploadImgObjectToS3(Bucket, objKey, imageBuff);
-  // console.log(response);
   return response;
 }
 
-export { getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage }
+export { deleteFileS3, getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage }
