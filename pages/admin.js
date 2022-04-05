@@ -1,453 +1,26 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Card, Columns, Container, Image, Section, Tag } from "react-bulma-components";
-import PostContent from "../components/postContent";
+import { Button, Card, Columns, Section } from "react-bulma-components";
 import shortUUID from "short-uuid";
 import styles from "../sass/components/Admin.module.scss"
 const ADD_CONTENT = "Add content. . .";
-import FD from "form-data";
-import ActionableImageList from "../components/actionableImageList";
+import BlogPostEditor from "../components/blogPostEditor";
+import LoginForm from "../components/loginForm";
+import ImageUploadEditor from "../components/imageUploadEditor";
+import DeploymentControls from "../components/deploymentControls";
 
-const LogIn = ({ loginButtonClickHandler }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  return (
-    <div>
-      Login
-      <div>
-        <input
-          placeholder="username"
-          onChange={(event) => {
-            setUsername(event.target.value);
-          }}
-        ></input>
-        <input
-          placeholder="password"
-          type="password"
-          onChange={(event) => {
-            setPassword(event.target.value);
-          }}
-        ></input>
-        <button
-          onClick={() => {
-            loginButtonClickHandler(username, password);
-          }}
-        >
-          Log in
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const BlogPostEditor = ({
-  isEdited,
-  isDraftChangeHandler,
-  updatePostHandler,
-  postIndex,
-  initialData,
-  images,
-  saveState,
-  savePostHandler
-}) => {
-
-  const [showPreview, setShowPreview] = useState(false);
-
-  const AddPartButtons = ({ insertPartAfterIndex }) => (
-    <React.Fragment>
-      <button
-        onClick={() => {
-          let newParts = [...initialData.Parts];
-
-          newParts.splice(insertPartAfterIndex + 1, 0, {
-            Type: "IMAGE",
-          });
-
-          let newBlogPostData = {};
-          Object.assign(newBlogPostData, initialData);
-          newBlogPostData.Parts = newParts;
-
-          updatePostHandler(postIndex, newBlogPostData);
-        }}
-
-        disabled={!images || !images?.length > 0}
-      >
-        + image
-      </button>
-      <button
-        onClick={() => {
-          let newParts = [...initialData.Parts];
-
-          newParts.splice(insertPartAfterIndex + 1, 0, {
-            Type: "MARKDOWN",
-            Contents: ADD_CONTENT,
-          });
-
-          let newBlogPostData = {};
-          Object.assign(newBlogPostData, initialData);
-          newBlogPostData.Parts = newParts;
-
-          updatePostHandler(postIndex, newBlogPostData);
-        }}
-      >
-        + text
-      </button>
-      <button
-        onClick={() => {
-          let newParts = [...initialData.Parts];
-
-          newParts.splice(insertPartAfterIndex + 1, 0, {
-            Type: "TWEET_SINGLE",
-            Contents: '',
-          });
-
-          let newBlogPostData = {};
-          Object.assign(newBlogPostData, initialData);
-          newBlogPostData.Parts = newParts;
-
-          updatePostHandler(postIndex, newBlogPostData);
-        }}
-      >
-        + tweet
-      </button>
-    </React.Fragment>
-  );
-
-  const genericOnChangeAttrUpdater = (e, attrKey) => {
-    let newBlogPostData = {};
-    Object.assign(newBlogPostData, initialData);
-    newBlogPostData[attrKey] = e.target.value;
-    updatePostHandler(postIndex, newBlogPostData);
-  };
-
-  return (
-    <div>
-      <div className={styles.editorTitleContainer}>
-        <h1 className={styles.titleEditing}>
-          {initialData.Title}
-          {initialData.IsNewPost ? " [NEW]" : ""}
-        </h1>
-
-        <div>
-          <Button
-            id={styles.editorSaveButton}
-            onClick={() => {
-              savePostHandler(initialData.PostId);
-            }}
-          >
-            Save
-          </Button>
-          <Button
-            id={styles.previewButton}
-            onClick={() => {
-              setShowPreview(!showPreview);
-            }}
-          >
-            {showPreview == false ? 'Preview' : 'Edit'}
-          </Button>
-
-        </div>
-       
-      </div>
-      <div className={styles.editorPostShortIdTagGroup}>
-        <Tag.Group hasAddons>
-            {isEdited && saveState==="NONE" && <Tag color="warning">Edited</Tag>}
-            {!isEdited && saveState==="NONE" && <Tag color="info">Up to date</Tag>}
-            {saveState === "SUCCESS" && <Tag color="success">Saved!</Tag>}
-            {saveState === "FAIL" && <Tag color="danger">Save Failed</Tag>}
-          <Tag color="light">{initialData.PostShortId}</Tag>
-        </Tag.Group>
-      </div>
-      {
-        showPreview == true &&
-        <PostContent data={initialData} views={0} twitterUsername={'Preview'}/>
-      }
-
-      {
-        !(showPreview == true) &&
-        <div className={styles.editorForm}>
-          <label>Title</label>
-          <input
-            placeholder={"Edit Title"}
-            className={styles.titleInput}
-            value={initialData.Title}
-            onChange={(e) => {
-              genericOnChangeAttrUpdater(e, "Title");
-            }}
-          ></input>
-
-          <div className={styles.editorIsDraftCheckbox}>
-            <label>Draft</label>
-            <input
-              type="checkbox"
-              checked={initialData.IsDraft === true}
-              onChange={()=> {
-                isDraftChangeHandler(postIndex);
-              }}
-            ></input>
-          </div>
-
-          <label>SubTitle</label>
-          <input
-            placeholder={"Edit SubTitle"}
-            className={styles.titleInput}
-            value={initialData.SubTitle}
-            onChange={(e) => {
-              genericOnChangeAttrUpdater(e, "SubTitle");
-            }}
-          ></input>
-
-          <label>Description</label>
-          <input
-            placeholder={"Edit Description"}
-            className={styles.titleInput}
-            value={initialData.Description}
-            onChange={(e) => {
-              genericOnChangeAttrUpdater(e, "Description");
-            }}
-          ></input>
-
-          <label>Category</label>
-          <input
-            placeholder={"Edit Category"}
-            className={styles.categoryInput}
-            value={initialData.Category}
-            onChange={(e) => {
-              genericOnChangeAttrUpdater(e, "Category");
-            }}
-          ></input>
-
-          <label>PostId / slug</label>
-          <input
-            placeholder={"Edit PostId"}
-            className={styles.categoryInput}
-            value={initialData.PostId}
-            onChange={(e) => {
-              genericOnChangeAttrUpdater(e, "PostId");
-            }}
-          ></input>
-
-          <label>Tags</label>
-          <input
-            placeholder={"Edit Tags"}
-            className={styles.categoryInput}
-            value={initialData.Tags.join(",")}
-            onChange={(e) => {
-              let newBlogPostData = {};
-              Object.assign(newBlogPostData, initialData);
-              newBlogPostData.Tags = e.target.value.split(",");
-              updatePostHandler(postIndex, newBlogPostData);
-            }}
-            onBlur={(e) => {
-              let newBlogPostData = {};
-              Object.assign(newBlogPostData, initialData);
-              newBlogPostData.Tags = e.target.value
-                .split(",")
-                .filter((tag) => tag != "");
-              updatePostHandler(postIndex, newBlogPostData);
-            }}
-          ></input>
-
-          <label>CreatedAt</label>
-          <input
-            placeholder={"Edit CreatedAt - MM/DD/YYYY, HH:MM:SS AM/PM"}
-            className={styles.categoryInput}
-            value={initialData.CreatedAt}
-            onChange={(e) => {
-              genericOnChangeAttrUpdater(e, "CreatedAt");
-            }}
-          ></input>
-
-          <div className={styles.editorMainImageContainer}>
-            <label>Main image:</label>
-            <select
-              name="images"
-              id="images"
-              onChange={(event) => {
-                if (!event.target.value) {
-                  return;
-                }
-
-                let url = images.find(
-                  (image) => image.Key === event.target.value
-                ).Url;
-
-                let newBlogPostData = {};
-                Object.assign(newBlogPostData, initialData);
-                newBlogPostData.ImageS3Url = url;
-                newBlogPostData.ImageKey = event.target.value;
-
-                updatePostHandler(postIndex, newBlogPostData);
-              }}
-            >
-              <option key={"blank-option"}></option>
-              {images?.map((image) => (
-                <option value={image.Key} key={image.Key}>
-                  {image.Key}
-                </option>
-              ))}
-            </select>
-            <Image
-              src={initialData.ImageS3Url}
-              alt={initialData.ImageKey}
-              className={styles.editorMainImage}
-            />
-          </div>
-
-          <AddPartButtons insertPartAfterIndex={-1} />
-
-          {initialData.Parts.map((part, i) => {
-            if (part.Type === "MARKDOWN") {
-              return (
-                <div
-                  key={`${i}-${initialData.PostId}-md-part`}
-                  className={styles.mdPartEditor}
-                >
-                  <span
-                    className={styles.redDotDeleteMdPart}
-                    onClick={() => {
-                      let newParts = [...initialData.Parts];
-                      newParts.splice(i, 1); // .splice(index, howManyToDelete)
-
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
-                      newBlogPostData.Parts = newParts;
-
-                      updatePostHandler(postIndex, newBlogPostData);
-                    }}
-                  ></span>
-                  <textarea
-                    className={styles.textAreaEditor}
-                    value={part.Contents != ADD_CONTENT ? part.Contents : undefined}
-                    placeholder={
-                      part.Contents == ADD_CONTENT ? ADD_CONTENT : undefined
-                    }
-                    onChange={(e) => {
-                      let newParts = [...initialData.Parts];
-                      newParts[i].Contents = e.target.value;
-
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
-                      newBlogPostData.Parts = newParts;
-
-                      updatePostHandler(postIndex, newBlogPostData);
-                    }}
-                  ></textarea>
-
-                  <AddPartButtons insertPartAfterIndex={i} />
-
-                  <br />
-                </div>
-              );
-            } else if (part.Type === "IMAGE") {
-              return (
-                <div
-                  className={styles.imagePartSelect}
-                  key={`${i}-${initialData.PostId}-image-part`}
-                >
-                  <span
-                    className={styles.redDotDeleteImgPart}
-                    onClick={() => {
-                      let newParts = [...initialData.Parts];
-                      newParts.splice(i, 1); // .splice(index, howManyToDelete)
-
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
-                      newBlogPostData.Parts = newParts;
-
-                      updatePostHandler(postIndex, newBlogPostData);
-                    }}
-                  ></span>
-                  <p className={styles.selectImageLabel}>Select image: </p>
-                  <select
-                    name="images"
-                    id="images"
-                    onChange={(event) => {
-                      if (!event.target.value) {
-                        return;
-                      }
-
-                      let url = images.find(
-                        (image) => image.Key === event.target.value
-                      ).Url;
-
-                      let newParts = [...initialData.Parts];
-                      newParts[i].Contents = url;
-
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
-                      newBlogPostData.Parts = newParts;
-
-                      updatePostHandler(postIndex, newBlogPostData);
-                    }}
-                  >
-                    <option></option>
-                    {images?.map((image) => (
-                      <option value={image.Key} key={image.Key}>
-                        {image.Key}
-                      </option>
-                    ))}
-                  </select>
-                  <img src={part.Contents} style={{ maxWidth: "20rem" }} alt={`Image for part ${i}`} />
-                  <AddPartButtons insertPartAfterIndex={i} />
-                </div>
-              );
-            } else if (part.Type === "TWEET_SINGLE") {
-              return (
-                <div
-                  key={`${i}-${initialData.PostId}-tweet-single-part`}
-                  className={styles.tweetSinglePartEditor}
-                >
-                  <label>Tweet Single: </label>
-                  <span
-                    className={styles.redDotDeleteTweetPart}
-                    onClick={() => {
-                      let newParts = [...initialData.Parts];
-                      newParts.splice(i, 1); // .splice(index, howManyToDelete)
-
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
-                      newBlogPostData.Parts = newParts;
-
-                      console.log(`new parts`)
-                      console.log(newBlogPostData.Parts)
-
-                      updatePostHandler(postIndex, newBlogPostData);
-                    }}
-                  ></span>
-                  <input
-                    placeholder={"Tweet-Id"}
-                    // className={styles.categoryInput}
-                    value={part.Contents}
-                    onChange={(e) => {
-                      let newParts = [...initialData.Parts];
-                      newParts[i].Contents = e.target.value;
-
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
-                      newBlogPostData.Parts = newParts;
-
-                      updatePostHandler(postIndex, newBlogPostData);
-                    }}
-                  ></input>
-
-                  <AddPartButtons insertPartAfterIndex={i} />
-
-                  <br />
-                </div>
-              );
-            }
-          })}
-
-        </div>
-      }
-      
-    </div>
-  );
-};
+const API_ENDPOINTS = {
+  ALL_POST_IMAGES: `/api/posts/images`,
+  ALL_POSTS: `/api/posts/all`,
+  LOGIN: `/api/login`,
+  USER: `/api/user`,
+  CREATE_POSTS: `/api/posts/create/`,
+  DELETE_POSTS: `/api/posts/delete`,
+  UPDATE_POSTS: `/api/posts/update/`
+}
 
 const getCurrentUser = async () => {
-  const res = await axios.get(`api/user`);
+  const res = await axios.get(API_ENDPOINTS.USER);
   return res?.data;
 }
 
@@ -460,15 +33,9 @@ const Admin = ({}) => {
   const [editedPostIndexes, setEditedPostIndexes] = useState([]);
   const [infoShownPostIndexes, setInfoShownPostIndexes] = useState([]); // controls which posts to show info of
   const [currentSaveState, setCurrentSaveState] = useState('NONE');
-  const [deploymentId, setDeploymentId] = useState(null);
-  const [deploymentDetails, setDeploymentDetails] = useState(null);
-  const [imageFileToBeUploaded, setImageFileToBeUploaded] = useState(null);
-  const [imageUploadSuccess, setImageUploadSuccess] = useState(false);
-  
-  const [imageFile, setImageFile] = useState(null);
-
   // Controls what post to show images for, if any
   const [showImagesIndex, setShowImagesIndex] = useState(undefined);
+  const showImagesBlogPost = showImagesIndex != undefined ? blogPosts[showImagesIndex] : null;
 
   useEffect(() => {
 
@@ -488,8 +55,8 @@ const Admin = ({}) => {
     }
   }, [loggedInAdmin, blogPosts.length]);
 
-  const loginButtonClickHandler = async (providedUsername, password) => {
-    await axios.post(`/api/login`, {
+  const loginHandler = async (providedUsername, password) => {
+    await axios.post(API_ENDPOINTS.LOGIN, {
       username: providedUsername,
       password,
     });
@@ -505,13 +72,13 @@ const Admin = ({}) => {
   }
 
   const getBlogPosts = async () => {
-    const res = await axios.get(`/api/posts/all`);
+    const res = await axios.get(API_ENDPOINTS.ALL_POSTS);
     const { items } = res.data;
     setBlogPosts(items);
   }
 
   const fetchImagesHandler = async (PostShortId) => {
-    const res = await axios.get(`/api/posts/images?PostShortId=${PostShortId}`);
+    const res = await axios.get(`${API_ENDPOINTS.ALL_POST_IMAGES}?PostShortId=${PostShortId}`);
     const { items } = res.data;
 
     let newImagesByPostShortId = {}
@@ -535,7 +102,7 @@ const Admin = ({}) => {
     let blogPostData = blogPosts.find(post => post.PostId === postId);
 
     if (!blogPostData.IsNewPost) {
-      const res = await axios.put(`api/posts/update/`, { posts: [blogPostData] });
+      const res = await axios.put(API_ENDPOINTS.UPDATE_POSTS, { posts: [blogPostData] });
 
       const { updateStatusCodes } = res?.data;
       console.log(`[PUT] saving PostId: ${postId}`)
@@ -549,7 +116,7 @@ const Admin = ({}) => {
   
     } else {
       delete blogPostData.IsNewPost
-      const res = await axios.post(`api/posts/create/`, { posts: [blogPostData] });
+      const res = await axios.post(API_ENDPOINTS.CREATE_POSTS, { posts: [blogPostData] });
 
       const { updateStatusCodes } = res?.data;
       console.log(`[POST] saving PostId: ${postId}`)
@@ -566,7 +133,7 @@ const Admin = ({}) => {
 
   const deletePostHandler = async (index) => {
     let blogPostData = blogPosts[index];
-    const res = await axios.post(`api/posts/delete`, { posts: [blogPostData] });
+    const res = await axios.post(API_ENDPOINTS.DELETE_POSTS, { posts: [blogPostData] });
     const { updateStatusCodes } = res?.data;
     console.log(`[POST] for delete, PostId: ${blogPostData.PostId}`)
     console.log(`Status codes were [${updateStatusCodes.join(", ")}]`);
@@ -587,7 +154,7 @@ const Admin = ({}) => {
   return (
     <div>
       {!loggedInAdmin && (
-        <LogIn loginButtonClickHandler={loginButtonClickHandler} />
+        <LoginForm loginHandler={loginHandler} />
       )}
       {loggedInAdmin && <div>Logged in!</div>}
       {loginFailed && <div>Login Failed </div>}
@@ -702,15 +269,7 @@ const Admin = ({}) => {
                         onClick={() => {
                           setActiveBlogPostIndex(i);
                           fetchImagesHandler(post.PostShortId);
-
-                          if (showImagesIndex)
-                            // deselect the image if navigate away
-                            setImageFile(null);
-
-                          console.log(`showImagesIndex: ${showImagesIndex}`);
-                          setShowImagesIndex(
-                            showImagesIndex === undefined ? i : undefined
-                          );
+                          setShowImagesIndex(i);
                         }}
                       >
                         Images
@@ -741,54 +300,17 @@ const Admin = ({}) => {
                   </Card.Header>
                   {infoShownPostIndexes.includes(i) && (
                     <Card.Content>
-                      <div>PostId: {post.PostId}</div>
-                      <div>PostShortId: {post.PostShortId}</div>
-                      <div>Category: {post.Category}</div>
-                      <div>Created at: {post.CreatedAt}</div>
+                      <pre>
+                        {JSON.stringify(post, null, 2)}
+                      </pre>
                     </Card.Content>
                   )}
                 </Card>
               ))}
             </div>
 
-            <Button color="warning"
-              style={{marginRight: '0.4rem'}}
-              onClick={async () => {
-                let confirmed = confirm(`are you sure you want to rebuild the site? This will start a new deployment`);
-                // alert(`confirm was ${confirmed}, DIGITAL_OCEAN_API_BASE_URL=${process.env.DIGITAL_OCEAN_API_BASE_URL}`)
+            <DeploymentControls/>
 
-                if (confirmed === true) {
-                  let deployRes = await axios.post(`api/application/deploy`, {})
-                  console.log(deployRes.data);
-
-                  setDeploymentId(deployRes.data.deploymentId)
-                }
-                
-              }}
-            >Rebuild App
-            </Button>
-
-            <Button color="info"
-              disabled={deploymentId===null}
-              onClick={async () => {
-                let deployRes = await axios.get(`api/application/getDeployment?deploymentId=${deploymentId}`);
-                console.log(deployRes.data);
-                setDeploymentDetails(JSON.stringify(deployRes.data, null, 2))
-              }}
-            >Deployment Details
-            </Button>
-
-            <Tag.Group hasAddons className={styles.deploymentIdTagGroup}>
-              <Tag color="black">DeploymentId</Tag>
-              <Tag>{deploymentId !== null ? deploymentId : "No deployment started"}</Tag>
-            </Tag.Group>
-
-            <div>
-              {deploymentDetails === null && <span>No deployment details</span>}
-              {deploymentDetails !== null && <pre>{deploymentDetails}</pre>}
-            </div>
-
-            
           </Columns.Column>
           <Columns.Column size={9}>
             {blogPosts.length > 0 && showImagesIndex === undefined && (
@@ -809,76 +331,12 @@ const Admin = ({}) => {
 
             {showImagesIndex !== undefined && (
               <Section>
-                <h1 style={{marginBottom: '2rem'}}>Images for &quot;{blogPosts[showImagesIndex]?.Title}&quot;</h1>
-                <Container className={styles.postImagesContainer}>
-                  <ActionableImageList
-                    images={imagesByPostShortId[blogPosts[showImagesIndex]?.PostShortId]}
-                    actionHandler={async (imageKey, action) => {
-                      if (action === `DELETE`) {
-                        const deleteRes = await axios.delete(`/api/images/${blogPosts[showImagesIndex]?.PostShortId}/${imageKey}`);
-                        if (deleteRes.status === 204) {
-                          await fetchImagesHandler(blogPosts[showImagesIndex]?.PostShortId);
-                        }
-                      }
-                    }}
-                  />
-                </Container>
-                <Container>
-                  <h1>Upload image</h1>
-                  {
-                    imageFileToBeUploaded &&
-                    <p>{imageFileToBeUploaded.name}</p>
-                  }
-                  {
-                    imageFileToBeUploaded == null &&
-                    <input type="file"
-                           id="avatar" name="imagebuff"
-                           accept="image/png, image/jpeg"
-                           onInput={async (e) => {
-                            setImageUploadSuccess(false);
-                            setImageFileToBeUploaded(e.target.files[0]);
-                          }}>
-                          
-                  </input>
-                  }
-                  
-                  {
-                    imageFileToBeUploaded &&
-                    <div>
-                      <Button onClick={async () => {
-
-                        const fd = new FD();
-                        fd.append("imagefile", imageFileToBeUploaded);
-                        fd.append("PostShortId", blogPosts[showImagesIndex]?.PostShortId)
-                        const res = await fetch(`/api/posts/uploadImageV2`,
-                          {
-                            method: 'POST',
-                            body: fd
-                          });
-                        setImageUploadSuccess(res.status === 200)
-                        if (res.status === 200) {
-                          await fetchImagesHandler(blogPosts[showImagesIndex]?.PostShortId);
-                          setImageFileToBeUploaded(null);
-                        }
-                      }}>
-                        {"Upload"}
-                      </Button>
-                      <Button onClick={() => {
-                        setImageFileToBeUploaded(null);
-                      }}>
-                        {"Cancel"}
-                      </Button>
-                    </div>
-                  }
-
-                  {
-                    imageUploadSuccess &&
-                    <div>
-                      <span style={{color: 'green'}}>Upload successful!</span>
-                    </div>
-                  }
-                  
-                </Container>
+                <ImageUploadEditor
+                  images={imagesByPostShortId[showImagesBlogPost?.PostShortId]}
+                  postShortId={showImagesBlogPost?.PostShortId}
+                  title={showImagesBlogPost?.Title}
+                  fetchImagesHandler={fetchImagesHandler}
+                />
               </Section>
             )}
           </Columns.Column>
