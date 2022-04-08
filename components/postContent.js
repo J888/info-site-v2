@@ -20,6 +20,7 @@ import postContentStyles from "../sass/components/PostContent.module.scss"
 import AuthorCredits from "../components/AuthorCredits";
 import NextPrevButtons from "../components/nextPrevButtons";
 import { Tweet } from "react-twitter-widgets";
+import HorizontalGoogleAd from "../components/google-ads/HorizontalGoogleAd";
 
 const PostContent = ({ data, views, twitterUsername }) => (
   <Columns>
@@ -86,6 +87,8 @@ const PostContent = ({ data, views, twitterUsername }) => (
               </div>
             </div>
           </Container>
+
+          <HorizontalGoogleAd/>
 
           <Section>
             {data?.Parts?.map((part, i) => {
