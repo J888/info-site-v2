@@ -9,16 +9,8 @@ import LoginForm from "../components/loginForm";
 import ImageUploadEditor from "../components/imageUploadEditor";
 import DeploymentControls from "../components/deploymentControls";
 import ScrollablePosts from "../components/scrollablePosts";
-
-const API_ENDPOINTS = {
-  ALL_POST_IMAGES: `/api/posts/images`,
-  ALL_POSTS: `/api/posts/all`,
-  LOGIN: `/api/login`,
-  USER: `/api/user`,
-  CREATE_POSTS: `/api/posts/create/`,
-  DELETE_POSTS: `/api/posts/delete`,
-  UPDATE_POSTS: `/api/posts/update/`,
-};
+import { API_ENDPOINTS } from "../lib/constants";
+import { getCurrentUser } from "../lib/user";
 
 const newPost = (postNum) => ({
   PostId: `post-${postNum}-id`,
@@ -40,11 +32,6 @@ const newPost = (postNum) => ({
   IsNewPost: true,
   IsDraft: true,
 });
-
-const getCurrentUser = async () => {
-  const res = await axios.get(API_ENDPOINTS.USER);
-  return res?.data;
-};
 
 const Admin = ({}) => {
   const [loggedInAdmin, setLoggedInAdmin] = useState(false);

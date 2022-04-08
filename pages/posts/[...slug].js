@@ -8,6 +8,7 @@ import ImagePostGrid from "../../components/imagePostGrid";
 import PostContent from "../../components/postContent";
 import { firstWordsWithEllipses } from "../../util/textUtil";
 import { DiscussionEmbed } from "disqus-react";
+import { API_ENDPOINTS } from "../../lib/constants";
 
 const Post = ({
   postData,
@@ -24,7 +25,7 @@ const Post = ({
   disqusShortname,
 }) => {
   const { data: pageViewData, error } = useSWR(
-    `/api/page-views?slug=${encodeURIComponent(slug)}`,
+    `${API_ENDPOINTS.PAGE_VIEWS}?slug=${encodeURIComponent(slug)}`,
     async (url) => {
       const res = await fetch(url);
       return res.json();

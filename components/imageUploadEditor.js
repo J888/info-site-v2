@@ -4,6 +4,7 @@ import axios from "axios";
 import { Button, Container } from "react-bulma-components";
 import FD from "form-data";
 import ActionableImageList from "../components/actionableImageList";
+import { API_ENDPOINTS } from "../lib/constants";
 
 const ImageUploadEditor = ({ images, postShortId, title, fetchImagesHandler }) => {
   const [imageFileToBeUploaded, setImageFileToBeUploaded] = useState(null);
@@ -20,7 +21,7 @@ const ImageUploadEditor = ({ images, postShortId, title, fetchImagesHandler }) =
           actionHandler={async (imageKey, action) => {
             if (action === `DELETE`) {
               const deleteRes = await axios.delete(
-                `/api/images/${postShortId}/${imageKey}`
+                `${API_ENDPOINTS.IMAGES}/${postShortId}/${imageKey}`
               );
               if (deleteRes.status === 204) {
                 await fetchImagesHandler(postShortId);
@@ -52,7 +53,7 @@ const ImageUploadEditor = ({ images, postShortId, title, fetchImagesHandler }) =
                 const fd = new FD();
                 fd.append("imagefile", imageFileToBeUploaded);
                 fd.append("PostShortId", postShortId);
-                const res = await fetch(`/api/posts/uploadImageV2`, {
+                const res = await fetch(API_ENDPOINTS.IMAGE_UPLOAD, {
                   method: "POST",
                   body: fd,
                 });
