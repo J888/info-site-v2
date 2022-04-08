@@ -19,76 +19,6 @@
   margin-bottom: 1rem;
 }
 
-.expandPostArrow {
-  cursor: pointer;
-  position: relative;
-  font-size: 1.5rem;
-  right: -1rem;
-  top: 0.24rem;
-}
-
-.postCardListScrollableContainer {
-  overflow-y: auto;
-  height: 37rem;
-
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  &::-webkit-scrollbar{
-    display: none;
-  }
-
-  /* Hide scrollbar for IE, Edge and Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-
-}
-
-.postCard {
-  margin-bottom: 0.5rem;
-
-  &--isActive {
-    @extend .postCard;
-    border: solid #9f9f9f 0.12rem;
-  }
-
-  &--grayedOut {
-    @extend .postCard;
-    opacity: 40%;
-  }
-}
-
-.postCardButtons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  margin-left: 0.3rem;
-  margin-right: 0.3rem;
-}
-
-.postCardImagesButton {
-  width: 45%;
-}
-
-.postCardEditButton {
-  width: 45%;
-}
-
-.postCardHeader {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 0.7rem;
-}
-
-.postCardTitle {
-  margin-left: 1rem;
-}
-
-.postCardHeaderTitleContainer {
-  display: flex;
-  flex-direction: row;
-
-  font-size: 1.3rem
-}
-
 .postsHeader {
   font-size: 1.9rem;
   margin-bottom: 1rem;
@@ -96,22 +26,4 @@
 
 .postCardDeleteButton {
   width: fit-content;
-}
-
-$dot-size: 0.4rem;
-.greenDotPostCardIndicator {
-  height: $dot-size;
-  width: $dot-size;
-  background-color: rgb(67, 199, 96);
-  border-radius: 50%;
-  display: inline-block;
-
-  position: relative;
-  top: -0.0055rem;
-  left: 0.3rem;
-
-  &--invisible {
-    @extend .greenDotPostCardIndicator;
-    opacity: 0;
-  }
 }
