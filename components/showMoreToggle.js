@@ -4,7 +4,7 @@ import styles from "../sass/components/ShowMoreToggle.module.scss";
 const ShowMoreToggle = ({ children, labelShow, labelHide, title, titleSize, className}) => {
 
   labelHide = labelHide === undefined ? `hide.` : labelHide;
-  let [shown, setShown] = useState(false)
+  let [shown, setShown] = useState(true)
   return (
     <div className={className}>
       <h3 className={styles[`showMoreToggleTitle-size${titleSize}`]}>{title}</h3>
