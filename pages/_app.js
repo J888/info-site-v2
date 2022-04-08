@@ -2,7 +2,6 @@ import '../styles/globals.css'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 import 'bulma/css/bulma.min.css';
-import '../css/mystyles.css'
 
 import * as ga from '../lib/google_analytics'
 import { useEffect } from 'react';
