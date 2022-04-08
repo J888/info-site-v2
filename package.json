@@ -7,10 +7,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run css-build; next build",
+    "build": "next build",
     "start": "next start",
-    "css-build": "node-sass --omit-source-map-url sass/mystyles.scss css/mystyles.css",
-    "css-watch": "npm run css-build -- --watch",
     "lint": "next lint"
   },
   "dependencies": {
