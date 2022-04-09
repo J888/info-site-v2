@@ -7,12 +7,8 @@
 - Add "Back to top" button on articles. Useful if article is long.
 - Make the background color of the navbar a config item.
 - Admin
-  - break it out into components
   - image upload:
-    - show success/fail status of upload
     - compress photos before upload
-    - make list of photos look better.
-    - add delete button for items in list of photos 
   - Make article list searchable/filterable by title on admin page.
 
 # ENV VARS
