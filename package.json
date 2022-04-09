@@ -2,7 +2,7 @@
   "name": "info-site-v2",
   "version": "0.1.0",
   "engines": {
-    "node": "15.11.0"
+    "node": "17.9.0"
   },
   "private": true,
   "scripts": {
