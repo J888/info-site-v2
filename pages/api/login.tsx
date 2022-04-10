@@ -1,4 +1,5 @@
 import { withIronSessionApiRoute } from "iron-session/next";
+import { SessionDecorated } from "../../interfaces/Session";
 import { sessionOptions } from "../../lib/session/sessionOptions";
 import { getSiteUsers } from "../../util/s3Util";
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
@@ -26,11 +27,11 @@ const Login = withIronSessionApiRoute(
         const derived = crypto.scryptSync(password, saltS3, 64).toString("hex");
 
         if (derived === hashS3) { // if password match
-          session.user = {
+          (session as SessionDecorated).user = {
             username: username,
             admin: userConfig["admin"],
           };
-          await session.save();
+          await (session as SessionDecorated).save();
           
         }
 

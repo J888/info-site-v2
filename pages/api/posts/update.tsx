@@ -1,7 +1,8 @@
-import { deleteBlogPostsDynamoDb } from "../../../util/dynamoDbUtil";
+import { updateBlogPostsDynamoDb } from "../../../util/dynamoDbUtil";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
 import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "../../../util/nodeCache";
+import { SessionDecorated } from "../../../interfaces/Session";
 
 export default withIronSessionApiRoute(async function updateRoute(req, res) {
   const {
@@ -11,18 +12,16 @@ export default withIronSessionApiRoute(async function updateRoute(req, res) {
   } = req;
 
   switch (method) {
-    case "POST":
+    case "PUT":
       try {
-        console.log(session?.user)
-        if (!session?.user?.admin) {
+        console.log((session as SessionDecorated)?.user)
+        if (!(session as SessionDecorated)?.user?.admin) {
           return res
             .status(401)
             .json({ error: "you must be logged in to make this request." });
         }
 
-        console.log(posts);
-
-        const awsRes = await deleteBlogPostsDynamoDb(
+        const awsRes = await updateBlogPostsDynamoDb(
           process.env.BLOG_POSTS_DYNAMO_TABLE_NAME,
           posts
         );
@@ -39,7 +38,7 @@ export default withIronSessionApiRoute(async function updateRoute(req, res) {
 
       break;
     default:
-      res.setHeader("Allow", ["POST"]);
+      res.setHeader("Allow", ["PUT"]);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 }, sessionOptions);

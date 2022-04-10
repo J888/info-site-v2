@@ -254,7 +254,8 @@ export async function getStaticProps() {
       return 0;
     })
     .slice(0, 10);
-  topTags = topTags.map((topTag) => topTag[0]);
+
+  let topTagsList: String[] = topTags.map((topTag) => topTag[0]);
 
   // Strip down the posts because we don't wanna pass too much (or any) data to props
   // that won't be used.
@@ -300,7 +301,7 @@ export async function getStaticProps() {
     props: {
       postsByCategory,
       newestPost,
-      topTags,
+      topTags: topTagsList,
       siteName,
       siteStatementsPurposeLong,
       siteStatementsPurposeShort,

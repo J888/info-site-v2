@@ -1,4 +1,5 @@
 import { withIronSessionApiRoute } from "iron-session/next";
+import { SessionDecorated } from "../../interfaces/Session";
 import { sessionOptions } from "../../lib/session/sessionOptions";
 
 const User = withIronSessionApiRoute(
@@ -14,8 +15,8 @@ const User = withIronSessionApiRoute(
       case 'GET':
 
         res.status(200).send({
-          username: session?.user?.username,
-          admin: session?.user?.admin
+          username: (session as SessionDecorated)?.user?.username,
+          admin: (session as SessionDecorated)?.user?.admin
         });
         
         break

@@ -1,7 +1,7 @@
-import { createBlogPostsDynamoDb } from "../../../util/dynamoDbUtil";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
 import axios from "axios";
+import { SessionDecorated } from "../../../interfaces/Session";
 
 export default withIronSessionApiRoute(async function updateRoute(req, res) {
   const {
@@ -13,8 +13,8 @@ export default withIronSessionApiRoute(async function updateRoute(req, res) {
   switch (method) {
     case "GET":
       try {
-        console.log(session?.user)
-        if (!session?.user?.admin) {
+        console.log((session as SessionDecorated)?.user)
+        if (!(session as SessionDecorated)?.user?.admin) {
           return res
             .status(401)
             .json({ error: "you must be logged in to make this request." });

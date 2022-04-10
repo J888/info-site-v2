@@ -9,6 +9,23 @@ import PostContent from "../../components/postContent";
 import { firstWordsWithEllipses } from "../../util/textUtil";
 import { DiscussionEmbed } from "disqus-react";
 import { API_ENDPOINTS } from "../../lib/constants";
+import { PostData } from "../../interfaces/PostData";
+import { NavBackground, NavLink } from "../../interfaces/Nav";
+
+type Props = {
+  articleUrl: string;
+  category: string;
+  disqusShortname: string;
+  footerTagline: string;
+  postsByCategory: Array<PostData>;
+  postData: PostData;
+  navBackground: NavBackground;
+  navLinks: Array<NavLink>;
+  navLogoUrl: string;
+  slug: string;
+  siteName: string;
+  twitterUsername: string;
+};
 
 const Post = ({
   postData,
@@ -23,7 +40,7 @@ const Post = ({
   footerTagline,
   articleUrl,
   disqusShortname,
-}) => {
+}: Props) => {
   const { data: pageViewData, error } = useSWR(
     `${API_ENDPOINTS.PAGE_VIEWS}?slug=${encodeURIComponent(slug)}`,
     async (url) => {

@@ -3,6 +3,19 @@ import React from "react";
 import { getSiteConfig } from "../../util/s3Util";
 import { getBlogPostsWithPrevNext } from "../../util/dynamoDbUtil";
 import ImagePostGrid from "../../components/imagePostGrid";
+import { PostData } from "../../interfaces/PostData";
+import { NavBackground, NavLink } from "../../interfaces/Nav";
+
+type Props = {
+  footerTagline: string;
+  matchingPosts: Array<PostData>;
+  navBackground: NavBackground;
+  navLinks: Array<NavLink>;
+  navLogoUrl: string;
+  siteName: string;
+  tag: string;
+  twitterUsername: string;
+};
 
 const PostsByTag = ({
   matchingPosts,
@@ -13,7 +26,7 @@ const PostsByTag = ({
   navLogoUrl,
   navBackground,
   footerTagline,
-}) => {
+}: Props) => {
   return (
     <MainWrapper
       twitterUsername={twitterUsername}

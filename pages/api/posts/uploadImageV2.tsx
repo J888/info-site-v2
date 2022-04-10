@@ -4,6 +4,15 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
 import fs from "fs";
 import { uploadImage } from "../../../util/s3Util"
+import { NextIncomingMessage } from 'next/dist/server/request-meta';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { SessionDecorated } from '../../../interfaces/Session';
+
+interface MulterRequest extends Request {
+  files: any;
+  body: any;
+  session: SessionDecorated
+}
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -13,7 +22,7 @@ const upload = multer({
 });
 
 const apiRoute = nextConnect({
-  onError(error, req, res) {
+  onError(error, _req: NextApiRequest, res: NextApiResponse) {
     res.status(501).json({ error: `Sorry something Happened! ${error.message}` });
   },
   onNoMatch(req, res) {
@@ -23,8 +32,10 @@ const apiRoute = nextConnect({
 
 apiRoute.use(upload.array('imagefile'));
 
-apiRoute.post(async (req, res) => {
-  if (!req.session?.user?.admin) {
+apiRoute.post(async (req: MulterRequest, res: NextApiResponse) => {
+
+  let session = (req.session as SessionDecorated);
+  if (!session?.user?.admin) {
     return res
       .status(401)
       .json({ error: "you must be logged in to make this request." });

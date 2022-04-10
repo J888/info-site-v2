@@ -1,5 +1,6 @@
 
 import { withIronSessionApiRoute } from "iron-session/next";
+import { SessionDecorated } from "../../../interfaces/Session";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
 import { deleteFileS3 } from "../../../util/s3Util";
 
@@ -12,8 +13,8 @@ export default withIronSessionApiRoute(async function updateRoute(req, res) {
   switch (method) {
     case "DELETE":
       try {
-        console.log(session?.user)
-        if (!session?.user?.admin) {
+        console.log((session as SessionDecorated)?.user)
+        if (!(session as SessionDecorated)?.user?.admin) {
           return res
             .status(401)
             .json({ error: "you must be logged in to make this request." });
@@ -23,7 +24,7 @@ export default withIronSessionApiRoute(async function updateRoute(req, res) {
         const deleteRes = await deleteFileS3(process.env.IMG_S3_BUCKET, PostShortId, filename);
         console.log(deleteRes)
         if (deleteRes[`$metadata`].httpStatusCode === 204) {
-          return res.status(204).send();
+          return res.status(204).send({});
         } else {
           return res.status(500).send("could not delete image");
 
