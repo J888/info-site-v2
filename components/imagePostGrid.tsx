@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { Columns } from "react-bulma-components";
+import { PostData } from "../interfaces/PostData";
 import styles from "../sass/components/ImagePostGrid.module.scss";
 
-const ImagePostGrid = ({ posts, heading }) => (
+type Props = {
+  heading: string;
+  posts: Array<PostData>;
+};
+
+const ImagePostGrid = ({ posts, heading }: Props) => (
   <Columns>
     <Columns.Column size={3}></Columns.Column>
     <Columns.Column size={7}>
@@ -16,7 +22,11 @@ const ImagePostGrid = ({ posts, heading }) => (
           >
             <a>
               <div className={styles.gridItem}>
-                <img src={post.ImageS3Url} className={styles.image} alt={`Image for ${post.Title}`}/>
+                <img
+                  src={post.ImageS3Url}
+                  className={styles.image}
+                  alt={`Image for ${post.Title}`}
+                />
 
                 <h3 className={styles.gridItemTitle}>{post.Title}</h3>
               </div>

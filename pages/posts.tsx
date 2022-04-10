@@ -4,6 +4,19 @@ import MainWrapper from "../components/mainWrapper";
 import { getSiteConfig } from "../util/s3Util";
 import PostGrid from "../components/postGrid";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
+import { PostDataWithNextPrev } from "../interfaces/PostData";
+import { NavBackground, NavLink } from "../interfaces/Nav";
+
+type Props = {
+  footerTagline: string;
+  navBackground: NavBackground;
+  navLinks: Array<NavLink>;
+  navLogoUrl: string;
+  postsDynamo: Array<PostDataWithNextPrev>;
+  siteName: string;
+  siteSubject: string;
+  twitterUsername: string;
+}
 
 const AllPosts = ({
   postsDynamo,
@@ -14,7 +27,7 @@ const AllPosts = ({
   navLogoUrl,
   navBackground,
   footerTagline,
-}) => {
+}: Props) => {
   return (
     <MainWrapper
       twitterUsername={twitterUsername}

@@ -1,6 +1,11 @@
 import styles from "../sass/components/AuthorCredits.module.scss";
 
-const AuthorCredits = ({ authorName, twitterUsername }) => (
+type Props = {
+  authorName?: string;
+  twitterUsername: string;
+}
+
+const AuthorCredits = ({ authorName, twitterUsername }: Props) => (
   <div className={styles.authorCreditsContainer}>
     <img src="/icons/author-icon-small.png" className={styles.authorImage} alt={`Image of ${authorName || `unknown`}`}/>
     <div className={styles.authorDescription}>

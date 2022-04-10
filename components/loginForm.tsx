@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
-const LoginForm = ({ loginHandler }) => {
+type Props = {
+  loginHandler: (username: string, password: string) => void;
+};
+
+const LoginForm = ({ loginHandler }: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   return (

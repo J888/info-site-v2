@@ -1,6 +1,20 @@
 import React, { useState } from "react";
 import { Button, Card } from "react-bulma-components";
+import { PostData } from "../interfaces/PostData";
+import { SaveState } from "../interfaces/SaveState";
 import styles from "../sass/components/ScrollablePosts.module.scss";
+
+type Props = {
+  activeBlogPostIndex: number;
+  deletePostHandler: (i: number) => void;
+  fetchImagesHandler: (PostShortId: string) => void;
+  posts: Array<PostData>;
+  setActiveBlogPostIndex: (i: number) => void;
+  setBlogPosts: (newPosts: Array<PostData>) => void;
+  setCurrentSaveState: (state: SaveState) => void;
+  setShowImagesIndex: (i: number) => void;
+  showImagesIndex: number;
+};
 
 const ScrollablePosts = ({
   posts,
@@ -12,7 +26,7 @@ const ScrollablePosts = ({
   fetchImagesHandler,
   setShowImagesIndex,
   showImagesIndex,
-}) => {
+}: Props) => {
   const [infoShownPostIndexes, setInfoShownPostIndexes] = useState([]); // controls which posts to show info of
 
   return (
@@ -68,7 +82,7 @@ const ScrollablePosts = ({
                       deletePostHandler(i);
 
                       // when switching posts, set the save state back to none
-                      setCurrentSaveState("NONE");
+                      setCurrentSaveState(SaveState.NONE);
                     }
                   }
                 }}
@@ -96,7 +110,7 @@ const ScrollablePosts = ({
                   setShowImagesIndex(undefined);
 
                   // when switching posts, set the save state back to none
-                  setCurrentSaveState("NONE");
+                  setCurrentSaveState(SaveState.NONE);
                 }}
               >
                 <span>Edit</span>

@@ -2,6 +2,27 @@ import React from "react";
 import MainWrapper from "../components/mainWrapper";
 import { getSiteConfig } from "../util/s3Util";
 import Billboard from "../components/billboard";
+import { NavBackground, NavLink } from "../interfaces/Nav";
+
+type Props = {
+  footerTagline: string;
+  navBackground: NavBackground;
+  navLinks: Array<NavLink>;
+  navLogoUrl: string;
+  pageData: {
+    about: {
+      description: Array<string>;
+    };
+  };
+  site: {
+    name: string;
+  };
+  socialMedia: {
+    username: {
+      twitter: string;
+    };
+  };
+};
 
 const About = ({
   site,
@@ -11,7 +32,7 @@ const About = ({
   navLogoUrl,
   footerTagline,
   navBackground,
-}) => {
+}: Props) => {
   const AboutParagraphs = (
     <React.Fragment>
       {pageData.about.description.map((part, i) => (

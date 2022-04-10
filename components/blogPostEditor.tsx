@@ -1,8 +1,22 @@
 import React, { useState } from "react";
 import { Button, Image, Tag } from "react-bulma-components";
-import PostContent from "../components/postContent";
-import styles from "../sass/components/BlogPostEditor.module.scss"
+import PostContent from "./postContent";
+import styles from "../sass/components/BlogPostEditor.module.scss";
+import { PostDataWithNextPrev } from "../interfaces/PostData";
+import { ImageData } from "../interfaces/Image";
+import { SaveState } from "../interfaces/SaveState";
 const ADD_CONTENT = "Add content. . .";
+
+type Props = {
+  images: Array<ImageData>;
+  initialData: PostDataWithNextPrev;
+  isDraftChangeHandler: (i: number) => void;
+  isEdited: boolean;
+  postIndex: number;
+  saveState: SaveState;
+  savePostHandler: (PostId: string) => void;
+  updatePostHandler: (i: number, newData: PostDataWithNextPrev) => void;
+};
 
 const BlogPostEditor = ({
   isEdited,
@@ -12,9 +26,8 @@ const BlogPostEditor = ({
   initialData,
   images,
   saveState,
-  savePostHandler
-}) => {
-
+  savePostHandler,
+}: Props) => {
   const [showPreview, setShowPreview] = useState(false);
 
   const AddPartButtons = ({ insertPartAfterIndex }) => (
@@ -27,14 +40,12 @@ const BlogPostEditor = ({
             Type: "IMAGE",
           });
 
-          let newBlogPostData = {};
-          Object.assign(newBlogPostData, initialData);
+          let newBlogPostData: PostDataWithNextPrev = { ...initialData };
           newBlogPostData.Parts = newParts;
 
           updatePostHandler(postIndex, newBlogPostData);
         }}
-
-        disabled={!images || !images?.length > 0}
+        disabled={!images || !(images?.length > 0)}
       >
         + image
       </button>
@@ -47,8 +58,7 @@ const BlogPostEditor = ({
             Contents: ADD_CONTENT,
           });
 
-          let newBlogPostData = {};
-          Object.assign(newBlogPostData, initialData);
+          let newBlogPostData: PostDataWithNextPrev = { ...initialData };
           newBlogPostData.Parts = newParts;
 
           updatePostHandler(postIndex, newBlogPostData);
@@ -62,11 +72,10 @@ const BlogPostEditor = ({
 
           newParts.splice(insertPartAfterIndex + 1, 0, {
             Type: "TWEET_SINGLE",
-            Contents: '',
+            Contents: "",
           });
 
-          let newBlogPostData = {};
-          Object.assign(newBlogPostData, initialData);
+          let newBlogPostData: PostDataWithNextPrev = { ...initialData };
           newBlogPostData.Parts = newParts;
 
           updatePostHandler(postIndex, newBlogPostData);
@@ -78,8 +87,7 @@ const BlogPostEditor = ({
   );
 
   const genericOnChangeAttrUpdater = (e, attrKey) => {
-    let newBlogPostData = {};
-    Object.assign(newBlogPostData, initialData);
+    let newBlogPostData: PostDataWithNextPrev = { ...initialData };
     newBlogPostData[attrKey] = e.target.value;
     updatePostHandler(postIndex, newBlogPostData);
   };
@@ -107,28 +115,28 @@ const BlogPostEditor = ({
               setShowPreview(!showPreview);
             }}
           >
-            {showPreview == false ? 'Preview' : 'Edit'}
+            {showPreview == false ? "Preview" : "Edit"}
           </Button>
-
         </div>
-       
       </div>
       <div className={styles.editorPostShortIdTagGroup}>
         <Tag.Group hasAddons>
-            {isEdited && saveState==="NONE" && <Tag color="warning">Edited</Tag>}
-            {!isEdited && saveState==="NONE" && <Tag color="info">Up to date</Tag>}
-            {saveState === "SUCCESS" && <Tag color="success">Saved!</Tag>}
-            {saveState === "FAIL" && <Tag color="danger">Save Failed</Tag>}
+          {isEdited && saveState === "NONE" && (
+            <Tag color="warning">Edited</Tag>
+          )}
+          {!isEdited && saveState === "NONE" && (
+            <Tag color="info">Up to date</Tag>
+          )}
+          {saveState === "SUCCESS" && <Tag color="success">Saved!</Tag>}
+          {saveState === "FAIL" && <Tag color="danger">Save Failed</Tag>}
           <Tag color="light">{initialData.PostShortId}</Tag>
         </Tag.Group>
       </div>
-      {
-        showPreview == true &&
-        <PostContent data={initialData} views={0} twitterUsername={'Preview'}/>
-      }
+      {showPreview == true && (
+        <PostContent data={initialData} views={0} twitterUsername={"Preview"} />
+      )}
 
-      {
-        !(showPreview == true) &&
+      {!(showPreview == true) && (
         <div className={styles.editorForm}>
           <label>Title</label>
           <input
@@ -145,7 +153,7 @@ const BlogPostEditor = ({
             <input
               type="checkbox"
               checked={initialData.IsDraft === true}
-              onChange={()=> {
+              onChange={() => {
                 isDraftChangeHandler(postIndex);
               }}
             ></input>
@@ -197,14 +205,12 @@ const BlogPostEditor = ({
             className={styles.categoryInput}
             value={initialData.Tags.join(",")}
             onChange={(e) => {
-              let newBlogPostData = {};
-              Object.assign(newBlogPostData, initialData);
+              let newBlogPostData: PostDataWithNextPrev = { ...initialData };
               newBlogPostData.Tags = e.target.value.split(",");
               updatePostHandler(postIndex, newBlogPostData);
             }}
             onBlur={(e) => {
-              let newBlogPostData = {};
-              Object.assign(newBlogPostData, initialData);
+              let newBlogPostData: PostDataWithNextPrev = { ...initialData };
               newBlogPostData.Tags = e.target.value
                 .split(",")
                 .filter((tag) => tag != "");
@@ -236,8 +242,7 @@ const BlogPostEditor = ({
                   (image) => image.Key === event.target.value
                 ).Url;
 
-                let newBlogPostData = {};
-                Object.assign(newBlogPostData, initialData);
+                let newBlogPostData: PostDataWithNextPrev = { ...initialData };
                 newBlogPostData.ImageS3Url = url;
                 newBlogPostData.ImageKey = event.target.value;
 
@@ -273,8 +278,7 @@ const BlogPostEditor = ({
                       let newParts = [...initialData.Parts];
                       newParts.splice(i, 1); // .splice(index, howManyToDelete)
 
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
+                      let newBlogPostData: PostDataWithNextPrev = { ...initialData };
                       newBlogPostData.Parts = newParts;
 
                       updatePostHandler(postIndex, newBlogPostData);
@@ -282,7 +286,9 @@ const BlogPostEditor = ({
                   ></span>
                   <textarea
                     className={styles.textAreaEditor}
-                    value={part.Contents != ADD_CONTENT ? part.Contents : undefined}
+                    value={
+                      part.Contents != ADD_CONTENT ? part.Contents : undefined
+                    }
                     placeholder={
                       part.Contents == ADD_CONTENT ? ADD_CONTENT : undefined
                     }
@@ -290,8 +296,7 @@ const BlogPostEditor = ({
                       let newParts = [...initialData.Parts];
                       newParts[i].Contents = e.target.value;
 
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
+                      let newBlogPostData: PostDataWithNextPrev = { ...initialData };
                       newBlogPostData.Parts = newParts;
 
                       updatePostHandler(postIndex, newBlogPostData);
@@ -315,8 +320,7 @@ const BlogPostEditor = ({
                       let newParts = [...initialData.Parts];
                       newParts.splice(i, 1); // .splice(index, howManyToDelete)
 
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
+                      let newBlogPostData: PostDataWithNextPrev = { ...initialData };
                       newBlogPostData.Parts = newParts;
 
                       updatePostHandler(postIndex, newBlogPostData);
@@ -338,8 +342,7 @@ const BlogPostEditor = ({
                       let newParts = [...initialData.Parts];
                       newParts[i].Contents = url;
 
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
+                      let newBlogPostData: PostDataWithNextPrev = { ...initialData };
                       newBlogPostData.Parts = newParts;
 
                       updatePostHandler(postIndex, newBlogPostData);
@@ -352,7 +355,11 @@ const BlogPostEditor = ({
                       </option>
                     ))}
                   </select>
-                  <img src={part.Contents} style={{ maxWidth: "20rem" }} alt={`Image for part ${i}`} />
+                  <img
+                    src={part.Contents}
+                    style={{ maxWidth: "20rem" }}
+                    alt={`Image for part ${i}`}
+                  />
                   <AddPartButtons insertPartAfterIndex={i} />
                 </div>
               );
@@ -369,12 +376,11 @@ const BlogPostEditor = ({
                       let newParts = [...initialData.Parts];
                       newParts.splice(i, 1); // .splice(index, howManyToDelete)
 
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
+                      let newBlogPostData: PostDataWithNextPrev = { ...initialData };
                       newBlogPostData.Parts = newParts;
 
-                      console.log(`new parts`)
-                      console.log(newBlogPostData.Parts)
+                      console.log(`new parts`);
+                      console.log(newBlogPostData.Parts);
 
                       updatePostHandler(postIndex, newBlogPostData);
                     }}
@@ -386,8 +392,7 @@ const BlogPostEditor = ({
                       let newParts = [...initialData.Parts];
                       newParts[i].Contents = e.target.value;
 
-                      let newBlogPostData = {};
-                      Object.assign(newBlogPostData, initialData);
+                      let newBlogPostData: PostDataWithNextPrev = { ...initialData };
                       newBlogPostData.Parts = newParts;
 
                       updatePostHandler(postIndex, newBlogPostData);
@@ -401,10 +406,8 @@ const BlogPostEditor = ({
               );
             }
           })}
-
         </div>
-      }
-      
+      )}
     </div>
   );
 };

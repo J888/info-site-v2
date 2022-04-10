@@ -11,6 +11,7 @@ import DeploymentControls from "../components/deploymentControls";
 import ScrollablePosts from "../components/scrollablePosts";
 import { API_ENDPOINTS } from "../lib/constants";
 import { getCurrentUser } from "../lib/user";
+import { SaveState } from "../interfaces/SaveState";
 
 const newPost = (postNum) => ({
   PostId: `post-${postNum}-id`,
@@ -40,7 +41,7 @@ const Admin = ({}) => {
   const [imagesByPostShortId, setImagesByPostShortId] = useState({});
   const [activeBlogPostIndex, setActiveBlogPostIndex] = useState(0);
   const [editedPostIndexes, setEditedPostIndexes] = useState([]);
-  const [currentSaveState, setCurrentSaveState] = useState("NONE");
+  const [currentSaveState, setCurrentSaveState] = useState(SaveState.NONE);
   // Controls what post to show images for, if any
   const [showImagesIndex, setShowImagesIndex] = useState(undefined);
   const showImagesBlogPost =
@@ -120,9 +121,9 @@ const Admin = ({}) => {
       console.log(`Status codes were [${updateStatusCodes.join(", ")}]`);
 
       if (updateStatusCodes.includes(200)) {
-        setCurrentSaveState("SUCCESS");
+        setCurrentSaveState(SaveState.SUCCESS);
       } else {
-        setCurrentSaveState("FAIL");
+        setCurrentSaveState(SaveState.FAIL);
       }
     } else {
       delete blogPostData.IsNewPost;
@@ -135,9 +136,9 @@ const Admin = ({}) => {
       console.log(`Status codes were [${updateStatusCodes.join(", ")}]`);
 
       if (updateStatusCodes.includes(200)) {
-        setCurrentSaveState("SUCCESS");
+        setCurrentSaveState(SaveState.SUCCESS);
       } else {
-        setCurrentSaveState("FAIL");
+        setCurrentSaveState(SaveState.FAIL);
       }
     }
   };
@@ -215,7 +216,6 @@ const Admin = ({}) => {
                 }
                 postIndex={activeBlogPostIndex}
                 initialData={blogPosts[activeBlogPostIndex]}
-                saveBlogPostClickHandler={saveBlogPostClickHandler}
                 updatePostHandler={updatePostHandler}
                 savePostHandler={savePostHandler}
               />

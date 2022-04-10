@@ -5,7 +5,17 @@ import styles from "../sass/components/PostGrid.module.scss";
 import TextColoredBackground from "./textColoredBackground";
 import { firstWordsWithEllipses } from "../util/textUtil";
 
-const PostGridItemV2 = ({ description, link, imageUrl, tags, title, category, createdAt }) => (
+type Props = {
+  category: string;
+  createdAt: string;
+  description: string;
+  imageUrl: string;
+  link: string;
+  tags: Array<string>;
+  title: string;
+};
+
+const PostGridItemV2 = ({ description, link, imageUrl, tags, title, category, createdAt }: Props) => (
   <article className={styles.gridItem}>
     <div className={styles.imageWrapper}>
       <Link href={link} passHref>
@@ -51,7 +61,7 @@ const PostGridItemV2 = ({ description, link, imageUrl, tags, title, category, cr
           <div className={styles.gridItemTextMetaV2}>
             <Tag.Group className={styles.postGridItemV2TagGroup}>
               {tags.map((tag) => (
-                <Tag clickable key={tag}>
+                <Tag key={tag}>
                   <LinkWrapper wrapInAnchor={true} href={`/tags/${tag}`}>
                     #{tag}
                   </LinkWrapper>

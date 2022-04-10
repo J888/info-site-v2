@@ -3,23 +3,34 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Button, Container } from "react-bulma-components";
 import FD from "form-data";
-import ActionableImageList from "../components/actionableImageList";
+import ActionableImageList from "./actionableImageList";
 import { API_ENDPOINTS } from "../lib/constants";
+import { ImageAction, ImageData } from "../interfaces/Image";
 
-const ImageUploadEditor = ({ images, postShortId, title, fetchImagesHandler }) => {
+type Props = {
+  fetchImagesHandler: (PostShortId: string) => void;
+  images: Array<ImageData>;
+  postShortId: string;
+  title: string;
+};
+
+const ImageUploadEditor = ({
+  images,
+  postShortId,
+  title,
+  fetchImagesHandler,
+}) => {
   const [imageFileToBeUploaded, setImageFileToBeUploaded] = useState(null);
   const [imageUploadSuccess, setImageUploadSuccess] = useState(false);
 
   return (
     <div>
-      <h1 style={{ marginBottom: "2rem" }}>
-        Images for &quot;{title}&quot;
-      </h1>
+      <h1 style={{ marginBottom: "2rem" }}>Images for &quot;{title}&quot;</h1>
       <Container className={styles.postImagesContainer}>
         <ActionableImageList
           images={images}
           actionHandler={async (imageKey, action) => {
-            if (action === `DELETE`) {
+            if (action === ImageAction.DELETE) {
               const deleteRes = await axios.delete(
                 `${API_ENDPOINTS.IMAGES}/${postShortId}/${imageKey}`
               );
@@ -41,7 +52,8 @@ const ImageUploadEditor = ({ images, postShortId, title, fetchImagesHandler }) =
             accept="image/png, image/jpeg"
             onInput={async (e) => {
               setImageUploadSuccess(false);
-              setImageFileToBeUploaded(e.target.files[0]);
+              let file = (e.target as HTMLInputElement).files[0];
+              setImageFileToBeUploaded(file);
             }}
           ></input>
         )}

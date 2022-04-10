@@ -3,8 +3,23 @@ import { Block } from "react-bulma-components";
 import Nav from "./navbar";
 import Footer from "./footer";
 import styles from "../sass/components/MainWrapper.module.scss"
+import { ReactNode } from "react";
+import { NavBackground, NavLink } from "../interfaces/Nav";
 
-export default function MainWrapper(props) {
+type Props = {
+  children?: ReactNode;
+  description: string;
+  footerTagline: string;
+  imageUrl?: string;
+  navBackground: NavBackground;
+  navLogoUrl: string;
+  pageTitle: string;
+  siteName: string;
+  twitterUsername: string;
+  navLinks: Array<NavLink>;
+};
+
+export default function MainWrapper(props: Props) {
 
   return (
     <div>
@@ -39,8 +54,6 @@ export default function MainWrapper(props) {
       </Head>
 
       <Nav
-        siteName={props.siteName}
-        twitterUsername={props.twitterUsername}
         navLinks={props.navLinks}
         navLogoUrl={props.navLogoUrl}
         background={props.navBackground}

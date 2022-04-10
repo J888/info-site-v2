@@ -1,8 +1,15 @@
 import styles from "../sass/components/PostGrid.module.scss";
 import PostGridItemV2 from "./postGridItemV2";
 import React from "react";
+import { PostData } from "../interfaces/PostData";
 
-const PostGrid = ({ posts, heading, subHeading }) => (
+type Props = {
+  heading?: string;
+  posts: Array<PostData>;
+  subHeading?: string;
+};
+
+const PostGrid = ({ posts, heading, subHeading }: Props) => (
   <React.Fragment>
     {heading && <h2 className={styles.heading}>{heading}</h2>}
     {subHeading && <p>{subHeading}</p>}

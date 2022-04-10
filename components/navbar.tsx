@@ -1,9 +1,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import styles from "../sass/components/NavBar.module.scss";
-import Logo from "../components/logo";
+import Logo from "./logo";
+import { NavBackground, NavLink } from "../interfaces/Nav";
 
-const NavV2 = ({ navLinks, navLogoUrl, background }) => {
+type Props = {
+  background?: NavBackground;
+  navLinks: Array<NavLink>;
+  navLogoUrl: string;
+};
+
+const NavV2 = ({ navLinks, navLogoUrl, background }: Props) => {
   const [showNav, setShowNav] = useState(false);
 
   const stylesNavbarV2 = background !== undefined ? {
@@ -48,8 +55,8 @@ const NavV2 = ({ navLinks, navLogoUrl, background }) => {
               </div>
               {
                 navLinks.map(navLink => 
-                  <Link href={navLink.href} className={styles.navItem} key={`nav-link-${navLink.href}`}>
-                    {navLink.label}
+                  <Link href={navLink.href} key={`nav-link-${navLink.href}`}>
+                    <a className={styles.navItem}>{navLink.label}</a>
                   </Link>
                 )
               }

@@ -1,6 +1,13 @@
+import { ReactNode } from "react";
 import styles from "../sass/components/Billboard.module.scss";
 
-const Billboard = ({ title, body, bodyComponent }) => (
+type Props = {
+  bodyComponent?: ReactNode;
+  body?: string;
+  title: string;
+}
+
+const Billboard = ({ title, body, bodyComponent }: Props) => (
   <div className={styles.billboard}>
     <h3>{title}</h3>
     {

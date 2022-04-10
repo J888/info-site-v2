@@ -153,7 +153,7 @@ export default function Home({
             <Card.Content>
               <Tag.Group>
                 {topTags.map((tag) => (
-                  <Tag clickable key={tag} className={styles.popularTags}>
+                  <Tag key={tag} className={styles.popularTags}>
                     <LinkWrapper wrapInAnchor={true} href={`/tags/${tag}`}>
                       #{tag}
                     </LinkWrapper>

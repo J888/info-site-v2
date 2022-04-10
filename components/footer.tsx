@@ -2,10 +2,16 @@ import styles from "../sass/components/Footer.module.scss";
 import Logo from "./logo";
 import { SocialIcon } from "react-social-icons";
 
+type Props = {
+  logoUrl: string;
+  tagline: string;
+  twitterUsername: string;
+};
+
 const Footer = ({ logoUrl, twitterUsername, tagline }) => (
   <footer className={styles.footer}>
     <div className={styles.logo}>
-      <Logo logoUrl={logoUrl}/>
+      <Logo logoUrl={logoUrl} />
     </div>
     <div>{`© ${new Date().getFullYear()} - ${tagline}`}</div>
     <div className={styles.twitterIcon}>
@@ -15,7 +21,6 @@ const Footer = ({ logoUrl, twitterUsername, tagline }) => (
         style={{ height: 26, width: 26 }}
       />
     </div>
-    
   </footer>
 );
 

@@ -3,8 +3,14 @@ import {
 } from "react-bulma-components";
 import Link from "next/link";
 import styles from "../sass/components/NextPrevButtons.module.scss";
+import { PostDataWithNextPrev } from "../interfaces/PostData";
 
-const NextPrevButtons = ({ data, hideTitles }) => 
+type Props = {
+  data: PostDataWithNextPrev;
+  hideTitles?: boolean;
+};
+
+const NextPrevButtons = ({ data, hideTitles }: Props) => 
   <Section className={styles.nextPrevArticleContainer}>
     {data?.PrevPost?.Slug ? (
       <div>

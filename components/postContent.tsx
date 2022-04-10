@@ -15,14 +15,21 @@ import Link from "next/link";
 import styles from "../sass/components/Post.module.scss";
 import React from "react";
 import rehypeRaw from 'rehype-raw'
-import LinkWrapper from "../components/linkWrapper";
+import LinkWrapper from "./linkWrapper";
 import postContentStyles from "../sass/components/PostContent.module.scss"
-import AuthorCredits from "../components/AuthorCredits";
-import NextPrevButtons from "../components/nextPrevButtons";
+import AuthorCredits from "./AuthorCredits";
+import NextPrevButtons from "./nextPrevButtons";
 import { Tweet } from "react-twitter-widgets";
-import HorizontalGoogleAd from "../components/google-ads/HorizontalGoogleAd";
+import HorizontalGoogleAd from "./google-ads/HorizontalGoogleAd";
+import { PostDataWithNextPrev } from "../interfaces/PostData";
 
-const PostContent = ({ data, views, twitterUsername }) => (
+type Props = {
+  data: PostDataWithNextPrev;
+  twitterUsername: string;
+  views: number;
+};
+
+const PostContent = ({ data, views, twitterUsername }: Props) => (
   <Columns>
     <Columns.Column size={2}></Columns.Column>
     <Columns.Column size={8}>
@@ -58,7 +65,7 @@ const PostContent = ({ data, views, twitterUsername }) => (
               <Heading className={postContentStyles.mainTitle}>{data?.Title}</Heading>
               <Tag.Group>
                 {data?.Tags?.map((tag) => (
-                  <Tag key={tag} clickable>
+                  <Tag key={tag}>
                     <LinkWrapper
                       href={`/tags/${tag}`}
                       key={tag}
