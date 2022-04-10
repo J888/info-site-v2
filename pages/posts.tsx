@@ -5,39 +5,24 @@ import { getSiteConfig } from "../util/s3Util";
 import PostGrid from "../components/postGrid";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 import { PostDataWithNextPrev } from "../interfaces/PostData";
-import { NavBackground, NavLink } from "../interfaces/Nav";
+import { SiteConfig } from "../interfaces/SiteConfig";
 
 type Props = {
-  footerTagline: string;
-  navBackground: NavBackground;
-  navLinks: Array<NavLink>;
-  navLogoUrl: string;
   postsDynamo: Array<PostDataWithNextPrev>;
-  siteName: string;
   siteSubject: string;
-  twitterUsername: string;
+  siteConfig: SiteConfig;
 }
 
 const AllPosts = ({
   postsDynamo,
   siteSubject,
-  siteName,
-  twitterUsername,
-  navLinks,
-  navLogoUrl,
-  navBackground,
-  footerTagline,
+  siteConfig
 }: Props) => {
   return (
     <MainWrapper
-      twitterUsername={twitterUsername}
-      pageTitle={`All - ${postsDynamo.length} Results - ${siteSubject}`}
-      siteName={siteName}
+      title={`All - ${postsDynamo.length} Results - ${siteSubject}`}
       description={`A grid of all blog posts available on the website`}
-      navLinks={navLinks}
-      navLogoUrl={navLogoUrl}
-      navBackground={navBackground}
-      footerTagline={footerTagline}
+      siteConfig={siteConfig}
     >
       <Columns>
         <Columns.Column size={1}></Columns.Column>
@@ -55,24 +40,13 @@ export async function getStaticProps() {
     process.env.BLOG_POSTS_DYNAMO_TABLE_NAME
   );
   const siteConfig = await getSiteConfig();
-  const twitterUsername = siteConfig.socialMedia.username.twitter;
   const siteSubject = siteConfig.site.subject;
-  const siteName = siteConfig.site.name;
-  const navLinks = siteConfig.nav.links;
-  const navLogoUrl = siteConfig.nav.logoUrl;
-  const navBackground = siteConfig.nav.background;
-  const footerTagline = siteConfig.footer.tagline;
 
   return {
     props: {
       postsDynamo,
       siteSubject,
-      siteName,
-      twitterUsername,
-      navLinks,
-      navLogoUrl,
-      navBackground,
-      footerTagline,
+      siteConfig
     },
   };
 }

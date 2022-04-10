@@ -4,28 +4,40 @@ import Nav from "./navbar";
 import Footer from "./footer";
 import styles from "../sass/components/MainWrapper.module.scss"
 import { ReactNode } from "react";
-import { NavBackground, NavLink } from "../interfaces/Nav";
+import { SiteConfig } from "../interfaces/SiteConfig";
 
 type Props = {
   children?: ReactNode;
   description: string;
-  footerTagline: string;
-  imageUrl?: string;
-  navBackground: NavBackground;
-  navLogoUrl: string;
-  pageTitle: string;
-  siteName: string;
-  twitterUsername: string;
-  navLinks: Array<NavLink>;
+  siteConfig: SiteConfig,
+  title: string;
 };
 
-export default function MainWrapper(props: Props) {
+export default function MainWrapper({ children, siteConfig, title, description }: Props) {
+
+  const {
+    faviconUrl,
+    footer: {
+      tagline: footerTagline
+    },
+    site: { name: siteName },
+    nav: {
+      background: navBackground,
+      links: navLinks,
+      logoUrl: navLogoUrl
+    },
+    socialMedia: {
+      username: {
+        twitter: twitterUsername
+      }
+    }
+  } = siteConfig;
 
   return (
     <div>
       <Head>
-        <title>{props.pageTitle}</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>{title}</title>
+        <link rel="icon" href={faviconUrl} />
 
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={"true"}/>
@@ -36,37 +48,37 @@ export default function MainWrapper(props: Props) {
         />{" "}
         {/* needed for react bootstrap responsiveness */}
 
-        <meta name="description" content={props.description}/>
+        <meta name="description" content={description}/>
 
-        <meta property="og:title" content={props.pageTitle}/>
-        <meta property="og:description" content={props.description}/>
-        { props.imageUrl && <meta property="og:image" content={props.imageUrl}/> }
+        <meta property="og:title" content={title}/>
+        <meta property="og:description" content={description}/>
+        {/* { props.imageUrl && <meta property="og:image" content={props.imageUrl}/> } */}
 
-        <meta name="twitter:title" content={props.pageTitle}/>
-        <meta name="twitter:description" content={props.description}/>
-        { props.imageUrl && <meta name="twitter:image" content={props.imageUrl}/> }
+        <meta name="twitter:title" content={title}/>
+        <meta name="twitter:description" content={description}/>
+        {/* { props.imageUrl && <meta name="twitter:image" content={props.imageUrl}/> } */}
 
         <meta name="twitter:card" content="summary_large_image"/> {/* The card type . . . one of “summary”, “summary_large_image”, “app”, or “player”. */}
 
         {/* <!--  Non-Essential, But Recommended --> */}
-        <meta property="og:site_name" content={props.siteName}/>
-        <meta name="twitter:image:alt" content={`${props.pageTitle} image`}/>
+        <meta property="og:site_name" content={siteName}/>
+        <meta name="twitter:image:alt" content={`${title} image`}/>
       </Head>
 
       <Nav
-        navLinks={props.navLinks}
-        navLogoUrl={props.navLogoUrl}
-        background={props.navBackground}
+        navLinks={navLinks}
+        navLogoUrl={navLogoUrl}
+        background={navBackground}
       />
       <Block/>
       <main className={styles.mainSection}>
-        {props.children}
+        {children}
       </main>
 
       <Footer
-        logoUrl={props.navLogoUrl}
-        twitterUsername={props.twitterUsername}
-        tagline={props.footerTagline}
+        logoUrl={navLogoUrl}
+        twitterUsername={twitterUsername}
+        tagline={footerTagline}
       />
     </div>
   );

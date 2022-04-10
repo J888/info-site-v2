@@ -11,6 +11,7 @@ const SiteMap = () => {
 export const getServerSideProps = async ({ res }) => {
   const postsDynamo = await getBlogPostsWithPrevNext(process.env.BLOG_POSTS_DYNAMO_TABLE_NAME);
   const siteConfig = await getSiteConfig();
+  const { faviconUrl } = siteConfig;
   const baseUrl = siteConfig.site.baseUrl;
   
   const tags = Array.from(new Set(postsDynamo.map((post) => post.Tags || []).flat()));

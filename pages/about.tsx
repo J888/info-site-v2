@@ -2,40 +2,18 @@ import React from "react";
 import MainWrapper from "../components/mainWrapper";
 import { getSiteConfig } from "../util/s3Util";
 import Billboard from "../components/billboard";
-import { NavBackground, NavLink } from "../interfaces/Nav";
+import { SiteConfig } from "../interfaces/SiteConfig";
 
 type Props = {
-  footerTagline: string;
-  navBackground: NavBackground;
-  navLinks: Array<NavLink>;
-  navLogoUrl: string;
-  pageData: {
-    about: {
-      description: Array<string>;
-    };
-  };
-  site: {
-    name: string;
-  };
-  socialMedia: {
-    username: {
-      twitter: string;
-    };
-  };
+  siteConfig: SiteConfig
 };
 
 const About = ({
-  site,
-  pageData,
-  socialMedia,
-  navLinks,
-  navLogoUrl,
-  footerTagline,
-  navBackground,
+  siteConfig
 }: Props) => {
   const AboutParagraphs = (
     <React.Fragment>
-      {pageData.about.description.map((part, i) => (
+      {siteConfig.pageData.about.description.map((part, i) => (
         <p key={`part-${i}`}>{part}</p>
       ))}
     </React.Fragment>
@@ -43,14 +21,9 @@ const About = ({
 
   return (
     <MainWrapper
-      twitterUsername={socialMedia.username.twitter}
-      pageTitle={`About`}
-      siteName={site.name}
-      description={`The about page for ${site.name}`}
-      navLinks={navLinks}
-      navLogoUrl={navLogoUrl}
-      footerTagline={footerTagline}
-      navBackground={navBackground}
+      title={`About`}
+      description={`The about page for ${siteConfig.site.name}`}
+      siteConfig={siteConfig}
     >
       <Billboard title={"About"} bodyComponent={AboutParagraphs} />
     </MainWrapper>
@@ -59,21 +32,10 @@ const About = ({
 
 export async function getStaticProps({ params, preview = false, previewData }) {
   const siteConfig = await getSiteConfig();
-  const { site, pageData, socialMedia } = siteConfig;
-  const navLinks = siteConfig.nav.links;
-  const navLogoUrl = siteConfig.nav.logoUrl;
-  const footerTagline = siteConfig.footer.tagline;
-  const navBackground = siteConfig.nav.background;
 
   return {
     props: {
-      site,
-      pageData,
-      socialMedia,
-      navLinks,
-      navLogoUrl,
-      footerTagline,
-      navBackground,
+      siteConfig
     },
   };
 }

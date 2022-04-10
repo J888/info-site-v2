@@ -10,36 +10,28 @@ import { firstWordsWithEllipses } from "../../util/textUtil";
 import { DiscussionEmbed } from "disqus-react";
 import { API_ENDPOINTS } from "../../lib/constants";
 import { PostData } from "../../interfaces/PostData";
-import { NavBackground, NavLink } from "../../interfaces/Nav";
+import { SiteConfig } from "../../interfaces/SiteConfig";
 
 type Props = {
   articleUrl: string;
   category: string;
   disqusShortname: string;
-  footerTagline: string;
   postsByCategory: Array<PostData>;
   postData: PostData;
-  navBackground: NavBackground;
-  navLinks: Array<NavLink>;
-  navLogoUrl: string;
   slug: string;
-  siteName: string;
   twitterUsername: string;
+  siteConfig: SiteConfig;
 };
 
 const Post = ({
   postData,
   postsByCategory,
   category,
-  siteName,
   twitterUsername,
   slug,
-  navLinks,
-  navLogoUrl,
-  navBackground,
-  footerTagline,
   articleUrl,
   disqusShortname,
+  siteConfig
 }: Props) => {
   const { data: pageViewData, error } = useSWR(
     `${API_ENDPOINTS.PAGE_VIEWS}?slug=${encodeURIComponent(slug)}`,
@@ -58,15 +50,9 @@ const Post = ({
 
   return (
     <MainWrapper
-      twitterUsername={twitterUsername}
-      pageTitle={pageTitle}
-      siteName={siteName}
+      title={pageTitle}
       description={postData?.Description}
-      imageUrl={postData?.ImageS3Url}
-      navLinks={navLinks}
-      navLogoUrl={navLogoUrl}
-      navBackground={navBackground}
-      footerTagline={footerTagline}
+      siteConfig={siteConfig}
     >
       {postData && (
         <PostContent
@@ -104,6 +90,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   const [category, id] = params.slug;
   const postData = postsDynamo.filter((post) => post.PostId == id)[0];
   const siteConfig = await getSiteConfig();
+  const { faviconUrl } = siteConfig;
   const siteName = siteConfig.site.name;
   const twitterUsername = siteConfig.socialMedia.username.twitter;
   const navLinks = siteConfig.nav.links;
@@ -128,6 +115,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
     navLogoUrl,
     navBackground,
     footerTagline,
+    siteConfig
   };
 
   // This is the case when only a category is given

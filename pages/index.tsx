@@ -12,6 +12,8 @@ import { capitalizeWord } from "../util/textUtil";
 import ShowMoreToggle from "../components/showMoreToggle";
 import PostGridItemV2 from "../components/postGridItemV2";
 import FeaturedSection from "../components/featuredSection";
+import { PostData } from "../interfaces/PostData";
+import { SiteConfig } from "../interfaces/SiteConfig";
 
 const isSameDate = (dateA, dateB) => {
   // month number (0 - 11)
@@ -38,33 +40,46 @@ const newPostHeadingWording = (postCreatedDate, category) => {
     : `New in ${category}`;
 };
 
+type MostVisited = {
+  slug: string;
+  title: string;
+};
+
+type Props = {
+  postsByCategory: Array<PostData>;
+  newestPost: PostData;
+  topTags: Array<string>;
+  mostVisitedList: Array<MostVisited>;
+  siteConfig: SiteConfig;
+  siteStatementsPurposeLong: string;
+  siteStatementsPurposeShort: string;
+  categoryDescriptions: {
+    [key: string]: string;
+  };
+  featuredPosts: Array<PostData>;
+  featuredSection: {
+    titleText: string;
+    postIds: Array<string>;
+  };
+};
+
 export default function Home({
   postsByCategory,
   newestPost,
   topTags,
   mostVisitedList,
-  siteName,
+  siteConfig,
   siteStatementsPurposeLong,
   siteStatementsPurposeShort,
   categoryDescriptions,
-  twitterUsername,
-  navLinks,
-  navLogoUrl,
-  navBackground,
   featuredPosts,
   featuredSection,
-  footerTagline,
-}) {
+}: Props) {
   return (
     <MainWrapper
-      twitterUsername={twitterUsername}
-      pageTitle={`Front Page, ${siteStatementsPurposeShort}`}
-      siteName={siteName}
+      title={`Front Page, ${siteStatementsPurposeShort}`}
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
-      navLinks={navLinks}
-      navLogoUrl={navLogoUrl}
-      navBackground={navBackground}
-      footerTagline={footerTagline}
+      siteConfig={siteConfig}
     >
       <Columns style={{ margin: "0 0.5rem 0 0.5rem" }}>
         <Columns.Column size={2}></Columns.Column>
@@ -286,13 +301,7 @@ export async function getStaticProps() {
   let { categoryDescriptions } = siteConfig;
   let siteStatementsPurposeLong = siteConfig.site.statements.purpose.long;
   let siteStatementsPurposeShort = siteConfig.site.statements.purpose.short;
-  let twitterUsername = siteConfig.socialMedia.username.twitter;
-  let siteName = siteConfig.site.name;
-  const navLinks = siteConfig.nav.links;
-  const navLogoUrl = siteConfig.nav.logoUrl;
-  const navBackground = siteConfig.nav.background;
   const featuredSection = siteConfig.featuredSection;
-  const footerTagline = siteConfig.footer.tagline;
   const featuredPosts = postsStrippedDown.filter((p) =>
     featuredSection.postIds.includes(p.PostId)
   );
@@ -302,18 +311,13 @@ export async function getStaticProps() {
       postsByCategory,
       newestPost,
       topTags: topTagsList,
-      siteName,
       siteStatementsPurposeLong,
       siteStatementsPurposeShort,
       categoryDescriptions,
       mostVisitedList,
-      twitterUsername,
-      navLinks,
-      navLogoUrl,
-      navBackground,
       featuredPosts,
       featuredSection,
-      footerTagline,
+      siteConfig,
     },
   };
 }
