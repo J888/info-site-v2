@@ -149,10 +149,24 @@ export async function getStaticPaths() {
     process.env.BLOG_POSTS_DYNAMO_TABLE_NAME
   );
 
+  let paths = [];
+  for (let post of postsDynamo) {
+    paths.push({
+      params: {
+        slug: [post.Category, post.PostId],
+      },
+    });
+
+    paths.push({
+      params: {
+        slug: [post.Category],
+      },
+    });
+  }
+
   return {
-    paths:
-      postsDynamo.map((post) => `/posts/${post.Category}/${post.PostId}`) || [],
-    fallback: true,
+    paths,
+    fallback: false,
   };
 }
 

@@ -41,6 +41,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   const tag = params.tag;
   const matchingPosts = postsDynamo.filter((post) => post.Tags.includes(tag));
   const siteConfig = await getSiteConfig();
+  console.log(siteConfig)
 
   return {
     props: {
@@ -61,8 +62,13 @@ export async function getStaticPaths() {
   );
 
   return {
-    paths: tags.map((tag) => `/tags/${tag}`) || [],
-    fallback: true,
+    paths:
+      tags.map((tag) => ({
+        params: {
+          tag,
+        },
+      })) || [],
+    fallback: false,
   };
 }
 

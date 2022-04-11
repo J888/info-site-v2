@@ -14,7 +14,6 @@ type Props = {
 };
 
 export default function MainWrapper({ children, siteConfig, title, description }: Props) {
-
   const {
     faviconUrl,
     footer: {
