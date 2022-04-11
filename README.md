@@ -10,6 +10,7 @@
   - image upload:
     - compress photos before upload
   - Make article list searchable/filterable by title on admin page.
+  - add part numbers to keep track when adding new parts
 
 # ENV VARS
 
@@ -43,6 +44,7 @@ npm run start
 ## Stack
 
 - This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+- TypeScript for type safety. Define the shape of data to catch bugs early. Configured with `.tsconfig.json`
 - Bulma-React component library
 - S3 for file storage
 - Dynamo DB for storing articles (content and metadata both)
