@@ -19,7 +19,7 @@ const ImageUploadEditor = ({
   postShortId,
   title,
   fetchImagesHandler,
-}) => {
+}: Props) => {
   const [imageFileToBeUploaded, setImageFileToBeUploaded] = useState(null);
   const [imageUploadSuccess, setImageUploadSuccess] = useState(false);
 

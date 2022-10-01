@@ -1,9 +1,8 @@
-import { appCache, siteFileCacheKey } from "./nodeCache";
-
+const { appCache, siteFileCacheKey } = require("./nodeCache");
 const { S3Client, GetObjectCommand, S3, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
 const REGION = 'us-east-2';
 const client = new S3Client({ region: REGION });
-import yaml from "js-yaml";
+const yaml = require("js-yaml");
 
 /**
  * Returns data contents as string from S3 site-specific path
@@ -24,7 +23,7 @@ const getSiteFileContents = async (Bucket, sitename, relativePath) => {
 
     let Key = `websites/${sitename}/${relativePath}`;
     let ContentType = 'application/json';
-    console.log(`Getting posts from s3 at path ${Key} with ContentType=${ContentType}`);
+    console.log(`Getting s3://${Bucket}/${Key} with ContentType=${ContentType}`);
     const command = new GetObjectCommand({ Bucket, Key, ContentType });
     const response = await client.send(command);
     const readStream = response.Body;
@@ -104,4 +103,4 @@ const uploadImage = async (Bucket, PostShortId, imageBuff, fileName) => {
   return response;
 }
 
-export { deleteFileS3, getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage }
+module.exports = { deleteFileS3, getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage }

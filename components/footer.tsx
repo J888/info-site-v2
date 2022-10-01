@@ -8,7 +8,7 @@ type Props = {
   twitterUsername: string;
 };
 
-const Footer = ({ logoUrl, twitterUsername, tagline }) => (
+const Footer = ({ logoUrl, twitterUsername, tagline }: Props) => (
   <footer className={styles.footer}>
     <div className={styles.logo}>
       <Logo logoUrl={logoUrl} />
