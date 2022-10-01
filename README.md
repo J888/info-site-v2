@@ -77,3 +77,25 @@ if (derived === hash) {
 ## Disqus
 - Disqus will auto-close discussions after 30 days.
    - To disable this, go into the site config and change 30 to 0.
+
+## Cypress
+
+A framework used for integration testing.
+
+Run tests with Cypress Runner UI:
+
+```sh
+$ ./node_modules/.bin/cypress open
+```
+
+Or, run tests headless:
+
+```sh
+# Serve a production build of the site
+$ npm run build && npm start
+
+# In another terminal window, prep cypress by downloading siteConfig and posts locally so cypress can read the file straight up
+$ npm run prep-cypress-local
+# Run the integration tests
+$ npm run cy:headless
+```

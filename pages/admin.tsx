@@ -76,10 +76,6 @@ const Admin = ({}) => {
     setLoggedInAdmin(user && user.admin);
   };
 
-  const saveBlogPostClickHandler = async (parts) => {
-    alert(`saving ${JSON.stringify(parts, null, 2)}`);
-  };
-
   const getBlogPosts = async () => {
     const res = await axios.get(API_ENDPOINTS.ALL_POSTS);
     const { items } = res.data;
