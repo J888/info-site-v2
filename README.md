@@ -1,5 +1,27 @@
-### ToDo
+# Description
 
+This project aims to allow developers to easily create a blog about anything using a configuration-driven design.
+
+The app is designed to pull publicly-facing data at build time. Most pages will use pre-fetched data. This makes the application extremely fast and secure.
+
+## Goals
+- Website performance
+- Security
+- A custom-built content management system
+
+## Requirements to create a blog with this app
+1. An AWS account with the ability to create resources
+2. A server with nodeJS installed
+
+As of now, this project requires significant technical knowledge.
+
+## Administration
+
+The `/admin` page provides an interface to create, update, and delete content. You must log in as the admin user to do so.
+
+## Development To-Do Items
+
+- Make fonts configurable
 - "highlighted" tweets section - show a set of tweets (with react twitter embed component)
   - configurable in site config. And if they're not present then don't display anything.
 - Warning: data for page "/" is 201 kB, this amount of data can reduce performance.
@@ -11,8 +33,11 @@
     - compress photos before upload
   - Make article list searchable/filterable by title on admin page.
   - add part numbers to keep track when adding new parts
+- Add UI to configure the site config. Right now it's just a yaml file.
+  - add a version and lastUpdatedAt field to it
+  - detect issues with the config? (duplicates, blanks)
 
-# ENV VARS
+## ENV VARS
 
 ```
 export AWS_ACCESS_KEY_ID= \
@@ -52,7 +77,13 @@ npm run start
 - Disqus for comments
 - Google Analytics for view count
 
-## Authentication - Derive hash
+## Authentication
+
+To modify content, an admin user is authenticated using the crypto library.
+
+The admin user is the only user for now. Support for additional non-admin users may be added in the future.
+
+### Derive hash:
 
 ```javascript
 
@@ -62,7 +93,6 @@ const args = process.argv.slice(2);
 const salt = crypto.randomBytes(16).toString("hex");
 const derived = crypto.scryptSync(args[0], salt, 64).toString("hex");
 // store the salt and derived hash somewhere safe
-
 
 // Check if there's a match
 const hash = 'hash stored somewhere'
@@ -78,11 +108,9 @@ if (derived === hash) {
 - Disqus will auto-close discussions after 30 days.
    - To disable this, go into the site config and change 30 to 0.
 
-## Cypress
+## Integration Tests
 
-A framework used for integration testing.
-
-Run tests with Cypress Runner UI:
+Cypress is the framework used for integration testing. Run tests with Cypress Runner UI:
 
 ```sh
 $ ./node_modules/.bin/cypress open

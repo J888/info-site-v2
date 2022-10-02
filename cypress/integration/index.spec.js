@@ -10,12 +10,12 @@ describe("Home/front page [index]", () => {
 
   it("Has all categories on the home page", () => {
     cy.get("@siteConf").then((siteConf) => {
-      for (let key in siteConf.categoryDescriptions) {
-        cy.contains(key);
+      for (let category in siteConf.categories) {
+        cy.contains(category.key);
         cy.contains(
-          `More in ${key.substring(0, 1).toUpperCase() + key.substring(1)}`
+          `More in ${category.label}`
         );
-        cy.contains(siteConf.categoryDescriptions[key]);
+        cy.contains(category.description);
       }
     });
   });

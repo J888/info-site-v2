@@ -3,6 +3,7 @@ const { S3Client, GetObjectCommand, S3, ListObjectsV2Command, PutObjectCommand, 
 const REGION = 'us-east-2';
 const client = new S3Client({ region: REGION });
 const yaml = require("js-yaml");
+const SITE_CONFIG_FILE_NAME = 'siteConfig.json';
 
 /**
  * Returns data contents as string from S3 site-specific path
@@ -75,8 +76,17 @@ const getImagesByPostId = async (Bucket, PostShortId) => {
 }
 
 const getSiteConfig = async () => {
-  const configStr = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `siteConfig.yml`);
-  return yaml.load(configStr);
+  const configStr = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, SITE_CONFIG_FILE_NAME);
+  return JSON.parse(configStr);
+}
+
+const saveSiteConfig = async (siteConfigJson) => {
+  let response = await uploadObjectToS3(
+    process.env.STATIC_FILES_S3_BUCKET,
+    `websites/${process.env.SITE_FOLDER_S3}/${SITE_CONFIG_FILE_NAME}`,
+    JSON.stringify(siteConfigJson, null, 2)
+  );
+  return response;
 }
 
 const getSiteUsers = async () => {
@@ -97,10 +107,16 @@ const uploadImgObjectToS3 = async (Bucket, Key, Body) => {
   return response;
 }
 
+const uploadObjectToS3 = async (Bucket, Key, Body) => {
+  const command = new PutObjectCommand({ Bucket, Key, Body });
+  const response = await client.send(command);
+  return response;
+}
+
 const uploadImage = async (Bucket, PostShortId, imageBuff, fileName) => {
   let objKey = `posts/${PostShortId}/${fileName}`
   let response = await uploadImgObjectToS3(Bucket, objKey, imageBuff);
   return response;
 }
 
-module.exports = { deleteFileS3, getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage }
+module.exports = { deleteFileS3, getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage, saveSiteConfig }

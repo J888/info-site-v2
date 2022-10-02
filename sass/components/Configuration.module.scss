@@ -1,0 +1,66 @@
+.wrapper {
+  margin: 2rem 4rem 7rem 4rem;
+}
+
+.sectionHeading {
+  font-size: 1.7rem;
+}
+
+.tallTextAreaInput {
+  height: 10rem;
+  padding: 0.4rem 0.4rem 0.4rem 1rem;
+  font-size: 1rem;
+}
+
+.inputsSectionGeneral {
+  display: flex;
+  flex-direction: column;
+
+  input {
+    margin-bottom: 1rem;
+  }
+}
+
+.inputsSectionCategories {
+  display: flex;
+  flex-direction: column;
+  // width: 46%;
+  margin: 0 0 0 2rem;
+
+  input {
+    margin-bottom: 1rem;
+  }
+}
+
+.categoryInputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: solid #b5b5b5 0.1rem;
+  border-left: none;
+  border-right: none;
+  margin-bottom: 1rem 0 1rem 0;
+  &:first-child {
+    border-top: none;
+  }
+  &:not(:last-child) {
+    border-bottom: none;
+  }
+}
+
+.categoryDescriptionTextArea {
+  height: 4rem;
+  width: 34rem;
+}
+
+.featuredSectionPostIdInputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.addItemButton {
+  width: fit-content;
+  border-color: #adfeb6;
+  background: #6c6c6c;
+  color: #ebebeb;
+}
