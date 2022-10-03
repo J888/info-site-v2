@@ -8,6 +8,7 @@ import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'; // ht
 import Divider from "../components/divider";
 import { NavBackground, NavLink } from "../interfaces/Nav";
 import axios from "axios";
+import AuthenticationWrapper from "../components/authentication/AuthenticationWrapper";
 
 interface SiteCategory {
   key?: string;
@@ -358,6 +359,8 @@ const Configuration = ({ config }) => {
   );
 };
 
+const ConfigurationWrapped = ({config}) => <AuthenticationWrapper><Configuration config={config}/></AuthenticationWrapper>;
+
 export async function getStaticProps({ params, preview = false, previewData }) {
   const config = await getSiteConfig();
 
@@ -368,4 +371,4 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   };
 }
 
-export default Configuration;
+export default ConfigurationWrapped;
