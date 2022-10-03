@@ -33,11 +33,9 @@ The `/admin` page provides an interface to create, update, and delete content. Y
     - compress photos before upload
   - Make article list searchable/filterable by title on admin page.
   - add part numbers to keep track when adding new parts
-- Add UI to configure the site config. Right now it's just a yaml file.
+- configuration UI to configure the site config:
   - add a version and lastUpdatedAt field to it
-  - detect issues with the config? (duplicates, blanks)
-  - wrap in a log in
-- Add UI to configure users.
+  - detect issues (duplicates, blanks)
 
 ## ENV VARS
 
