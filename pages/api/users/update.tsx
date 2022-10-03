@@ -1,8 +1,7 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
-import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "../../../util/nodeCache";
 import { SessionDecorated } from "../../../interfaces/Session";
-import { getSiteUsers, saveSiteConfig, saveUsers } from "../../../util/s3Util";
+import { getSiteUsers, saveUsers } from "../../../util/s3Util";
 import crypto from "crypto";
 
 interface UserUpdate {

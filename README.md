@@ -36,6 +36,8 @@ The `/admin` page provides an interface to create, update, and delete content. Y
 - configuration UI to configure the site config:
   - add a version and lastUpdatedAt field to it
   - detect issues (duplicates, blanks)
+  - ability to delete array items
+  - AND prevent null from getting in the config
 
 ## Local Development: Set ENV VARS
 
