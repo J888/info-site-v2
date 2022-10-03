@@ -33,11 +33,14 @@ The `/admin` page provides an interface to create, update, and delete content. Y
     - compress photos before upload
   - Make article list searchable/filterable by title on admin page.
   - add part numbers to keep track when adding new parts
+- Add a wrapper for all configuration pages that displays tiles for what actions you can do (administrate, configure, setup new users)
 - configuration UI to configure the site config:
   - add a version and lastUpdatedAt field to it
   - detect issues (duplicates, blanks)
   - ability to delete array items
-  - AND prevent null from getting in the config
+  - Change favicon to a wrench icon if you're on /admin or /configuration* page(s)
+- Ability to create new users - should only be allowed for admin
+- Change /admin page to /publish or something
 
 ## Local Development: Set ENV VARS
 
@@ -146,3 +149,9 @@ $ npm run prep-cypress-local
 # Run the integration tests
 $ npm run cy:headless
 ```
+
+### Other
+
+- Copies of state objects are created for this reason. https://stackoverflow.com/a/56266640
+
+> . You've changed one of its values but it's still the same [object], and I suspect React doesn't see any reason to re-render because state hasn't changed;

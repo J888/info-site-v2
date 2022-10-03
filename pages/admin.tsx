@@ -10,7 +10,7 @@ import DeploymentControls from "../components/deploymentControls";
 import ScrollablePosts from "../components/scrollablePosts";
 import { API_ENDPOINTS } from "../lib/constants";
 import { SaveState } from "../interfaces/SaveState";
-import AuthenticationWrapper from "../components/authentication/AuthenticationWrapper";
+import ConfigurationPagesWrapper from "../components/configuration/ConfigurationPagesWrapper";
 
 const newPost = (postNum) => ({
   PostId: `post-${postNum}-id`,
@@ -136,7 +136,7 @@ const Admin = ({}) => {
   };
 
   return (
-    <Columns className={styles.mainWrapper}>
+    <Columns>
       <Columns.Column size={3}>
         <h1 className={styles.postsHeader}>Posts</h1>
         <Button
@@ -200,7 +200,7 @@ const Admin = ({}) => {
   );
 };
 
-const AdminWrapped = () => <AuthenticationWrapper><Admin/></AuthenticationWrapper>
+const AdminWrapped = () => <ConfigurationPagesWrapper><Admin/></ConfigurationPagesWrapper>
 
 export async function getStaticProps({ params, preview = false, previewData }) {
   return {

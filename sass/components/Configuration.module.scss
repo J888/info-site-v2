@@ -1,5 +1,13 @@
 .wrapper {
-  margin: 2rem 4rem 7rem 4rem;
+  input {
+    border: solid #cecece 0.1rem;
+    border-radius: 0.2rem
+  }
+
+  textarea {
+    border: solid #cecece 0.1rem;
+    border-radius: 0.2rem
+  }
 }
 
 .sectionHeading {

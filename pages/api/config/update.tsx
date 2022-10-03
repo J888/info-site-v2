@@ -1,6 +1,5 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
-import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "../../../util/nodeCache";
 import { SessionDecorated } from "../../../interfaces/Session";
 import { saveSiteConfig } from "../../../util/s3Util";
 

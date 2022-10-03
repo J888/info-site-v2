@@ -8,7 +8,7 @@ import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'; // ht
 import Divider from "../components/divider";
 import { NavBackground, NavLink } from "../interfaces/Nav";
 import axios from "axios";
-import AuthenticationWrapper from "../components/authentication/AuthenticationWrapper";
+import ConfigurationPagesWrapper from "../components/configuration/ConfigurationPagesWrapper";
 
 interface SiteCategory {
   key?: string;
@@ -31,6 +31,19 @@ interface SiteConfiguration {
   nav: Nav;
 }
 
+/**
+ * Removes null and empty values from the configuration.
+ * @param conf the configuration to fix
+ * @returns fixed configuration
+ */
+const repairedConfiguration = (conf: SiteConfiguration) => {
+  let copy: SiteConfiguration = Object.assign({}, conf);
+  copy.featuredSection.postIds = copy.featuredSection.postIds.filter(p => p);
+  copy.nav.links = copy.nav.links.filter(l => l && Object.keys(l).length > 0);
+  copy.categories = copy.categories.filter(c => c && Object.keys(c).length > 0);
+  return copy;
+}
+
 const TextInput = ({ config, configKey, label, onChangeHandler }) => (
   <React.Fragment>
     <label>{label}: </label>
@@ -48,28 +61,44 @@ const SaveButton = ({onClickHandler}) => {
   return (<Button colorVariant={'light'} onClick={() => { onClickHandler() }}>Save</Button>);
 }
 
+const Stats = ({ config }) => <div>
+  <h3><u>What you have:</u></h3>
+  <ul>
+    <li>Featured posts: {config.featuredSection.postIds.length}</li>
+    <li>Nav links: {config.nav.links.length}</li>
+    <li>Categories: {config.categories.length}</li>
+  </ul>
+</div>
+
+const PageDescription = () => <p>Modify your website's configuration. <b>For changes to apply to the live website, it must go through a rebuild.</b></p>;
+
 const Configuration = ({ config }) => {
   const [modifiedConfig, setModifiedConfig] = useState(config);
   const [showRawConfig, setShowRawConfig] = useState(true);
 
   const saveConfiguration = async() => {
     if (confirm('Are you sure you want to save this configuration?')) {
-      let response = await axios.put('/api/config/update', modifiedConfig)
+      let modifiedConfigToSave = repairedConfiguration(modifiedConfig);
+      let response = await axios.put('/api/config/update', modifiedConfigToSave);
+      if (response.status == 200) {
+        setModifiedConfig(modifiedConfigToSave);
+        alert('config save successful');
+      }
     }
   }
   const handleTextInputChanged = (key, value) => {
     let newConfig = {};
     Object.assign(newConfig, modifiedConfig);
-
-    console.log(`handleTextInputChanged - key: ${key}, value: ${value}`);
     _.set(newConfig, key, value);
     setModifiedConfig(newConfig);
-    console.log(`the new val is: `, _.get(newConfig, key));
   };
   return (
     <div className={styles.wrapper}>
+      <PageDescription/>
+      <Divider size={'sm'}/>
+      <Stats config={modifiedConfig}/>
+      <Divider size={'sm'}/>
       <SaveButton onClickHandler={saveConfiguration}/>
-
       <Divider size={'sm'}/>
 
       {/* Begin general section */}
@@ -359,11 +388,11 @@ const Configuration = ({ config }) => {
   );
 };
 
-const ConfigurationWrapped = ({config}) => <AuthenticationWrapper><Configuration config={config}/></AuthenticationWrapper>;
+const ConfigurationWrapped = ({config}) => <ConfigurationPagesWrapper><Configuration config={config}/></ConfigurationPagesWrapper>;
 
 export async function getStaticProps({ params, preview = false, previewData }) {
   const config = await getSiteConfig();
-
+  console.log(`GETTING SITE CONFIG`)
   return {
     props: {
       config,

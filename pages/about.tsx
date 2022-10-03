@@ -13,9 +13,7 @@ const About = ({
 }: Props) => {
   const AboutParagraphs = (
     <React.Fragment>
-      {siteConfig.pageData.about.description.map((part, i) => (
-        <p key={`part-${i}`}>{part}</p>
-      ))}
+      {siteConfig.pageData.about.description}
     </React.Fragment>
   );
 

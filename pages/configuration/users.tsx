@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { getSiteUsers } from "../../util/s3Util";
 import styles from "../../sass/pages/configuration/Users.module.scss";
 import Divider from "../../components/divider";
-import AuthenticationWrapper from "../../components/authentication/AuthenticationWrapper";
 import axios from "axios";
+import ConfigurationPagesWrapper from "../../components/configuration/ConfigurationPagesWrapper";
 
 type User = {
   admin: boolean;
@@ -52,8 +52,8 @@ const Users = ({ users }: Props) => {
   const [newPasswordRetyped, setNewPasswordRetyped] = useState<string>();
 
   return (
-    <div className={styles.wrapper}>
-      <AuthenticationWrapper>
+    <div>
+      <ConfigurationPagesWrapper>
         <h1>Configure Users</h1>
         <Table>
           <thead>
@@ -131,7 +131,7 @@ const Users = ({ users }: Props) => {
             </Button>
           </div>
         )}
-      </AuthenticationWrapper>
+      </ConfigurationPagesWrapper>
     </div>
   );
 };

@@ -1,0 +1,32 @@
+.wrapper {
+  margin: 2rem 12vw 7rem 12vw;
+}
+
+.navigationOptionBox {
+  height: 10rem;
+  font-size: 1.3rem;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+    border: dotted #ece48a 1px;
+  }
+  a {
+    color: #595858;
+  }
+  &--red {
+    @extend .navigationOptionBox;
+    color: white;
+    background-color: #f06d78;
+  }
+  &--orange {
+    @extend .navigationOptionBox;
+    color: white;
+
+    background-color: #f9ac52;
+  }
+  &--blue {
+    @extend .navigationOptionBox;
+    color: white;
+    background-color: #6ba2f4;
+  }
+}
