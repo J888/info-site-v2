@@ -40,7 +40,6 @@ The `/admin` page provides an interface to create, update, and delete content. Y
   - ability to delete array items
   - Change favicon to a wrench icon if you're on /admin or /configuration* page(s)
 - Ability to create new users - should only be allowed for admin
-- Change /admin page to /publish or something
 
 ## Local Development: Set ENV VARS
 

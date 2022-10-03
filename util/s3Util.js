@@ -11,14 +11,17 @@ const SITE_CONFIG_FILE_NAME = 'siteConfig.json';
  * @param {*} relativePath 
  * @returns 
  */
-const getSiteFileContents = async (Bucket, sitename, relativePath) => {
+const getSiteFileContents = async (Bucket, sitename, relativePath, useCache = true) => {
   return new Promise(async (resolve, reject) => {
 
     let cachedSiteFileKey = siteFileCacheKey(relativePath);
-    let cachedSiteFile = appCache.get(cachedSiteFileKey);
-    if (cachedSiteFile) {
-      console.log(`[CACHE-HIT][Key=${cachedSiteFileKey}]`)
-      return resolve(cachedSiteFile);
+
+    if (useCache) {
+      let cachedSiteFile = appCache.get(cachedSiteFileKey);
+      if (cachedSiteFile) {
+        console.log(`[CACHE-HIT][Key=${cachedSiteFileKey}]`)
+        return resolve(cachedSiteFile);
+      }
     }
 
     let Key = `websites/${sitename}/${relativePath}`;
@@ -102,7 +105,7 @@ const saveUsers = async (usersJson) => {
  * @returns 
  */
 const getSiteUsers = async () => {
-  const configStr = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `users/users.json`);
+  const configStr = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `users/users.json`, false);
   return JSON.parse(configStr);
 }
 
