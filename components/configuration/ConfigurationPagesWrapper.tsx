@@ -29,7 +29,7 @@ const ConfigurationPagesWrapper = ({children}) => {
         <Divider size="sm"/>
         <Columns>
           <Columns.Column>
-            <NavOptionBox label={'Publish Content'} href={'/admin'} color={'blue'}/>
+            <NavOptionBox label={'Publish Content'} href={'/publish'} color={'blue'}/>
           </Columns.Column>
           <Columns.Column>
             <NavOptionBox label={'Configure'} href={'/configuration'} color={'red'}/>

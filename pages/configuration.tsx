@@ -86,12 +86,14 @@ const Configuration = ({ config }) => {
       }
     }
   }
+  
   const handleTextInputChanged = (key, value) => {
     let newConfig = {};
     Object.assign(newConfig, modifiedConfig);
     _.set(newConfig, key, value);
     setModifiedConfig(newConfig);
   };
+
   return (
     <div className={styles.wrapper}>
       <PageDescription/>

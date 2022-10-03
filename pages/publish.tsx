@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Columns, Section } from "react-bulma-components";
 import shortUUID from "short-uuid";
-import styles from "../sass/components/Admin.module.scss";
+import styles from "../sass/components/Publish.module.scss";
 const ADD_CONTENT = "Add content. . .";
 import BlogPostEditor from "../components/blogPostEditor";
 import ImageUploadEditor from "../components/imageUploadEditor";
@@ -33,7 +33,7 @@ const newPost = (postNum) => ({
   IsDraft: true,
 });
 
-const Admin = ({}) => {
+const Publish = ({}) => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [imagesByPostShortId, setImagesByPostShortId] = useState({});
   const [activeBlogPostIndex, setActiveBlogPostIndex] = useState(0);
@@ -200,7 +200,7 @@ const Admin = ({}) => {
   );
 };
 
-const AdminWrapped = () => <ConfigurationPagesWrapper><Admin/></ConfigurationPagesWrapper>
+const PublishWrapped = () => <ConfigurationPagesWrapper><Publish/></ConfigurationPagesWrapper>
 
 export async function getStaticProps({ params, preview = false, previewData }) {
   return {
@@ -208,4 +208,4 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   };
 }
 
-export default AdminWrapped;
+export default PublishWrapped;
