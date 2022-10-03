@@ -11,7 +11,7 @@ The app is designed to pull publicly-facing data at build time. Most pages will 
 
 ## Requirements to create a blog with this app
 1. An AWS account with the ability to create resources
-2. A server with nodeJS installed
+2. A server with nodeJS installed.
 
 As of now, this project requires significant technical knowledge.
 
@@ -37,16 +37,33 @@ The `/admin` page provides an interface to create, update, and delete content. Y
   - add a version and lastUpdatedAt field to it
   - detect issues (duplicates, blanks)
 
-## ENV VARS
+## Local Development: Set ENV VARS
+
+`Create a file `.env.local` in the root of this project and fill in values
 
 ```
-export AWS_ACCESS_KEY_ID= \
-       AWS_SECRET_ACCESS_KEY= \
-       S3_REGION=us-east-2 \
-       SITE_FOLDER_S3= \
-       STATIC_FILES_S3_BUCKET= \
-       IMG_S3_BUCKET= \
-       GOOGLE_ANALYTICS_PROPERTY_ID=
+GOOGLE_ANALYTICS_VIEW_ID=
+GOOGLE_CLIENT_EMAIL=
+GOOGLE_CLIENT_ID=
+GOOGLE_PRIVATE_KEY=
+GOOGLE_ANALYTICS_PROPERTY_ID=
+
+SECRET_COOKIE_PASSWORD=
+SITE_NAME_LOWERCASE=
+BLOG_POSTS_DYNAMO_TABLE_NAME=
+
+DIGITAL_OCEAN_APP_ID=
+DIGITAL_OCEAN_API_BASE_URL=
+DIGITAL_OCEAN_PAT=
+
+DISQUS_SHORTNAME=
+
+S3_REGION=
+SITE_FOLDER_S3=
+STATIC_FILES_S3_BUCKET=
+IMG_S3_BUCKET=
+
+SITE_BASE_URL=
 
 ```
 

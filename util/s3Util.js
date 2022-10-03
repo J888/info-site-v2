@@ -2,7 +2,6 @@ const { appCache, siteFileCacheKey } = require("./nodeCache");
 const { S3Client, GetObjectCommand, S3, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
 const REGION = 'us-east-2';
 const client = new S3Client({ region: REGION });
-const yaml = require("js-yaml");
 const SITE_CONFIG_FILE_NAME = 'siteConfig.json';
 
 /**
