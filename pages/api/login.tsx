@@ -19,7 +19,8 @@ const Login = withIronSessionApiRoute(
         const userConfig = usersByUsername[username];
 
         if (!userConfig) {
-          res.send({ ok: true });
+          res.status(401).send({});
+          break;
         }
 
         const hashS3 = userConfig["hash"];

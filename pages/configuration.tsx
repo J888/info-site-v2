@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "react-bulma-components";
 import styles from "../sass/components/Configuration.module.scss";
-import { getSiteConfig, saveSiteConfig } from "../util/s3Util";
+import { getSiteConfig } from "../util/s3Util";
 var _ = require("lodash");
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'; // https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/473#issuecomment-1144052994

@@ -1,7 +1,3 @@
-import styles from "../sass/components/Footer.module.scss";
-import Logo from "./logo";
-import { SocialIcon } from "react-social-icons";
-
 type Props = {
   size: 'xxs' | 'xs' | 'sm' | 'm' | 'l';
 };
@@ -11,7 +7,7 @@ const Divider = ({ size }: Props) => {
   if (size === 'xxs') {
     height = 1.5;
   } else if (size === 'xs') {
-    height = 2.0;
+    height = 1.8;
   } else if (size === 'sm') {
     height = 2.5;
   } else if (size === 'm') {

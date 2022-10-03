@@ -89,9 +89,22 @@ const saveSiteConfig = async (siteConfigJson) => {
   return response;
 }
 
+const saveUsers = async (usersJson) => {
+  let response = await uploadObjectToS3(
+    process.env.STATIC_FILES_S3_BUCKET,
+    `websites/${process.env.SITE_FOLDER_S3}/users/users.json`,
+    JSON.stringify(usersJson, null, 2)
+  );
+  return response;
+}
+
+/**
+ * Site users are those who contribute to or manage the site
+ * @returns 
+ */
 const getSiteUsers = async () => {
-  const configStr = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `users/users.yml`);
-  return yaml.load(configStr);
+  const configStr = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, `users/users.json`);
+  return JSON.parse(configStr);
 }
 
 const deleteFileS3 = async (Bucket, PostShortId, fileName) => {
@@ -119,4 +132,4 @@ const uploadImage = async (Bucket, PostShortId, imageBuff, fileName) => {
   return response;
 }
 
-module.exports = { deleteFileS3, getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage, saveSiteConfig }
+module.exports = { deleteFileS3, getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage, saveSiteConfig, saveUsers }

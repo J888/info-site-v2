@@ -36,6 +36,8 @@ The `/admin` page provides an interface to create, update, and delete content. Y
 - Add UI to configure the site config. Right now it's just a yaml file.
   - add a version and lastUpdatedAt field to it
   - detect issues with the config? (duplicates, blanks)
+  - wrap in a log in
+- Add UI to configure users.
 
 ## ENV VARS
 
