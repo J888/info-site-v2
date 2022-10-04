@@ -14,6 +14,14 @@ type User = {
   salt: string;
 };
 
+const handleApiError = (error) => {
+  if (error?.response?.status === 401) {
+    alert("Request failed. You are not authorized to complete this action.");
+  } else {
+    alert("Request failed.")
+  }
+}
+
 const AddNewUser = ({
   handleUsernameUpdate, handlePasswordUpdate,
   handleRetypedPasswordUpdate, handleSaveClick,
@@ -194,15 +202,19 @@ const Users = ({}) => {
                         if (
                           confirm("Please confirm that you want to change the password")
                         ) {
-                          let res = await axios.put("/api/users/update", {
-                            user: {
-                              username: editingUser,
-                              password: newPassword,
-                            },
-                          });
-
-                          if (res.status === 200) {
-                            alert("update was successful");
+                          try {
+                            let res = await axios.put("/api/users/update", {
+                              user: {
+                                username: editingUser,
+                                password: newPassword,
+                              },
+                            });
+  
+                            if (res.status === 200) {
+                              alert("update was successful");
+                            }
+                          } catch (err) {
+                            handleApiError(err);
                           }
                         }
                       }}
@@ -239,22 +251,27 @@ const Users = ({}) => {
                   handleAdminCheckboxChange={setNewUserIsAdmin}
                   handleSaveClick={async () => {
                     if (confirm(`are you sure you want to create new user ${newUserUsername}, admin:${newUserIsAdmin}`)) {
-                      let createUserResponse = await axios.post(`/api/users/create`, {
-                        user: {
-                          username: newUserUsername,
-                          password: newUserNewPassword,
-                          isAdmin: newUserIsAdmin,
-                        },
-                      });
 
-                      if (createUserResponse.status === 201) {
-                        alert(`${newUserUsername} created successfully!`);
-                        setNewUserNewPassword(undefined);
-                        setNewUserNewPasswordRetyped(undefined);
-                        setNewUserUsername(undefined);
-                        setNewUserIsAdmin(false);
-                        setCreatingNewUser(false);
-                        await fetchAllUsers();
+                      try {
+                        let createUserResponse = await axios.post(`/api/users/create`, {
+                          user: {
+                            username: newUserUsername,
+                            password: newUserNewPassword,
+                            isAdmin: newUserIsAdmin,
+                          },
+                        });
+  
+                        if (createUserResponse.status === 201) {
+                          alert(`${newUserUsername} created successfully!`);
+                          setNewUserNewPassword(undefined);
+                          setNewUserNewPasswordRetyped(undefined);
+                          setNewUserUsername(undefined);
+                          setNewUserIsAdmin(false);
+                          setCreatingNewUser(false);
+                          await fetchAllUsers();
+                        }
+                      } catch (err) {
+                        handleApiError(err);
                       }
                     }
                   }}
@@ -276,14 +293,5 @@ const Users = ({}) => {
     </div>
   );
 };
-
-// export async function getServerSideProps({ params, preview = false, previewData }) {
-//   let users = await getSiteUsers();
-//   return {
-//     props: {
-//       users,
-//     },
-//   };
-// }
 
 export default Users;

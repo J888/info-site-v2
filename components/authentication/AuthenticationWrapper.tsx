@@ -14,7 +14,7 @@ const AuthenticationWrapper = ({children}) => {
   useEffect(() => {
     async function callGetCurrentUser() {
       let user = await getCurrentUser();
-      if (user?.admin) {
+      if (user) {
         setLoginStatus({
           success: !!user,
           isAdmin: user?.admin

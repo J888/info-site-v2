@@ -13,7 +13,7 @@ export default withIronSessionApiRoute(async function updateRoute(req, res) {
     case "GET":
       try {
         console.log((session as SessionDecorated)?.user)
-        if (!(session as SessionDecorated)?.user?.admin) {
+        if (!(session as SessionDecorated)?.user) {
           return res
             .status(401)
             .json({ error: "you must be logged in to make this request." });
