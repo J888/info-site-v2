@@ -28,18 +28,15 @@ The `/admin` page provides an interface to create, update, and delete content. Y
        -  https://nextjs.org/docs/messages/large-page-data 
 - Add "Back to top" button on articles. Useful if article is long.
 - Make the background color of the navbar a config item.
-- Admin
+- Publish page
   - image upload:
     - compress photos before upload
   - Make article list searchable/filterable by title on admin page.
   - add part numbers to keep track when adding new parts
-- Add a wrapper for all configuration pages that displays tiles for what actions you can do (administrate, configure, setup new users)
 - configuration UI to configure the site config:
   - add a version and lastUpdatedAt field to it
-  - detect issues (duplicates, blanks)
   - ability to delete array items
   - Change favicon to a wrench icon if you're on /admin or /configuration* page(s)
-- Ability to create new users - should only be allowed for admin
 
 ## Local Development: Set ENV VARS
 

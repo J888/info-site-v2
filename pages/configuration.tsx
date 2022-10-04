@@ -70,7 +70,7 @@ const Stats = ({ config }) => <div>
   </ul>
 </div>
 
-const PageDescription = () => <p>Modify your website's configuration. <b>For changes to apply to the live website, it must go through a rebuild.</b></p>;
+const PageDescription = () => <p>{"Modify your website's configuration."}<b>{"For changes to apply to the live website, it must go through a rebuild."}</b></p>;
 
 const Configuration = ({ config }) => {
   const [modifiedConfig, setModifiedConfig] = useState(config);

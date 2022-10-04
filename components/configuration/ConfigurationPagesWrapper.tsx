@@ -36,13 +36,13 @@ const ConfigurationPagesWrapper = ({children}) => {
     if (!currentUser) {
       fetchCurrentUser(setCurrentUser);
     }
-  });
+  }, [currentUser]);
 
   return (
     <AuthenticationWrapper>
       <div className={styles.wrapper}>
         <div>
-          {currentUser && <p>You're logged in as <b>{currentUser.username}</b> ({ currentUser.admin ? 'admin' : 'non-admin'})</p>}
+          {currentUser && <p>{"You're logged in as"} <b>{currentUser.username}</b> ({ currentUser.admin ? 'admin' : 'non-admin'})</p>}
           <p>Welcome to your website management dashboard.</p>
         </div>
         <Divider size="sm"/>
