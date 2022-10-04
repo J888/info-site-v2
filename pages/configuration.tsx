@@ -390,7 +390,11 @@ const Configuration = ({ config }) => {
   );
 };
 
-const ConfigurationWrapped = ({config}) => <ConfigurationPagesWrapper><Configuration config={config}/></ConfigurationPagesWrapper>;
+const ConfigurationWrapped = ({ config }) => (
+  <ConfigurationPagesWrapper activePage={"configuration"}>
+    <Configuration config={config} />
+  </ConfigurationPagesWrapper>
+);
 
 export async function getStaticProps({ params, preview = false, previewData }) {
   const config = await getSiteConfig();

@@ -119,7 +119,7 @@ const Users = ({}) => {
 
   return (
     <div>
-      <ConfigurationPagesWrapper>
+      <ConfigurationPagesWrapper activePage={"users"}>
         <Columns>
           <Columns.Column>
             <Box>

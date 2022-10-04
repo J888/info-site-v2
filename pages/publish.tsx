@@ -200,7 +200,11 @@ const Publish = ({}) => {
   );
 };
 
-const PublishWrapped = () => <ConfigurationPagesWrapper><Publish/></ConfigurationPagesWrapper>
+const PublishWrapped = () => (
+  <ConfigurationPagesWrapper activePage={"publish"}>
+    <Publish />
+  </ConfigurationPagesWrapper>
+);
 
 export async function getStaticProps({ params, preview = false, previewData }) {
   return {

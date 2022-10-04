@@ -3,7 +3,7 @@
 }
 
 .navigationOptionBox {
-  height: 10rem;
+  height: 5rem;
   font-size: 1.3rem;
   &:hover {
     cursor: pointer;
@@ -21,7 +21,6 @@
   &--orange {
     @extend .navigationOptionBox;
     color: white;
-
     background-color: #f9ac52;
   }
   &--blue {

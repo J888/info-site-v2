@@ -10,14 +10,28 @@ interface NavOptionBoxProps {
   label: string;
   href: string;
   color?: string;
+  isActive?: boolean;
 }
-const NavOptionBox = ({ label, href, color }: NavOptionBoxProps) => (
-  <Link href={href} passHref>
-    <Box className={color ? styles[`navigationOptionBox--${color}`] : styles.navigationOptionBox}>
-      {label}
-    </Box>
-  </Link>
-);
+const NavOptionBox = ({ label, href, color, isActive }: NavOptionBoxProps) => {
+  const activeStyling = {
+    borderBottom: "solid #565656 0.5rem",
+    opacity: '0.6',
+  }
+  return (
+    <Link href={href} passHref>
+      <Box
+        className={
+          color
+            ? styles[`navigationOptionBox--${color}`]
+            : styles.navigationOptionBox
+        }
+        style={isActive ? activeStyling : {}}
+      >
+        {label}
+      </Box>
+    </Link>
+  );
+};
 
 const fetchCurrentUser = async (setter) => {
   let data = await getCurrentUser();
@@ -29,7 +43,7 @@ interface CurrentUser {
   admin: boolean;
 }
 
-const ConfigurationPagesWrapper = ({children}) => {
+const ConfigurationPagesWrapper = ({children, activePage}) => {
   const [currentUser, setCurrentUser] = useState<CurrentUser>();
 
   useEffect(() => {
@@ -48,13 +62,13 @@ const ConfigurationPagesWrapper = ({children}) => {
         <Divider size="sm"/>
         <Columns>
           <Columns.Column>
-            <NavOptionBox label={'Publish Content'} href={'/publish'} color={'blue'}/>
+            <NavOptionBox label={'Publish Content'} href={'/publish'} color={'blue'} isActive={activePage === 'publish'}/>
           </Columns.Column>
           <Columns.Column>
-            <NavOptionBox label={'Configure'} href={'/configuration'} color={'red'}/>
+            <NavOptionBox label={'Configure'} href={'/configuration'} color={'red'} isActive={activePage === 'configuration'}/>
           </Columns.Column>
           <Columns.Column>
-            <NavOptionBox label={'Manage Users'} href={'/configuration/users'} color={'orange'}/>
+            <NavOptionBox label={'Manage Users'} href={'/configuration/users'} color={'orange'} isActive={activePage === 'users'}/>
           </Columns.Column>
           <Columns.Column>
             <NavOptionBox label={'Website Front Page'} href={'/'}/>
