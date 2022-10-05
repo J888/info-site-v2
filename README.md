@@ -38,6 +38,7 @@ The `/admin` page provides an interface to create, update, and delete content. Y
   - ability to delete array items
   - Change favicon to a wrench icon if you're on /admin or /configuration* page(s)
 - allow a non-admin user to change their own (and only their own) password
+- log out button
 
 ## Local Development: Set ENV VARS
 

@@ -3,7 +3,7 @@ import AuthenticationWrapper from "../authentication/AuthenticationWrapper";
 import { Box, Columns } from "react-bulma-components";
 import Link from "next/link";
 import styles from "../../sass/components/configuration/ConfigurationPagesWrapper.module.scss";
-import Divider from "../divider";
+import Spacer from "../utility/spacer";
 import { getCurrentUser } from "../../lib/user";
 
 interface NavOptionBoxProps {
@@ -59,7 +59,7 @@ const ConfigurationPagesWrapper = ({children, activePage}) => {
           {currentUser && <p>{"You're logged in as"} <b>{currentUser.username}</b> ({ currentUser.admin ? 'admin' : 'non-admin'})</p>}
           <p>Welcome to your website management dashboard.</p>
         </div>
-        <Divider size="sm"/>
+        <Spacer size="sm"/>
         <Columns>
           <Columns.Column>
             <NavOptionBox label={'Publish Content'} href={'/publish'} color={'blue'} isActive={activePage === 'publish'}/>
@@ -74,7 +74,7 @@ const ConfigurationPagesWrapper = ({children, activePage}) => {
             <NavOptionBox label={'Website Front Page'} href={'/'}/>
           </Columns.Column>
         </Columns>
-        <Divider size="m"/>
+        <Spacer size="m"/>
 
         {children}
       </div>

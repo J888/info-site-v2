@@ -1,7 +1,7 @@
 import { Box, Button, Columns, Form, Table } from "react-bulma-components";
 import React, { useEffect, useState } from "react";
 import styles from "../../sass/pages/configuration/Users.module.scss";
-import Divider from "../../components/divider";
+import Spacer from "../../components/utility/spacer";
 import axios from "axios";
 import ConfigurationPagesWrapper from "../../components/configuration/ConfigurationPagesWrapper";
 
@@ -30,19 +30,19 @@ const AddNewUser = ({
   return (
     <Box className={styles.editForm}>
       <h1><u>Add New User</u></h1>
-      <Divider size={'xxs'} />
+      <Spacer size={'xxs'} />
       <label>Username (Max {MAX_USERNAME_LENGTH} chars):</label>
       <input placeholder="username" maxLength={MAX_USERNAME_LENGTH}
              onChange={(e) => { handleUsernameUpdate(e.target.value) }}/>
-      <Divider size={'xxs'} />
+      <Spacer size={'xxs'} />
       <label>Password: </label>
       <input placeholder="password" type="password" onChange={(e) => { handlePasswordUpdate(e.target.value) }}/>
       <input placeholder="type password again" type="password" onChange={(e) => { handleRetypedPasswordUpdate(e.target.value) }}/>
-      <Divider size={'xxs'} />
+      <Spacer size={'xxs'} />
       <Form.Checkbox onChange={(e) => handleAdminCheckboxChange(e.target.checked) }>
         make user an admin
       </Form.Checkbox>
-      <Divider size={'xxs'} />
+      <Spacer size={'xxs'} />
       <Button.Group>
         <Button onClick={handleSaveClick} disabled={saveButtonDisabled} color='success'>Save</Button>
         <Button onClick={handleCancelClick} color='danger'>Cancel</Button>
@@ -96,9 +96,13 @@ const Users = ({}) => {
   const [newUserIsAdmin, setNewUserIsAdmin] = useState<boolean>(false);
 
   const fetchAllUsers = async () => {
-    let response = await axios.get(`/api/users/all`);
-    if (response.status === 200) {
-      setUsersMap(response.data.users);
+    try {
+      let response = await axios.get(`/api/users/all`);
+      if (response.status === 200) {
+        setUsersMap(response.data.users);
+      }
+    } catch (err) {
+      //catch the 401
     }
   }
 
@@ -175,7 +179,7 @@ const Users = ({}) => {
                   <h3>
                     Editing <u>{editingUser}</u>
                   </h3>
-                  <Divider size={"xs"} />
+                  <Spacer size={"xs"} />
                   <label>Change password: </label>
                   <input
                     placeholder="New password"
@@ -191,11 +195,11 @@ const Users = ({}) => {
                       setNewPasswordRetyped(e.target.value);
                     }}
                   />
-                  <Divider size={"xxs"} />
+                  <Spacer size={"xxs"} />
                   {newPassword !== newPasswordRetyped && (
                     <p>Passwords do not match</p>
                   )}
-                  <Divider size={"xxs"} />
+                  <Spacer size={"xxs"} />
                   <Button.Group>
                     <Button
                       onClick={async () => {

@@ -5,7 +5,7 @@ import { getSiteConfig } from "../util/s3Util";
 var _ = require("lodash");
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'; // https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/473#issuecomment-1144052994
-import Divider from "../components/divider";
+import Spacer from "../components/utility/spacer";
 import { NavBackground, NavLink } from "../interfaces/Nav";
 import axios from "axios";
 import ConfigurationPagesWrapper from "../components/configuration/ConfigurationPagesWrapper";
@@ -70,7 +70,7 @@ const Stats = ({ config }) => <div>
   </ul>
 </div>
 
-const PageDescription = () => <p>{"Modify your website's configuration."}<b>{"For changes to apply to the live website, it must go through a rebuild."}</b></p>;
+const PageDescription = () => <p>{"Modify your website's configuration."} <b>{"A rebuild is necessary for modifications to be reflected"}</b></p>;
 
 const Configuration = ({ config }) => {
   const [modifiedConfig, setModifiedConfig] = useState(config);
@@ -97,11 +97,11 @@ const Configuration = ({ config }) => {
   return (
     <div className={styles.wrapper}>
       <PageDescription/>
-      <Divider size={'sm'}/>
+      <Spacer size={'sm'}/>
       <Stats config={modifiedConfig}/>
-      <Divider size={'sm'}/>
+      <Spacer size={'sm'}/>
       <SaveButton onClickHandler={saveConfiguration}/>
-      <Divider size={'sm'}/>
+      <Spacer size={'sm'}/>
 
       {/* Begin general section */}
       <h2 className={styles.sectionHeading}><u>General</u></h2>
@@ -144,7 +144,7 @@ const Configuration = ({ config }) => {
       </div>
       {/* End general section */}
 
-      <Divider size={'m'}/>
+      <Spacer size={'m'}/>
       
       {/* Begin Categories */}
       <h2 className={styles.sectionHeading}><u>Categories</u></h2>
@@ -199,7 +199,7 @@ const Configuration = ({ config }) => {
             </div>
           );
         })}
-        <Divider size={'xxs'}/>
+        <Spacer size={'xxs'}/>
 
         <Button
           className={styles.addItemButton}
@@ -221,7 +221,7 @@ const Configuration = ({ config }) => {
       </div>
       {/* End Categories */}
 
-      <Divider size={'m'}/>
+      <Spacer size={'m'}/>
 
       {/* Begin `About Page` Description */}
       <h2 className={styles.sectionHeading}><u>About Page</u></h2>
@@ -246,7 +246,7 @@ const Configuration = ({ config }) => {
       </div>
       {/* End `About Page` Description */}
 
-      <Divider size={'m'}/>
+      <Spacer size={'m'}/>
 
       {/* Begin `Featured Section` */}
       <h2 className={styles.sectionHeading}><u>Featured Section</u></h2>
@@ -280,7 +280,7 @@ const Configuration = ({ config }) => {
               </div>
           )
         }
-        <Divider size={'xxs'}/>
+        <Spacer size={'xxs'}/>
         <Button
           className={styles.addItemButton}
           onClick={() => {
@@ -299,7 +299,7 @@ const Configuration = ({ config }) => {
       </div>
       {/* End `Featured Section` */}
 
-      <Divider size={'m'}/>
+      <Spacer size={'m'}/>
 
       {/* Begin NavBar configuration  */}
       <h2 className={styles.sectionHeading}><u>Navigation</u></h2>
@@ -342,7 +342,7 @@ const Configuration = ({ config }) => {
               </div>
           )
         }
-        <Divider size={'xxs'}/>
+        <Spacer size={'xxs'}/>
         <Button
           className={styles.addItemButton}
           onClick={() => {
@@ -363,7 +363,7 @@ const Configuration = ({ config }) => {
       </div>
       {/* End NavBar configuration  */}
 
-      <Divider size={'sm'}/>
+      <Spacer size={'sm'}/>
 
       {/* Begin Raw JSON section */}
       <h2 className={styles.sectionHeading}><u>Review raw configuration value</u></h2>
@@ -383,7 +383,7 @@ const Configuration = ({ config }) => {
       }
       {/* End Raw JSON section */}
 
-      <Divider size={'l'}/>
+      <Spacer size={'l'}/>
 
       <SaveButton onClickHandler={saveConfiguration}/>
     </div>

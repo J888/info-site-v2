@@ -11,6 +11,7 @@ export const loginHandler = async (providedUsername, password): Promise<LoginSta
       username: providedUsername,
       password,
     });
+    console.log(`loginRes: `, loginRes)
   } catch (err) {
     return {
       unauthorized: true,

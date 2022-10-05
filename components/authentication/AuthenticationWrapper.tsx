@@ -3,6 +3,7 @@ import LoginForm from "../loginForm";
 import { loginHandler } from "../../lib/handlers/login";
 import { LoginStatus } from "../../interfaces/LoginStatus";
 import { getCurrentUser } from "../../lib/user";
+import Spacer from "../utility/spacer";
 
 const AuthenticationWrapper = ({children}) => {
   const [loginStatus, setLoginStatus] = useState<LoginStatus>({
@@ -30,10 +31,17 @@ const AuthenticationWrapper = ({children}) => {
 
   return (
     <React.Fragment>
-      {!loginStatus.success && <LoginForm loginHandler={async (username, password) => { 
-        let loginResult = await loginHandler(username, password);
-        setLoginStatus(loginResult)
-      }} />}
+      {!loginStatus.success && (
+        <div style={{margin: '0 16vw 0 16vw'}}>
+          <Spacer size="sm"/>
+          <LoginForm
+            loginHandler={async (username, password) => {
+              let loginResult = await loginHandler(username, password);
+              setLoginStatus(loginResult);
+            }}
+          />
+        </div>
+      )}
       {loginStatus.success && children}
       {loginStatus.unauthorized && <p>unauthorized.</p>}
     </React.Fragment>

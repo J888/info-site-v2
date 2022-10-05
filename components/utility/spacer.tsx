@@ -2,7 +2,7 @@ type Props = {
   size: 'xxs' | 'xs' | 'sm' | 'm' | 'l';
 };
 
-const Divider = ({ size }: Props) => {
+const Spacer = ({ size }: Props) => {
   let height = 0.0;
   if (size === 'xxs') {
     height = 1.5;
@@ -22,4 +22,4 @@ const Divider = ({ size }: Props) => {
   return (<div style={{height: `${height}rem`}}></div>)
 }
 
-export default Divider;
+export default Spacer;
