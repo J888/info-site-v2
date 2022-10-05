@@ -4,6 +4,7 @@ interface PartData {
 }
 
 export interface PostData {
+  AuthorName: string;
   PostId: string;
   PostShortId: string;
   Category: string;

@@ -39,6 +39,9 @@ The `/admin` page provides an interface to create, update, and delete content. Y
   - Change favicon to a wrench icon if you're on /admin or /configuration* page(s)
 - allow a non-admin user to change their own (and only their own) password
 - log out button
+- publish page:
+  - allow (non-admin) user to delete articles they create
+  - highlight articles I've written 
 
 ## Local Development: Set ENV VARS
 
