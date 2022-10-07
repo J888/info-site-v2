@@ -4,7 +4,7 @@ import { sessionOptions } from "../../../lib/session/sessionOptions";
 import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "../../../util/nodeCache";
 import { SessionDecorated } from "../../../interfaces/Session";
 
-export default withIronSessionApiRoute(async function updateRoute(req, res) {
+export default withIronSessionApiRoute(async function createPostsRoute(req, res) {
   const {
     body: { posts },
     method,

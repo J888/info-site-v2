@@ -10,7 +10,7 @@ interface UserCreate {
   isAdmin: boolean;
 }
 
-export default withIronSessionApiRoute(async function updateRoute(req, res) {
+export default withIronSessionApiRoute(async function createRoute(req, res) {
   const {
     body,
     method,

@@ -5,7 +5,7 @@ type Props = {
 const Spacer = ({ size }: Props) => {
   let height = 0.0;
   if (size === 'xxs') {
-    height = 1.5;
+    height = 0.5;
   } else if (size === 'xs') {
     height = 1.8;
   } else if (size === 'sm') {

@@ -1,17 +1,39 @@
 import React, { useEffect, useState } from "react";
 import AuthenticationWrapper from "../authentication/AuthenticationWrapper";
-import { Box, Columns, Heading } from "react-bulma-components";
+import { Box, Button, Columns, Heading } from "react-bulma-components";
 import Link from "next/link";
 import styles from "../../sass/components/configuration/ConfigurationPagesWrapper.module.scss";
 import { getCurrentUser } from "../../lib/user";
 import Head from "next/head";
+import axios from "axios";
+import Spacer from "../utility/spacer";
 
-const CurrentUserInfo = ({currentUser}) => {
-  return (<div>
-    <span>{"Logged in as"} <b>{currentUser.username}</b></span>
-    {' '}{currentUser.admin ? <img src="/icons/badge-icon.png" style={{maxWidth: '16px'}}/> : ''}
-  </div>);
-}
+const CurrentUserInfo = ({ currentUser }) => {
+  return (
+    <div>
+      <span>
+        {"Logged in as"} <b>{currentUser.username}</b>
+      </span>{" "}
+      <Spacer size="xxs"/>
+      {currentUser.admin ? (
+        <img src="/icons/badge-icon.png" style={{ maxWidth: "16px" }} />
+      ) : (
+        ""
+      )}
+      <div>
+        <Button size="small" onClick={async () => {
+          if (confirm("are you sure you want to log out?")) {
+            let res = await axios.post('/api/logout', {});
+            if (res.status === 200) {
+              // alert('successfully logged out');
+              location.reload();
+            }
+          }
+        }}>Log out</Button>
+      </div> 
+    </div>
+  );
+};
 
 interface NavOptionBoxProps {
   label: string;
@@ -52,7 +74,7 @@ const NavOptionGroup = ({ activePage }) => {
       </Columns.Column>
       <Columns.Column>
         <NavOptionBox
-          label={"Configure"}
+          label={"Configure Your Site"}
           href={"/configuration"}
           color={"red"}
           isActive={activePage === "configuration"}
@@ -67,7 +89,7 @@ const NavOptionGroup = ({ activePage }) => {
         />
       </Columns.Column>
       <Columns.Column>
-        <NavOptionBox label={"Website Front Page"} href={"/"} />
+        <NavOptionBox label={"View Front Page"} href={"/"} />
       </Columns.Column>
     </Columns>
   );

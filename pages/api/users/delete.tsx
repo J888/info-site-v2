@@ -3,7 +3,7 @@ import { sessionOptions } from "../../../lib/session/sessionOptions";
 import { SessionDecorated } from "../../../interfaces/Session";
 import { getSiteUsers, saveUsers } from "../../../util/s3Util";
 
-export default withIronSessionApiRoute(async function updateRoute(req, res) {
+export default withIronSessionApiRoute(async function deleteRoute(req, res) {
   const {
     body,
     method,
