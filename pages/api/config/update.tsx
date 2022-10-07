@@ -1,17 +1,17 @@
-import { createBlogPostsDynamoDb } from "../../../util/dynamoDbUtil";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
-import axios from "axios";
 import { SessionDecorated } from "../../../interfaces/Session";
+import { saveSiteConfig } from "../../../util/s3Util";
 
-export default withIronSessionApiRoute(async function deployRoute(req, res) {
+export default withIronSessionApiRoute(async function updateConfigRoute(req, res) {
   const {
+    body,
     method,
     session,
   } = req;
 
   switch (method) {
-    case "POST":
+    case "PUT":
       try {
         console.log((session as SessionDecorated)?.user)
         if (!(session as SessionDecorated)?.user?.admin) {
@@ -19,20 +19,8 @@ export default withIronSessionApiRoute(async function deployRoute(req, res) {
             .status(401)
             .json({ error: "you must be logged in to make this request." });
         }
-
-        const digitalOceanRes = await axios.post(
-          `${process.env.DIGITAL_OCEAN_API_BASE_URL}/apps/${process.env.DIGITAL_OCEAN_APP_ID}/deployments`,
-          {
-            "force_build": true
-          },
-          {
-            headers: {
-              "Authorization": `Bearer ${process.env.DIGITAL_OCEAN_PAT}`
-            }
-          }
-        )
-
-        res.status(200).json({ deploymentId: digitalOceanRes?.data?.deployment?.id });
+        const awsRes = await saveSiteConfig(body);
+        res.status(200).json({ awsRes });
       } catch (err) {
         console.log(err);
 
@@ -43,7 +31,7 @@ export default withIronSessionApiRoute(async function deployRoute(req, res) {
 
       break;
     default:
-      res.setHeader("Allow", ["POST"]);
+      res.setHeader("Allow", ["PUT"]);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 }, sessionOptions);

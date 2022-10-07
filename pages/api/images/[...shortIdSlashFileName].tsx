@@ -4,7 +4,7 @@ import { SessionDecorated } from "../../../interfaces/Session";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
 import { deleteFileS3 } from "../../../util/s3Util";
 
-export default withIronSessionApiRoute(async function updateRoute(req, res) {
+export default withIronSessionApiRoute(async function imagesRoute(req, res) {
   const {
     method,
     session,

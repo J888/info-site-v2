@@ -1,27 +1,75 @@
-### ToDo
+# Description
 
+This project aims to allow developers to easily create a blog about anything using a configuration-driven design.
+
+The app is designed to pull publicly-facing data at build time. Most pages will use pre-fetched data. This makes the application extremely fast and secure.
+
+## Goals
+- Website performance
+- Security
+- A custom-built content management system
+
+## Requirements to create a blog with this app
+1. An AWS account with the ability to create resources
+2. A server with nodeJS installed.
+
+As of now, this project requires significant technical knowledge.
+
+## Administration
+
+The `/admin` page provides an interface to create, update, and delete content. You must log in as the admin user to do so.
+
+## Development To-Do Items
+
+- Make fonts configurable
 - "highlighted" tweets section - show a set of tweets (with react twitter embed component)
   - configurable in site config. And if they're not present then don't display anything.
 - Warning: data for page "/" is 201 kB, this amount of data can reduce performance.
        -  https://nextjs.org/docs/messages/large-page-data 
 - Add "Back to top" button on articles. Useful if article is long.
 - Make the background color of the navbar a config item.
-- Admin
+- Publish page
   - image upload:
     - compress photos before upload
   - Make article list searchable/filterable by title on admin page.
   - add part numbers to keep track when adding new parts
+- configuration UI to configure the site config:
+  - add a version and lastUpdatedAt field to it
+  - ability to delete array items
+  - Change favicon to a wrench icon if you're on /admin or /configuration* page(s)
+- allow a non-admin user to change their own (and only their own) password
+- log out button
+- publish page:
+  - allow (non-admin) user to delete articles they create
+  - highlight articles I've written 
 
-# ENV VARS
+## Local Development: Set ENV VARS
+
+`Create a file `.env.local` in the root of this project and fill in values
 
 ```
-export AWS_ACCESS_KEY_ID= \
-       AWS_SECRET_ACCESS_KEY= \
-       S3_REGION=us-east-2 \
-       SITE_FOLDER_S3= \
-       STATIC_FILES_S3_BUCKET= \
-       IMG_S3_BUCKET= \
-       GOOGLE_ANALYTICS_PROPERTY_ID=
+GOOGLE_ANALYTICS_VIEW_ID=
+GOOGLE_CLIENT_EMAIL=
+GOOGLE_CLIENT_ID=
+GOOGLE_PRIVATE_KEY=
+GOOGLE_ANALYTICS_PROPERTY_ID=
+
+SECRET_COOKIE_PASSWORD=
+SITE_NAME_LOWERCASE=
+BLOG_POSTS_DYNAMO_TABLE_NAME=
+
+DIGITAL_OCEAN_APP_ID=
+DIGITAL_OCEAN_API_BASE_URL=
+DIGITAL_OCEAN_PAT=
+
+DISQUS_SHORTNAME=
+
+S3_REGION=
+SITE_FOLDER_S3=
+STATIC_FILES_S3_BUCKET=
+IMG_S3_BUCKET=
+
+SITE_BASE_URL=
 
 ```
 
@@ -52,7 +100,13 @@ npm run start
 - Disqus for comments
 - Google Analytics for view count
 
-## Authentication - Derive hash
+## Authentication
+
+To modify content, an admin user is authenticated using the crypto library.
+
+The admin user is the only user for now. Support for additional non-admin users may be added in the future.
+
+### Derive hash:
 
 ```javascript
 
@@ -62,7 +116,6 @@ const args = process.argv.slice(2);
 const salt = crypto.randomBytes(16).toString("hex");
 const derived = crypto.scryptSync(args[0], salt, 64).toString("hex");
 // store the salt and derived hash somewhere safe
-
 
 // Check if there's a match
 const hash = 'hash stored somewhere'
@@ -78,11 +131,9 @@ if (derived === hash) {
 - Disqus will auto-close discussions after 30 days.
    - To disable this, go into the site config and change 30 to 0.
 
-## Cypress
+## Integration Tests
 
-A framework used for integration testing.
-
-Run tests with Cypress Runner UI:
+Cypress is the framework used for integration testing. Run tests with Cypress Runner UI:
 
 ```sh
 $ ./node_modules/.bin/cypress open
@@ -99,3 +150,9 @@ $ npm run prep-cypress-local
 # Run the integration tests
 $ npm run cy:headless
 ```
+
+### Other
+
+- Copies of state objects are created for this reason. https://stackoverflow.com/a/56266640
+
+> . You've changed one of its values but it's still the same [object], and I suspect React doesn't see any reason to re-render because state hasn't changed;

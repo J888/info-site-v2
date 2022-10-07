@@ -44,7 +44,11 @@ type MostVisited = {
   slug: string;
   title: string;
 };
-
+type Category = {
+  key: string;
+  label: string;
+  description: string;
+}
 type Props = {
   postsByCategory: Array<PostData>;
   newestPost: PostData;
@@ -53,9 +57,7 @@ type Props = {
   siteConfig: SiteConfig;
   siteStatementsPurposeLong: string;
   siteStatementsPurposeShort: string;
-  categoryDescriptions: {
-    [key: string]: string;
-  };
+  categories: Category[];
   featuredPosts: Array<PostData>;
   featuredSection: {
     titleText: string;
@@ -71,7 +73,7 @@ export default function Home({
   siteConfig,
   siteStatementsPurposeLong,
   siteStatementsPurposeShort,
-  categoryDescriptions,
+  categories,
   featuredPosts,
   featuredSection,
 }: Props) {
@@ -181,21 +183,21 @@ export default function Home({
         <Columns.Column size={2}></Columns.Column>
       </Columns>
 
-      {Object.keys(categoryDescriptions).map((category) => (
-        <Columns key={category}>
+      {categories.map((category) => (
+        <Columns key={category.key}>
           <Columns.Column size={2}></Columns.Column>
 
           <Columns.Column size={8}>
             <PostGrid
-              posts={postsByCategory[category].slice(0, 8)}
-              heading={capitalizeWord(category)}
-              subHeading={categoryDescriptions[category]}
+              posts={postsByCategory[category.key].slice(0, 8)}
+              heading={category.label}
+              subHeading={category.description}
             />
             <div className={styles.seeAllLink}>
-              <Link href={`/posts/${category}`} passHref>
+              <Link href={`/posts/${category.key}`} passHref>
                 <a>
                   {`More in `}
-                  <i>{capitalizeWord(category)}</i>
+                  <i>{category.label}</i>
                   {` →`}
                 </a>
               </Link>
@@ -298,7 +300,7 @@ export async function getStaticProps() {
     }
   }
 
-  let { categoryDescriptions } = siteConfig;
+  let { categories } = siteConfig;
   let siteStatementsPurposeLong = siteConfig.site.statements.purpose.long;
   let siteStatementsPurposeShort = siteConfig.site.statements.purpose.short;
   const featuredSection = siteConfig.featuredSection;
@@ -313,7 +315,7 @@ export async function getStaticProps() {
       topTags: topTagsList,
       siteStatementsPurposeLong,
       siteStatementsPurposeShort,
-      categoryDescriptions,
+      categories,
       mostVisitedList,
       featuredPosts,
       featuredSection,

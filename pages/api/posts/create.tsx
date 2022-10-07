@@ -4,7 +4,7 @@ import { sessionOptions } from "../../../lib/session/sessionOptions";
 import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "../../../util/nodeCache";
 import { SessionDecorated } from "../../../interfaces/Session";
 
-export default withIronSessionApiRoute(async function updateRoute(req, res) {
+export default withIronSessionApiRoute(async function createPostsRoute(req, res) {
   const {
     body: { posts },
     method,
@@ -15,7 +15,7 @@ export default withIronSessionApiRoute(async function updateRoute(req, res) {
     case "POST":
       try {
         console.log((session as SessionDecorated)?.user)
-        if (!(session as SessionDecorated)?.user?.admin) {
+        if (!(session as SessionDecorated)?.user) {
           return res
             .status(401)
             .json({ error: "you must be logged in to make this request." });
@@ -23,7 +23,11 @@ export default withIronSessionApiRoute(async function updateRoute(req, res) {
 
         const awsRes = await createBlogPostsDynamoDb(
           process.env.BLOG_POSTS_DYNAMO_TABLE_NAME,
-          posts
+          posts.map(p => {
+            // set the author name as the current logged in user
+            p.AuthorName = (session as SessionDecorated)?.user?.username;
+            return p;
+          })
         );
         
         appCache.del(DYNAMO_BLOG_POSTS_CACHE_KEY);

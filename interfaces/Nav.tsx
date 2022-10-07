@@ -4,6 +4,6 @@ export interface NavBackground {
 }
 
 export interface NavLink {
-  href: string;
-  label: string;
+  href?: string;
+  label?: string;
 }

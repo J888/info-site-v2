@@ -1,11 +1,11 @@
-import { createBlogPostsDynamoDb } from "../../../util/dynamoDbUtil";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../../lib/session/sessionOptions";
-import axios from "axios";
 import { SessionDecorated } from "../../../interfaces/Session";
+import { getSiteUsers, saveUsers } from "../../../util/s3Util";
 
-export default withIronSessionApiRoute(async function deployRoute(req, res) {
+export default withIronSessionApiRoute(async function deleteRoute(req, res) {
   const {
+    body,
     method,
     session,
   } = req;
@@ -19,20 +19,11 @@ export default withIronSessionApiRoute(async function deployRoute(req, res) {
             .status(401)
             .json({ error: "you must be logged in to make this request." });
         }
-
-        const digitalOceanRes = await axios.post(
-          `${process.env.DIGITAL_OCEAN_API_BASE_URL}/apps/${process.env.DIGITAL_OCEAN_APP_ID}/deployments`,
-          {
-            "force_build": true
-          },
-          {
-            headers: {
-              "Authorization": `Bearer ${process.env.DIGITAL_OCEAN_PAT}`
-            }
-          }
-        )
-
-        res.status(200).json({ deploymentId: digitalOceanRes?.data?.deployment?.id });
+        const username: string = body.username;
+        const existingUsers = await getSiteUsers();
+        delete existingUsers[username]
+        await saveUsers(existingUsers);
+        res.status(204).send('');
       } catch (err) {
         console.log(err);
 

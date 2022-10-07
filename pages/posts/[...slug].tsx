@@ -90,7 +90,6 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   const [category, id] = params.slug;
   const postData = postsDynamo.filter((post) => post.PostId == id)[0];
   const siteConfig = await getSiteConfig();
-  const { faviconUrl } = siteConfig;
   const siteName = siteConfig.site.name;
   const twitterUsername = siteConfig.socialMedia.username.twitter;
   const navLinks = siteConfig.nav.links;

@@ -1,0 +1,11 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  input {
+    border: solid #cecece 0.1rem;
+    border-radius: 0.2rem;
+    padding: 0.3333rem;
+    font-family: 'IBM Plex Mono', serif;
+  }
+}

@@ -1,0 +1,36 @@
+.wrapper {
+  margin: 2rem 12vw 7rem 12vw;
+}
+
+.currenUserInfo {
+  text-align: right;
+  font-size: 0.8rem;
+}
+
+.navigationOptionBox {
+  height: 3.7rem;
+  font-size: 0.89rem;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+    border: dotted #ece48a 1px;
+  }
+  a {
+    color: #595858;
+  }
+  &--red {
+    @extend .navigationOptionBox;
+    color: white;
+    background-color: #cc4b56;
+  }
+  &--orange {
+    @extend .navigationOptionBox;
+    color: white;
+    background-color: #f9a552;
+  }
+  &--blue {
+    @extend .navigationOptionBox;
+    color: white;
+    background-color: #5598f0;
+  }
+}

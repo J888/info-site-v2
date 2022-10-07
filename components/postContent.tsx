@@ -76,7 +76,7 @@ const PostContent = ({ data, views, twitterUsername }: Props) => (
                   </Tag>
                 ))}
               </Tag.Group>
-              <AuthorCredits authorName={twitterUsername} twitterUsername={twitterUsername}/>
+              <AuthorCredits authorName={data.AuthorName} twitterUsername={twitterUsername}/>
               <div style={{marginTop: `1.6rem`}}>
                 {views !== undefined && (
                   <div className={styles.viewCount}>

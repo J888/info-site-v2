@@ -3,7 +3,7 @@ import { sessionOptions } from "../../../lib/session/sessionOptions";
 import axios from "axios";
 import { SessionDecorated } from "../../../interfaces/Session";
 
-export default withIronSessionApiRoute(async function updateRoute(req, res) {
+export default withIronSessionApiRoute(async function getDeploymentRoute(req, res) {
   const {
     method,
     query: { deploymentId },

@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Columns, Section } from "react-bulma-components";
 import shortUUID from "short-uuid";
-import styles from "../sass/components/Admin.module.scss";
+import styles from "../sass/components/Publish.module.scss";
 const ADD_CONTENT = "Add content. . .";
 import BlogPostEditor from "../components/blogPostEditor";
-import LoginForm from "../components/loginForm";
 import ImageUploadEditor from "../components/imageUploadEditor";
 import DeploymentControls from "../components/deploymentControls";
 import ScrollablePosts from "../components/scrollablePosts";
 import { API_ENDPOINTS } from "../lib/constants";
-import { getCurrentUser } from "../lib/user";
 import { SaveState } from "../interfaces/SaveState";
+import ConfigurationPagesWrapper from "../components/configuration/ConfigurationPagesWrapper";
 
 const newPost = (postNum) => ({
   PostId: `post-${postNum}-id`,
@@ -34,9 +33,7 @@ const newPost = (postNum) => ({
   IsDraft: true,
 });
 
-const Admin = ({}) => {
-  const [loggedInAdmin, setLoggedInAdmin] = useState(false);
-  const [loginFailed, setLoginFailed] = useState(false);
+const Publish = ({}) => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [imagesByPostShortId, setImagesByPostShortId] = useState({});
   const [activeBlogPostIndex, setActiveBlogPostIndex] = useState(0);
@@ -48,33 +45,10 @@ const Admin = ({}) => {
     showImagesIndex != undefined ? blogPosts[showImagesIndex] : null;
 
   useEffect(() => {
-    async function callGetCurrentUser() {
-      let user = await getCurrentUser();
-      if (user?.admin) {
-        setLoggedInAdmin(true);
-      }
-    }
-
-    if (!loggedInAdmin) {
-      callGetCurrentUser();
-    }
-
     if (blogPosts.length == 0) {
       getBlogPosts();
     }
-  }, [loggedInAdmin, blogPosts.length]);
-
-  const loginHandler = async (providedUsername, password) => {
-    await axios.post(API_ENDPOINTS.LOGIN, {
-      username: providedUsername,
-      password,
-    });
-
-    const user = await getCurrentUser();
-
-    setLoginFailed(!user || !user?.admin);
-    setLoggedInAdmin(user && user.admin);
-  };
+  }, [blogPosts.length]);
 
   const getBlogPosts = async () => {
     const res = await axios.get(API_ENDPOINTS.ALL_POSTS);
@@ -162,77 +136,75 @@ const Admin = ({}) => {
   };
 
   return (
-    <div>
-      {!loggedInAdmin && <LoginForm loginHandler={loginHandler} />}
-      {loggedInAdmin && <div>Logged in!</div>}
-      {loginFailed && <div>Login Failed </div>}
+    <Columns>
+      <Columns.Column size={3}>
+        <h1 className={styles.postsHeader}>Posts</h1>
+        <Button
+          className={styles.newPostButton}
+          onClick={() => {
+            let newBlogPosts = [...blogPosts];
+            newBlogPosts.unshift(newPost(newBlogPosts.length + 1));
+            setBlogPosts(newBlogPosts);
+            setActiveBlogPostIndex(0);
+          }}
+        >
+          New Post
+        </Button>
 
-      {loggedInAdmin && (
-        <Columns className={styles.mainWrapper}>
-          <Columns.Column size={3}>
-            <h1 className={styles.postsHeader}>Posts</h1>
-            <Button
-              className={styles.newPostButton}
-              onClick={() => {
-                let newBlogPosts = [...blogPosts];
-                newBlogPosts.unshift(newPost(newBlogPosts.length + 1));
-                setBlogPosts(newBlogPosts);
-                setActiveBlogPostIndex(0);
-              }}
-            >
-              New Post
-            </Button>
+        <ScrollablePosts
+          posts={blogPosts}
+          setBlogPosts={setBlogPosts}
+          activeBlogPostIndex={activeBlogPostIndex}
+          setActiveBlogPostIndex={setActiveBlogPostIndex}
+          setCurrentSaveState={setCurrentSaveState}
+          deletePostHandler={deletePostHandler}
+          fetchImagesHandler={fetchImagesHandler}
+          setShowImagesIndex={setShowImagesIndex}
+          showImagesIndex={showImagesIndex}
+        />
 
-            <ScrollablePosts
-              posts={blogPosts}
-              setBlogPosts={setBlogPosts}
-              activeBlogPostIndex={activeBlogPostIndex}
-              setActiveBlogPostIndex={setActiveBlogPostIndex}
-              setCurrentSaveState={setCurrentSaveState}
-              deletePostHandler={deletePostHandler}
+        <DeploymentControls />
+      </Columns.Column>
+      <Columns.Column size={9}>
+        {blogPosts.length > 0 && showImagesIndex === undefined && (
+          <BlogPostEditor
+            saveState={currentSaveState} // SUCCESS, FAIL, NONE
+            isDraftChangeHandler={isDraftChangeHandler}
+            isEdited={
+              editedPostIndexes?.includes(activeBlogPostIndex) || false
+            }
+            images={
+              imagesByPostShortId[
+                blogPosts[activeBlogPostIndex].PostShortId
+              ]
+            }
+            postIndex={activeBlogPostIndex}
+            initialData={blogPosts[activeBlogPostIndex]}
+            updatePostHandler={updatePostHandler}
+            savePostHandler={savePostHandler}
+          />
+        )}
+
+        {showImagesIndex !== undefined && (
+          <Section>
+            <ImageUploadEditor
+              images={imagesByPostShortId[showImagesBlogPost?.PostShortId]}
+              postShortId={showImagesBlogPost?.PostShortId}
+              title={showImagesBlogPost?.Title}
               fetchImagesHandler={fetchImagesHandler}
-              setShowImagesIndex={setShowImagesIndex}
-              showImagesIndex={showImagesIndex}
             />
-
-            <DeploymentControls />
-          </Columns.Column>
-          <Columns.Column size={9}>
-            {blogPosts.length > 0 && showImagesIndex === undefined && (
-              <BlogPostEditor
-                saveState={currentSaveState} // SUCCESS, FAIL, NONE
-                isDraftChangeHandler={isDraftChangeHandler}
-                isEdited={
-                  editedPostIndexes?.includes(activeBlogPostIndex) || false
-                }
-                images={
-                  imagesByPostShortId[
-                    blogPosts[activeBlogPostIndex].PostShortId
-                  ]
-                }
-                postIndex={activeBlogPostIndex}
-                initialData={blogPosts[activeBlogPostIndex]}
-                updatePostHandler={updatePostHandler}
-                savePostHandler={savePostHandler}
-              />
-            )}
-
-            {showImagesIndex !== undefined && (
-              <Section>
-                <ImageUploadEditor
-                  images={imagesByPostShortId[showImagesBlogPost?.PostShortId]}
-                  postShortId={showImagesBlogPost?.PostShortId}
-                  title={showImagesBlogPost?.Title}
-                  fetchImagesHandler={fetchImagesHandler}
-                />
-              </Section>
-            )}
-          </Columns.Column>
-        </Columns>
-      )}
-    </div>
+          </Section>
+        )}
+      </Columns.Column>
+    </Columns>
   );
 };
+
+const PublishWrapped = () => (
+  <ConfigurationPagesWrapper activePage={"publish"}>
+    <Publish />
+  </ConfigurationPagesWrapper>
+);
 
 export async function getStaticProps({ params, preview = false, previewData }) {
   return {
@@ -240,4 +212,4 @@ export async function getStaticProps({ params, preview = false, previewData }) {
   };
 }
 
-export default Admin;
+export default PublishWrapped;

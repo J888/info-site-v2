@@ -103,6 +103,7 @@ const updateBlogPostsDynamoDb = async (TableName, posts) => {
        + `, #title = :titleVal, #stitle = :stitleVal`
        + `, #cr = :crVal`
        + `, #parts = :partsVal, #tags = :tagsVal, #isDr = :isDrVal`
+       + `, #authorName = :authorNameVal`
 
       const params = {
         TableName,
@@ -115,7 +116,8 @@ const updateBlogPostsDynamoDb = async (TableName, posts) => {
           },
         },
         UpdateExpression,
-        ExpressionAttributeNames: { 
+        ExpressionAttributeNames: {
+          '#authorName': 'AuthorName',
           '#shortId': 'PostShortId',
           '#imgS3Url': 'ImageS3Url',
           '#imgKey': 'ImageKey',
@@ -128,6 +130,7 @@ const updateBlogPostsDynamoDb = async (TableName, posts) => {
           '#isDr': 'IsDraft'
         },
         ExpressionAttributeValues: { 
+          ':authorNameVal': { S: post.AuthorName },
           ':shortIdVal': { S: post.PostShortId },
           ':imgS3UrlVal': { S: post.ImageS3Url },
           ':imgKeyVal': { S: post.ImageKey },

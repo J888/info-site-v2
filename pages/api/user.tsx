@@ -14,9 +14,17 @@ const User = withIronSessionApiRoute(
     switch (method) {
       case 'GET':
 
+        let username = (session as SessionDecorated)?.user?.username;
+        let admin = (session as SessionDecorated)?.user?.admin;
+
+        if (!username) {
+          res.status(404).send("Session does not exist");
+          break;
+        }
+
         res.status(200).send({
-          username: (session as SessionDecorated)?.user?.username,
-          admin: (session as SessionDecorated)?.user?.admin
+          username,
+          admin,
         });
         
         break

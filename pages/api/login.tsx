@@ -19,7 +19,8 @@ const Login = withIronSessionApiRoute(
         const userConfig = usersByUsername[username];
 
         if (!userConfig) {
-          res.send({ ok: true });
+          res.status(401).send({});
+          break;
         }
 
         const hashS3 = userConfig["hash"];
@@ -32,12 +33,13 @@ const Login = withIronSessionApiRoute(
             admin: userConfig["admin"],
           };
           await (session as SessionDecorated).save();
-          
-        }
 
-        res.send({ ok: true });
-        
-        break
+          res.send({ session });
+          break;
+        } else { // passwords don't match. Unauthorized
+          res.status(401).send({});
+          break;
+        }
       default:
         res.setHeader('Allow', ['POST'])
         res.status(405).end(`Method ${method} Not Allowed`)
