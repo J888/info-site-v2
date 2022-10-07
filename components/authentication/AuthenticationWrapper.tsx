@@ -11,10 +11,13 @@ const AuthenticationWrapper = ({children}) => {
     isAdmin: false,
     unauthorized: false,
   });
+  const [fetchCurrentUserAttempted, setFetchCurrentUserAttempted] = useState<boolean>(false);
 
   useEffect(() => {
     async function callGetCurrentUser() {
       let user = await getCurrentUser();
+      setFetchCurrentUserAttempted(true);
+
       if (user) {
         setLoginStatus({
           success: !!user,
@@ -31,7 +34,7 @@ const AuthenticationWrapper = ({children}) => {
 
   return (
     <React.Fragment>
-      {!loginStatus.success && (
+      {fetchCurrentUserAttempted && !loginStatus.success && (
         <div style={{margin: '0 16vw 0 16vw'}}>
           <Spacer size="sm"/>
           <LoginForm

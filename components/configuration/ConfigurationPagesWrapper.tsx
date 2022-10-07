@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import AuthenticationWrapper from "../authentication/AuthenticationWrapper";
-import { Box, Columns } from "react-bulma-components";
+import { Box, Columns, Heading } from "react-bulma-components";
 import Link from "next/link";
 import styles from "../../sass/components/configuration/ConfigurationPagesWrapper.module.scss";
-import Spacer from "../utility/spacer";
 import { getCurrentUser } from "../../lib/user";
+import Head from "next/head";
+
+const CurrentUserInfo = ({currentUser}) => {
+  return (<div>
+    <span>{"Logged in as"} <b>{currentUser.username}</b></span>
+    {' '}{currentUser.admin ? <img src="/icons/badge-icon.png" style={{maxWidth: '16px'}}/> : ''}
+  </div>);
+}
 
 interface NavOptionBoxProps {
   label: string;
@@ -14,8 +21,7 @@ interface NavOptionBoxProps {
 }
 const NavOptionBox = ({ label, href, color, isActive }: NavOptionBoxProps) => {
   const activeStyling = {
-    borderBottom: "solid #565656 0.5rem",
-    opacity: '0.6',
+    borderBottom: "solid rgb(172, 172, 172) 0.3rem",
   }
   return (
     <Link href={href} passHref>
@@ -30,6 +36,40 @@ const NavOptionBox = ({ label, href, color, isActive }: NavOptionBoxProps) => {
         {label}
       </Box>
     </Link>
+  );
+};
+
+const NavOptionGroup = ({ activePage }) => {
+  return (
+    <Columns>
+      <Columns.Column>
+        <NavOptionBox
+          label={"Publish Content"}
+          href={"/publish"}
+          color={"blue"}
+          isActive={activePage === "publish"}
+        />
+      </Columns.Column>
+      <Columns.Column>
+        <NavOptionBox
+          label={"Configure"}
+          href={"/configuration"}
+          color={"red"}
+          isActive={activePage === "configuration"}
+        />
+      </Columns.Column>
+      <Columns.Column>
+        <NavOptionBox
+          label={"Manage Users"}
+          href={"/configuration/users"}
+          color={"orange"}
+          isActive={activePage === "users"}
+        />
+      </Columns.Column>
+      <Columns.Column>
+        <NavOptionBox label={"Website Front Page"} href={"/"} />
+      </Columns.Column>
+    </Columns>
   );
 };
 
@@ -54,28 +94,21 @@ const ConfigurationPagesWrapper = ({children, activePage}) => {
 
   return (
     <AuthenticationWrapper>
+      <Head>
+        <link rel="icon" href={'https://nftblog1-images.s3.us-east-2.amazonaws.com/assets/wrench-favicon.ico'} />
+      </Head>
       <div className={styles.wrapper}>
-        <div>
-          {currentUser && <p>{"You're logged in as"} <b>{currentUser.username}</b> ({ currentUser.admin ? 'admin' : 'non-admin'})</p>}
-          <p>Welcome to your website management dashboard.</p>
-        </div>
-        <Spacer size="sm"/>
         <Columns>
           <Columns.Column>
-            <NavOptionBox label={'Publish Content'} href={'/publish'} color={'blue'} isActive={activePage === 'publish'}/>
+            <Heading>/{activePage}</Heading>
           </Columns.Column>
           <Columns.Column>
-            <NavOptionBox label={'Configure'} href={'/configuration'} color={'red'} isActive={activePage === 'configuration'}/>
           </Columns.Column>
-          <Columns.Column>
-            <NavOptionBox label={'Manage Users'} href={'/configuration/users'} color={'orange'} isActive={activePage === 'users'}/>
-          </Columns.Column>
-          <Columns.Column>
-            <NavOptionBox label={'Website Front Page'} href={'/'}/>
+          <Columns.Column className={styles.currenUserInfo}>
+            { currentUser && <CurrentUserInfo currentUser={currentUser}/> }
           </Columns.Column>
         </Columns>
-        <Spacer size="m"/>
-
+        <NavOptionGroup activePage={activePage}/>
         {children}
       </div>
     </AuthenticationWrapper>
