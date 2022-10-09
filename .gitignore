@@ -4,5 +4,6 @@ mockData
 css
 .DS_Store
 .env.*
+*.local
 tmp/
 cypress/videos

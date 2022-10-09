@@ -1,4 +1,4 @@
-interface PartData {
+export interface PartData {
   Contents?: string;
   Type: string;
 }

@@ -1,3 +1,4 @@
+import { fakePosts } from "./fakeDataUtil";
 import { appCache, DYNAMO_BLOG_POSTS_CACHE_KEY } from "./nodeCache";
 
 const { unmarshall } = require("@aws-sdk/util-dynamodb");
@@ -65,6 +66,11 @@ const getBlogPostsDynamoDb = async (TableName) => {
 }
 
 const getBlogPostsWithPrevNext = async (TableName) => {
+
+  if (process.env.MOCK_DATA && process.env.MOCK_DATA_POST_COUNT) {
+    return fakePosts();
+  }
+
   let posts = await getBlogPostsDynamoDb(TableName)
   posts = posts.filter(p => !p.IsDraft);
 
