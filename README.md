@@ -21,6 +21,11 @@ The `/admin` page provides an interface to create, update, and delete content. Y
 
 ## Development To-Do Items
 
+- Make view counts completely optional since new sites arent gonna have a google analytics account setup right away
+- Get rid of the digital ocean deployment stuff because the deployment process is gonna be different now.
+- Make disqus completely optional
+- For all my sites, they should share a static file bucket. The folders would be different.
+   - same for the image bucket. It can be generic
 - Make fonts configurable
 - "highlighted" tweets section - show a set of tweets (with react twitter embed component)
   - configurable in site config. And if they're not present then don't display anything.
@@ -44,25 +49,20 @@ The `/admin` page provides an interface to create, update, and delete content. Y
   - highlight articles I've written 
 
 ## Local Development: Set ENV VARS
+Option 1: Run with mock data
 
-`Create a file `.env.local` in the root of this project and fill in values
+```sh
+$ MOCK_DATA=true MOCK_DATA_POST_COUNT=50 npm run dev
+```
+
+Option 2: `Create a file `.env.local` in the root of this project and fill in values
 
 ```
-GOOGLE_ANALYTICS_VIEW_ID=
-GOOGLE_CLIENT_EMAIL=
-GOOGLE_CLIENT_ID=
 GOOGLE_PRIVATE_KEY=
-GOOGLE_ANALYTICS_PROPERTY_ID=
 
 SECRET_COOKIE_PASSWORD=
 SITE_NAME_LOWERCASE=
 BLOG_POSTS_DYNAMO_TABLE_NAME=
-
-DIGITAL_OCEAN_APP_ID=
-DIGITAL_OCEAN_API_BASE_URL=
-DIGITAL_OCEAN_PAT=
-
-DISQUS_SHORTNAME=
 
 S3_REGION=
 SITE_FOLDER_S3=
@@ -73,18 +73,16 @@ SITE_BASE_URL=
 
 ```
 
-## Run dev server
+## Run Development Server
 
-Set env vars `LOCAL_POSTS_DIR`
-
-```bash
-npm run dev
+```sh
+$ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Production server
-```bash
+## Production Build and Startup
+```sh
 npm run build
 npm run start
 ```

@@ -7,7 +7,7 @@ const Spacer = ({ size }: Props) => {
   if (size === 'xxs') {
     height = 0.5;
   } else if (size === 'xs') {
-    height = 1.8;
+    height = 1.0;
   } else if (size === 'sm') {
     height = 2.5;
   } else if (size === 'm') {

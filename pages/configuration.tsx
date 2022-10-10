@@ -48,7 +48,7 @@ const TextInput = ({ config, configKey, label, onChangeHandler }) => (
   <React.Fragment>
     <label>{label}: </label>
     <input
-      placeholder="Subject"
+      placeholder={label}
       value={_.get(config, configKey)}
       onChange={(e) => {
         onChangeHandler(e.target.value);
@@ -145,6 +145,52 @@ const Configuration = ({ config }) => {
       {/* End general section */}
 
       <Spacer size={'m'}/>
+
+      <h2 className={styles.sectionHeading}><u>Google Analytics</u></h2>
+      <p>This information is used to integrate with Google for things like page views</p>
+      <Spacer size={'xs'}/>
+      <div className={styles.inputsSectionGoogleAnalytics}>
+        {[
+          { key: "integrations.google.analytics.viewId", label: "View ID (aka the property id used for retrieval of page views)" },
+          { key: "integrations.google.analytics.clientEmail", label: "Client Email" },
+          { key: "integrations.google.analytics.clientId", label: "Client ID" },
+          { key: "integrations.google.analytics.propertyId", label: "Property Id (used for gtag)" },
+        ].map((item, i) => (
+          <TextInput
+            key={`general-text-input-item-${i}`}
+            config={modifiedConfig}
+            configKey={item.key}
+            label={item.label}
+            onChangeHandler={(value) => {
+              handleTextInputChanged(item.key, value);
+            }}
+          />
+        ))}
+      </div>
+      
+      <Spacer size={'m'}/>
+
+      <h2 className={styles.sectionHeading}><u>Disqus</u></h2>
+      <p>Add commenting to your site</p>
+      <Spacer size={'xs'}/>
+      <div className={styles.inputsSectionGoogleAnalytics}>
+        {[
+          { key: "integrations.disqus.shortname", label: "Disqus Shortname" },
+        ].map((item, i) => (
+          <TextInput
+            key={`general-text-input-item-${i}`}
+            config={modifiedConfig}
+            configKey={item.key}
+            label={item.label}
+            onChangeHandler={(value) => {
+              handleTextInputChanged(item.key, value);
+            }}
+          />
+        ))}
+      </div>
+      
+      <Spacer size={'m'}/>
+      
       
       {/* Begin Categories */}
       <h2 className={styles.sectionHeading}><u>Categories</u></h2>

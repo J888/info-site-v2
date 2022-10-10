@@ -1,5 +1,5 @@
 const { appCache, siteFileCacheKey } = require("./nodeCache");
-const { S3Client, GetObjectCommand, S3, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
+const { S3Client, GetObjectCommand, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3"); // CommonJS import
 const { fakeSiteConfig } = require("./fakeDataUtil");
 const REGION = 'us-east-2';
 const client = new S3Client({ region: REGION });
@@ -12,7 +12,7 @@ const SITE_CONFIG_FILE_NAME = 'siteConfig.json';
  * @param {*} relativePath 
  * @returns 
  */
-const getSiteFileContents = async (Bucket, sitename, relativePath, useCache = true) => {
+const getSiteFileContents = async (Bucket, sitename, relativePath, useCache = true): Promise<string> => {
   return new Promise(async (resolve, reject) => {
 
     let cachedSiteFileKey = siteFileCacheKey(relativePath);
@@ -83,8 +83,13 @@ const getSiteConfig = async () => {
     return fakeSiteConfig();
   }
 
-  const configStr = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, SITE_CONFIG_FILE_NAME);
+  const configStr: string = await getSiteFileContents(process.env.STATIC_FILES_S3_BUCKET, process.env.SITE_FOLDER_S3, SITE_CONFIG_FILE_NAME);
   return JSON.parse(configStr);
+}
+
+const getIntegration = async (integrationName)  => {
+  let config = await getSiteConfig();
+  return config.integrations[integrationName];
 }
 
 const saveSiteConfig = async (siteConfigJson) => {
@@ -139,4 +144,4 @@ const uploadImage = async (Bucket, PostShortId, imageBuff, fileName) => {
   return response;
 }
 
-module.exports = { deleteFileS3, getSiteFileContents, getImagesByPostId, getSiteConfig, getSiteUsers, uploadImage, saveSiteConfig, saveUsers }
+export { deleteFileS3, getSiteFileContents, getImagesByPostId, getSiteConfig, getIntegration, getSiteUsers, uploadImage, saveSiteConfig, saveUsers };

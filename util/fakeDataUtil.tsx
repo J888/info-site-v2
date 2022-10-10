@@ -129,4 +129,4 @@ const fakeSiteConfig = () => {
   }
 }
 
-export { fakePosts, fakePageViewsBySlug, fakeSiteConfig };
+module.exports = { fakePosts, fakePageViewsBySlug, fakeSiteConfig };

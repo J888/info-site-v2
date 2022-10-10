@@ -163,7 +163,8 @@ const Publish = ({}) => {
           showImagesIndex={showImagesIndex}
         />
 
-        <DeploymentControls />
+        {/* TODO: Remove or repurpose: */}
+        {/* <DeploymentControls /> */}
       </Columns.Column>
       <Columns.Column size={9}>
         {blogPosts.length > 0 && showImagesIndex === undefined && (

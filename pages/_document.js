@@ -7,6 +7,7 @@ class MyDocument extends Document {
   }
 
   render() {
+    // console.log(`in document, GOOGLE_ANALYTICS_PROPERTY_ID is `, process.env.GOOGLE_ANALYTICS_PROPERTY_ID)
     return (
       <Html lang="en">
         <Head>
