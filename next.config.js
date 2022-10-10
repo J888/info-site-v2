@@ -18,6 +18,7 @@ module.exports = async (phase) => {
   const siteConfig = JSON.parse(siteConfigRaw);
 
   const env = {
+    GOOGLE_ANALYTICS_ENABLED: siteConfig?.integrations?.google?.analytics?.enabled === true,
     GOOGLE_ANALYTICS_VIEW_ID: siteConfig?.integrations?.google?.analytics?.viewId,
     GOOGLE_ANALYTICS_PROPERTY_ID: siteConfig?.integrations?.google?.analytics?.propertyId,
     GOOGLE_CLIENT_EMAIL: siteConfig?.integrations?.google?.analytics?.clientEmail,

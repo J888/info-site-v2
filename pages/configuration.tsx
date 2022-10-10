@@ -44,16 +44,37 @@ const repairedConfiguration = (conf: SiteConfiguration) => {
   return copy;
 }
 
-const TextInput = ({ config, configKey, label, onChangeHandler }) => (
+const TextInput = ({
+  config, configKey, label,
+  onChangeHandler, inputType = 'input', className = undefined
+}) => (
   <React.Fragment>
     <label>{label}: </label>
-    <input
-      placeholder={label}
-      value={_.get(config, configKey)}
-      onChange={(e) => {
-        onChangeHandler(e.target.value);
-      }}
-    />
+    { inputType === 'input' && <input placeholder={label}
+                                      value={_.get(config, configKey)}
+                                      onChange={(e) => {
+                                        onChangeHandler(e.target.value);
+                                      }}
+                                />
+    }
+
+    { inputType === 'textarea' && <textarea placeholder={label}
+                                            value={_.get(config, configKey)}
+                                            onChange={(e) => {
+                                              onChangeHandler(e.target.value);
+                                            }}
+                                            className={className}
+                                  />
+    }
+
+    { inputType === 'checkbox' && <input type="checkbox"
+                                         checked={_.get(config, configKey) === true}
+                                         onChange={(e) => {
+                                          onChangeHandler(e.target.checked)
+                                         }}
+                                         style={{maxWidth: 'fit-content'}}
+                                  />
+    }
   </React.Fragment>
 );
 
@@ -151,19 +172,21 @@ const Configuration = ({ config }) => {
       <Spacer size={'xs'}/>
       <div className={styles.inputsSectionGoogleAnalytics}>
         {[
+          { key: "integrations.google.analytics.enabled", label: "Enabled", inputType: 'checkbox' },
           { key: "integrations.google.analytics.viewId", label: "View ID (aka the property id used for retrieval of page views)" },
           { key: "integrations.google.analytics.clientEmail", label: "Client Email" },
           { key: "integrations.google.analytics.clientId", label: "Client ID" },
           { key: "integrations.google.analytics.propertyId", label: "Property Id (used for gtag)" },
         ].map((item, i) => (
           <TextInput
-            key={`general-text-input-item-${i}`}
+            key={`googleanalytics-text-input-item-${i}`}
             config={modifiedConfig}
             configKey={item.key}
             label={item.label}
             onChangeHandler={(value) => {
               handleTextInputChanged(item.key, value);
             }}
+            inputType={item.inputType}
           />
         ))}
       </div>
@@ -178,7 +201,7 @@ const Configuration = ({ config }) => {
           { key: "integrations.disqus.shortname", label: "Disqus Shortname" },
         ].map((item, i) => (
           <TextInput
-            key={`general-text-input-item-${i}`}
+            key={`disqus-text-input-item-${i}`}
             config={modifiedConfig}
             configKey={item.key}
             label={item.label}
@@ -275,18 +298,16 @@ const Configuration = ({ config }) => {
         {[
           { key: "pageData.about.description", label: "Description" },
         ].map((item, i) => (
- 
-          <textarea
-            className={styles.tallTextAreaInput}
-            key={`about-page-${i}`}
-            placeholder="Description"
-            value={_.get(modifiedConfig, item.key)}
-            onChange={(e) => {
-              handleTextInputChanged(
-                item.key,
-                e.target.value
-              );
+          <TextInput
+            key={`featuredsect-text-input-item-${i}`}
+            config={modifiedConfig}
+            configKey={item.key}
+            label={item.label}
+            onChangeHandler={(value) => {
+              handleTextInputChanged(item.key, value);
             }}
+            inputType='textarea'
+            className={styles.tallTextAreaInput}
           />
         ))}
       </div>
@@ -301,7 +322,7 @@ const Configuration = ({ config }) => {
           { key: "featuredSection.titleText", label: "Title of Featured Section" },
         ].map((item, i) => (
           <TextInput
-            key={`feat-sect-text-input-item-${i}`}
+            key={`featuredsect-text-input-item-${i}`}
             config={modifiedConfig}
             configKey={item.key}
             label={item.label}
@@ -356,7 +377,7 @@ const Configuration = ({ config }) => {
           { key: "nav.background.size", label: "Size" },
         ].map((item, i) => (
           <TextInput
-            key={`text-input-item-${i}`}
+            key={`navigation-input-item-${i}`}
             config={modifiedConfig}
             configKey={item.key}
             label={item.label}

@@ -16,7 +16,7 @@ const CurrentUserInfo = ({ currentUser }) => {
       </span>{" "}
       <Spacer size="xxs"/>
       {currentUser.admin ? (
-        <img src="/icons/badge-icon.png" style={{ maxWidth: "16px" }} />
+        <img src="/icons/badge-icon.png" style={{ maxWidth: "16px" }} alt="Admin Badge Icon" />
       ) : (
         ""
       )}

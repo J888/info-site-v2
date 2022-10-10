@@ -54,7 +54,7 @@ const getBlogPostsDynamoDb = async (TableName) => {
         console.log(err)
         if (err.name.includes(`ProvisionedThroughputExceededException`)) {
           retriesCount+=1;
-          console.log(`Sleeping ${SLEEP_SECONDS_BEFORE_RETRY} before retry`);
+          console.log(`Sleeping ${SLEEP_SECONDS_BEFORE_RETRY} seconds before retry`);
           await sleep(SLEEP_SECONDS_BEFORE_RETRY * 1000);
         }
       }

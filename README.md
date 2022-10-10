@@ -5,9 +5,9 @@ This project aims to allow developers to easily create a blog about anything usi
 The app is designed to pull publicly-facing data at build time. Most pages will use pre-fetched data. This makes the application extremely fast and secure.
 
 ## Goals
-- Website performance
-- Security
-- A custom-built content management system
+- Website performance - NextJS does a lot of pre-building of static data so it's faster and less cpu intensive to serve it at runtime
+- Security - No DB reads since it's all read at build time
+- A custom-built content management system - Who needs a fancy CMS? Just build your own!
 
 ## Requirements to create a blog with this app
 1. An AWS account with the ability to create resources

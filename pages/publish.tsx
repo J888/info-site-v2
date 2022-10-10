@@ -6,7 +6,6 @@ import styles from "../sass/components/Publish.module.scss";
 const ADD_CONTENT = "Add content. . .";
 import BlogPostEditor from "../components/blogPostEditor";
 import ImageUploadEditor from "../components/imageUploadEditor";
-import DeploymentControls from "../components/deploymentControls";
 import ScrollablePosts from "../components/scrollablePosts";
 import { API_ENDPOINTS } from "../lib/constants";
 import { SaveState } from "../interfaces/SaveState";
