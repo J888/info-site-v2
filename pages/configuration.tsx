@@ -64,6 +64,7 @@ const TextInput = ({
                                               onChangeHandler(e.target.value);
                                             }}
                                             className={className}
+                                            
                                   />
     }
 
@@ -138,6 +139,7 @@ const Configuration = ({ config }) => {
           {
             key: "site.statements.purpose.long",
             label: "Purpose Statement (Long Version)",
+            inputType: "textarea"
           },
           {
             key: "footer.tagline",
@@ -160,6 +162,7 @@ const Configuration = ({ config }) => {
             onChangeHandler={(value) => {
               handleTextInputChanged(item.key, value);
             }}
+            inputType={item.inputType}
           />
         ))}
       </div>
@@ -319,7 +322,7 @@ const Configuration = ({ config }) => {
       <h2 className={styles.sectionHeading}><u>Featured Section</u></h2>
       <div className={styles.inputsSectionGeneral}>
         {[
-          { key: "featuredSection.titleText", label: "Title of Featured Section" },
+          { key: "featuredSection.titleText", label: "Title" },
         ].map((item, i) => (
           <TextInput
             key={`featuredsect-text-input-item-${i}`}
