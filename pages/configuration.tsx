@@ -15,6 +15,7 @@ interface SiteCategory {
   label?: string;
   description?: string;
 }
+
 interface FeaturedSection {
   titleText: string;
   postIds: string[];
@@ -25,6 +26,7 @@ interface Nav {
   background: NavBackground;
   links: NavLink[];
 }
+
 interface SiteConfiguration {
   categories: Array<SiteCategory>;
   featuredSection?: FeaturedSection;
