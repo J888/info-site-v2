@@ -38,8 +38,6 @@ The `/admin` page provides an interface to create, update, and delete content. Y
 - Add "Back to top" button on articles. Useful if article is long.
 - Make the background color of the navbar a config item.
 - Publish page
-  - image upload:
-    - compress photos before upload
   - Make article list searchable/filterable by title on admin page.
   - add part numbers to keep track when adding new parts
 - configuration UI to configure the site config:
