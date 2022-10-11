@@ -15,6 +15,10 @@ The app is designed to pull publicly-facing data at build time. Most pages will 
 
 As of now, this project requires significant technical knowledge.
 
+## Server Requirements
+- NodeJS must be installed, a 17.x version. I prefer to use nvm to manage node versions
+- Image magick for image compression
+
 ## Administration
 
 The `/admin` page provides an interface to create, update, and delete content. You must log in as the admin user to do so.
