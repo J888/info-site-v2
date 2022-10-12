@@ -224,6 +224,14 @@ export async function getStaticProps() {
   );
   const siteConfig = await getSiteConfig();
 
+  if (!postsDynamo || postsDynamo.length === 0) {
+    return {
+      redirect: {
+        destination: "/publish",
+      },
+    }
+  }
+
   /** If there is no site config, then we need to assume this is a brand new site that must be set up */
   if (!siteConfig) {
     return {

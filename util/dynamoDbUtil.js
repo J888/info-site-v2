@@ -28,7 +28,12 @@ const getBlogPostsDynamoDb = async (TableName) => {
 
         console.log(`[Retry=${retriesCount}] Hitting Dynamo TableName=${TableName}`)
         const res = await dynamoClient.send(new ScanCommand({
-          TableName
+          TableName,
+          FilterExpression: "SiteName = :s",
+          ExpressionAttributeValues: {
+            ':s': {S: process.env.SITE_IDENTIFIER},
+          },
+          // KeyConditionExpression: 'SiteName = :s',
         }));
   
         const items = res?.Items;
@@ -110,12 +115,14 @@ const updateBlogPostsDynamoDb = async (TableName, posts) => {
        + `, #cr = :crVal`
        + `, #parts = :partsVal, #tags = :tagsVal, #isDr = :isDrVal`
        + `, #authorName = :authorNameVal`
+       + `, #cat = :catVal`
+
 
       const params = {
         TableName,
         Key: {
-          'Category': {
-            S: post.Category
+          'SiteName': {
+            S: process.env.SITE_IDENTIFIER
           },
           'PostId': {
             S: post.PostId
@@ -123,6 +130,7 @@ const updateBlogPostsDynamoDb = async (TableName, posts) => {
         },
         UpdateExpression,
         ExpressionAttributeNames: {
+          '#cat': 'Category',
           '#authorName': 'AuthorName',
           '#shortId': 'PostShortId',
           '#imgS3Url': 'ImageS3Url',
@@ -136,6 +144,7 @@ const updateBlogPostsDynamoDb = async (TableName, posts) => {
           '#isDr': 'IsDraft'
         },
         ExpressionAttributeValues: { 
+          ':catVal': { S: post.Category },
           ':authorNameVal': { S: post.AuthorName },
           ':shortIdVal': { S: post.PostShortId },
           ':imgS3UrlVal': { S: post.ImageS3Url },
@@ -191,6 +200,9 @@ const createBlogPostsDynamoDb = async (TableName, posts) => {
       const params = {
         TableName,
         Item: {
+          'SiteName' : {
+            S: process.env.SITE_IDENTIFIER
+          },
           'Category': {
             S: post.Category
           },
