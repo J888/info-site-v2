@@ -45,7 +45,6 @@ Option 2: `Create a file `.env.local` in the root of this project and fill in va
 GOOGLE_PRIVATE_KEY=
 
 SECRET_COOKIE_PASSWORD=
-SITE_NAME_LOWERCASE=
 BLOG_POSTS_DYNAMO_TABLE_NAME=
 
 S3_REGION=
