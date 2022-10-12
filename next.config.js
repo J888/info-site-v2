@@ -13,7 +13,7 @@ module.exports = async (phase) => {
   const isProd = phase === PHASE_PRODUCTION_BUILD && process.env.STAGING !== '1';
   
   // pulls the static site configuration into the local fs for reading
-  await exec(`aws s3 cp s3://${process.env.STATIC_FILES_BUCKET}/websites/${process.env.SITE_FOLDER_S3} tmp  --recursive `);
+  await exec(`aws s3 cp s3://${process.env.STATIC_FILES_BUCKET}/websites/${process.env.SITE_IDENTIFIER} tmp  --recursive `);
   const siteConfigRaw = await fs.readFile("tmp/siteConfig.json", `utf-8`);
   const siteConfig = JSON.parse(siteConfigRaw);
 

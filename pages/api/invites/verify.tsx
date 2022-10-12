@@ -4,7 +4,7 @@ const Verify = async (req, res) => {
   try {
     const valid: boolean = await isInviteCodeValid(
       process.env.STATIC_FILES_BUCKET,
-      process.env.SITE_FOLDER_S3,
+      process.env.SITE_IDENTIFIER,
       req.body.code
     );
 

@@ -155,7 +155,7 @@ const getSiteConfig = async () => {
     return fakeSiteConfig();
   }
 
-  const configStr: string = await getSiteFileContents(process.env.STATIC_FILES_BUCKET, process.env.SITE_FOLDER_S3, SITE_CONFIG_FILE_NAME);
+  const configStr: string = await getSiteFileContents(process.env.STATIC_FILES_BUCKET, process.env.SITE_IDENTIFIER, SITE_CONFIG_FILE_NAME);
   
   if (configStr) {
     return JSON.parse(configStr);
@@ -173,7 +173,7 @@ const getIntegration = async (integrationName)  => {
 const saveSiteConfig = async (siteConfigJson) => {
   let response = await uploadObjectToS3(
     process.env.STATIC_FILES_BUCKET,
-    `${TOP_LEVEL_SITES_FOLDER_NAME}/${process.env.SITE_FOLDER_S3}/${SITE_CONFIG_FILE_NAME}`,
+    `${TOP_LEVEL_SITES_FOLDER_NAME}/${process.env.SITE_IDENTIFIER}/${SITE_CONFIG_FILE_NAME}`,
     JSON.stringify(siteConfigJson, null, 2)
   );
   return response;
@@ -182,7 +182,7 @@ const saveSiteConfig = async (siteConfigJson) => {
 const saveUsers = async (usersJson) => {
   let response = await uploadObjectToS3(
     process.env.STATIC_FILES_BUCKET,
-    `${TOP_LEVEL_SITES_FOLDER_NAME}/${process.env.SITE_FOLDER_S3}/users/users.json`,
+    `${TOP_LEVEL_SITES_FOLDER_NAME}/${process.env.SITE_IDENTIFIER}/users/users.json`,
     JSON.stringify(usersJson, null, 2)
   );
   return response;
@@ -191,7 +191,7 @@ const saveUsers = async (usersJson) => {
 const initBlankJson = async(path: string) => {
   let response = await uploadObjectToS3(
     process.env.STATIC_FILES_BUCKET,
-    `${TOP_LEVEL_SITES_FOLDER_NAME}/${process.env.SITE_FOLDER_S3}/${path}`,
+    `${TOP_LEVEL_SITES_FOLDER_NAME}/${process.env.SITE_IDENTIFIER}/${path}`,
     JSON.stringify({}, null, 2)
   );
   return response;
@@ -204,7 +204,7 @@ const saveInvites = async (invites) => await uploadObjectToS3(process.env.STATIC
  * @returns 
  */
 const getSiteUsers = async () => {
-  const configStr = await getSiteFileContents(process.env.STATIC_FILES_BUCKET, process.env.SITE_FOLDER_S3, `users/users.json`, false);
+  const configStr = await getSiteFileContents(process.env.STATIC_FILES_BUCKET, process.env.SITE_IDENTIFIER, `users/users.json`, false);
   return JSON.parse(configStr);
 }
 

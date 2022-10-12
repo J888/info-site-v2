@@ -25,7 +25,7 @@ export default withIronSessionApiRoute(async function createRoute(req, res) {
         if (body.invite?.code && body.invite?.code?.length > 0) {
           console.log(`>>> redeeming invite code...`)
           inviteRedeemed = await redeemInvite(process.env.STATIC_FILES_BUCKET,
-                                process.env.SITE_FOLDER_S3,
+                                process.env.SITE_IDENTIFIER,
                                 body.invite.code);
           
           if (!inviteRedeemed) {
