@@ -2,7 +2,7 @@ const blankConfig = () => ({
   site: {
     subject: "",
     baseUrl: "",
-    name: "",
+    name: "Untitled",
     statements: {
       purpose: {
         short: "",

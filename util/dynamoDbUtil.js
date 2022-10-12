@@ -265,8 +265,8 @@ const deleteBlogPostsDynamoDb = async (TableName, posts) => {
       const params = {
         TableName,
         Key: {
-          'Category': {
-            S: post.Category
+          'SiteName': {
+            S: post.SiteName
           },
           'PostId': {
             S: post.PostId

@@ -365,6 +365,7 @@ const Configuration = ({ config }) => {
             setModifiedConfig(newConfig);
           }}
           disabled={
+            modifiedConfig.featuredSection.postIds.length > 0 &&
             modifiedConfig.featuredSection.postIds[modifiedConfig.featuredSection.postIds.length - 1] === undefined
           }
         >
