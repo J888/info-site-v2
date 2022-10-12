@@ -9,7 +9,7 @@ type Props = {
   background?: NavBackground;
   navLinks: Array<NavLink>;
   logoUrl: string;
-  siteName?: string;
+  siteName: string;
 };
 
 const NavV2 = ({ navLinks, logoUrl, background, siteName }: Props) => {
@@ -25,8 +25,7 @@ const NavV2 = ({ navLinks, logoUrl, background, siteName }: Props) => {
     <div className={styles.mainWrapper}>
       <div className={styles.header}>
         <div className={styles.siteName}>
-          {logoUrl && logoUrl.length > 0 && <Logo logoUrl={logoUrl}/> }
-          {(logoUrl === undefined || logoUrl.length === 0) && <Heading>{siteName}</Heading>}
+          <Logo logoUrl={logoUrl} siteName={siteName}/>
         </div>
         <img
           src="/icons/icons8-menu-48.png"
@@ -54,8 +53,7 @@ const NavV2 = ({ navLinks, logoUrl, background, siteName }: Props) => {
             navLinks && 
             <div className={styles.navBarV2Items}>
               <div className={styles.siteNameInPanel}>
-              {logoUrl && logoUrl.length > 0 && <Logo logoUrl={logoUrl}/> }
-              {(logoUrl === undefined || logoUrl.length === 0) && <Heading>{siteName}</Heading>}
+                <Logo logoUrl={logoUrl} siteName={siteName}/>
               </div>
               {
                 navLinks.map(navLink => 

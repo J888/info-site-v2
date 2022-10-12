@@ -78,7 +78,7 @@ export default function Home({
 }: Props) {
   return (
     <MainWrapper
-      title={`Front Page, ${siteStatementsPurposeShort}`}
+      title={`Home`}
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
       siteConfig={siteConfig}
     >
