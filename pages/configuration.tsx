@@ -10,6 +10,7 @@ import { NavBackground, NavLink } from "../interfaces/Nav";
 import axios from "axios";
 import ConfigurationPagesWrapper from "../components/configuration/ConfigurationPagesWrapper";
 import { blankConfig } from "../util/configUtil";
+import { toast } from 'react-toastify';
 
 interface SiteCategory {
   key?: string;
@@ -102,14 +103,33 @@ const Configuration = ({ config }) => {
   const [showRawConfig, setShowRawConfig] = useState(true);
 
   const saveConfiguration = async() => {
-    if (confirm('Are you sure you want to save this configuration?')) {
-      let modifiedConfigToSave = repairedConfiguration(modifiedConfig);
-      let response = await axios.put('/api/config/update', modifiedConfigToSave);
-      if (response.status == 200) {
-        setModifiedConfig(modifiedConfigToSave);
-        alert('config save successful');
+    let modifiedConfigToSave = repairedConfiguration(modifiedConfig);
+    const updatePromise = new Promise<void>(async (resolve, reject) => {
+      const sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
       }
-    }
+
+      await sleep (800);
+      let res = await axios.put('/api/config/update', modifiedConfigToSave);
+      if (res.status === 200) {
+        setModifiedConfig(modifiedConfigToSave);
+        resolve();
+      } else {
+        reject();
+      }
+    });
+    toast.promise(
+      updatePromise,
+        {
+          pending: 'Updating config',
+          success: 'Config updated successfully 👌',
+          error: 'There was an error updating the config :(',
+        },
+        {
+          position: toast.POSITION.BOTTOM_LEFT,
+          autoClose: 2000
+        }
+    );
   }
   
   const handleTextInputChanged = (key, value) => {

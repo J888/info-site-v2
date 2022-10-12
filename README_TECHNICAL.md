@@ -6,11 +6,9 @@
 
 ## Development To-Do Items
 
-- Make view counts completely optional since new sites arent gonna have a google analytics account setup right away
-- Get rid of the digital ocean deployment stuff because the deployment process is gonna be different now.
+- Theming/coloring based on settings
+- add some toasts for when things have been saved. (basically replace all the 'alerts')
 - Make disqus completely optional
-- For all my sites, they should share a static file bucket. The folders would be different.
-   - same for the image bucket. It can be generic
 - Make fonts configurable
 - "highlighted" tweets section - show a set of tweets (with react twitter embed component)
   - configurable in site config. And if they're not present then don't display anything.
@@ -24,9 +22,9 @@
 - configuration UI to configure the site config:
   - add a version and lastUpdatedAt field to it
   - ability to delete array items
-  - Change favicon to a wrench icon if you're on /admin or /configuration* page(s)
+  - ability to re-order array items
+- temp modal notifications when things are saved from publishing side
 - allow a non-admin user to change their own (and only their own) password
-- log out button
 - publish page:
   - allow (non-admin) user to delete articles they create
   - highlight articles I've written 

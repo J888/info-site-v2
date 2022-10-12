@@ -35,7 +35,7 @@ const isSameDate = (dateA, dateB) => {
 
 const newPostHeadingWording = (postCreatedDate, category) => {
   return isSameDate(new Date(), new Date(postCreatedDate))
-    ? `Just Posted in ${category}`
+    ? `Recently Posted in "${category}"`
     : `New in ${category}`;
 };
 

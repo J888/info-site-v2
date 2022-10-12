@@ -68,6 +68,7 @@ export default function MainWrapper({ children, siteConfig, title, description }
         navLinks={navLinks}
         navLogoUrl={navLogoUrl}
         background={navBackground}
+        siteName={siteName}
       />
       <Block/>
       <main className={styles.mainSection}>
@@ -78,6 +79,7 @@ export default function MainWrapper({ children, siteConfig, title, description }
         logoUrl={navLogoUrl}
         twitterUsername={twitterUsername}
         tagline={footerTagline}
+        siteName={siteName}
       />
     </div>
   );

@@ -7,6 +7,7 @@ import { getCurrentUser } from "../../lib/user";
 import Head from "next/head";
 import axios from "axios";
 import Spacer from "../utility/spacer";
+import { ToastContainer } from 'react-toastify';
 
 const CurrentUserInfo = ({ currentUser }) => {
   return (
@@ -119,6 +120,20 @@ const ConfigurationPagesWrapper = ({children, activePage}) => {
       <Head>
         <link rel="icon" href={'https://nftblog1-images.s3.us-east-2.amazonaws.com/assets/wrench-favicon.ico'} />
       </Head>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        />
+        {/* Same as */}
+      <ToastContainer />
       <div className={styles.wrapper}>
         <Columns>
           <Columns.Column>

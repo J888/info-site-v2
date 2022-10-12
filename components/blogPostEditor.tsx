@@ -115,7 +115,7 @@ const BlogPostEditor = ({
               setShowPreview(!showPreview);
             }}
           >
-            {showPreview == false ? "Preview" : "Edit"}
+            {showPreview == false ? "Preview" : "Close Preview"}
           </Button>
         </div>
       </div>
