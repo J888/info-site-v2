@@ -26,7 +26,6 @@ const CurrentUserInfo = ({ currentUser }) => {
           if (confirm("are you sure you want to log out?")) {
             let res = await axios.post('/api/logout', {});
             if (res.status === 200) {
-              // alert('successfully logged out');
               location.reload();
             }
           }

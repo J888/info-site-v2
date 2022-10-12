@@ -10,6 +10,7 @@ import ScrollablePosts from "../components/scrollablePosts";
 import { API_ENDPOINTS } from "../lib/constants";
 import { SaveState } from "../interfaces/SaveState";
 import ConfigurationPagesWrapper from "../components/configuration/ConfigurationPagesWrapper";
+import { toast } from 'react-toastify';
 
 const newPost = (postNum) => ({
   PostId: `post-${postNum}-id`,
@@ -33,6 +34,7 @@ const newPost = (postNum) => ({
 });
 
 const Publish = ({}) => {
+  const [savingInProgress, setSavingInProgress] = useState<boolean>(false);
   const [blogPosts, setBlogPosts] = useState([]);
   const [imagesByPostShortId, setImagesByPostShortId] = useState({});
   const [activeBlogPostIndex, setActiveBlogPostIndex] = useState(0);
@@ -81,34 +83,77 @@ const Publish = ({}) => {
     let blogPostData = blogPosts.find((post) => post.PostId === postId);
 
     if (!blogPostData.IsNewPost) {
-      const res = await axios.put(API_ENDPOINTS.UPDATE_POSTS, {
-        posts: [blogPostData],
+      setSavingInProgress(true);
+      const updatePromise = new Promise<void>(async (resolve, reject) => {
+        const sleep = (ms) => {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+  
+        await sleep (800);
+        const res = await axios.put(API_ENDPOINTS.UPDATE_POSTS, {
+          posts: [blogPostData],
+        });
+        setSavingInProgress(false);
+        const { updateStatusCodes } = res?.data;
+        if (updateStatusCodes.includes(200)) {
+          setCurrentSaveState(SaveState.SUCCESS);
+          return resolve();
+        } else {
+          setCurrentSaveState(SaveState.FAIL);
+          return reject();
+        }
       });
-
-      const { updateStatusCodes } = res?.data;
-      console.log(`[PUT] saving PostId: ${postId}`);
-      console.log(`Status codes were [${updateStatusCodes.join(", ")}]`);
-
-      if (updateStatusCodes.includes(200)) {
-        setCurrentSaveState(SaveState.SUCCESS);
-      } else {
-        setCurrentSaveState(SaveState.FAIL);
-      }
+      toast.promise(
+        updatePromise,
+          {
+            pending: 'Saving ⌛',
+            success: 'Saved!',
+            error: 'There was an error :(',
+          },
+          {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 2000
+          }
+      );
     } else {
+      setSavingInProgress(true);
+
       delete blogPostData.IsNewPost;
-      const res = await axios.post(API_ENDPOINTS.CREATE_POSTS, {
-        posts: [blogPostData],
+
+      const createPromise = new Promise<void>(async (resolve, reject) => {
+        const sleep = (ms) => {
+          return new Promise(resolve => setTimeout(resolve, ms));
+        }
+  
+        await sleep (800);
+        const res = await axios.post(API_ENDPOINTS.CREATE_POSTS, {
+          posts: [blogPostData],
+        });
+  
+        const { updateStatusCodes } = res?.data;
+        setSavingInProgress(false);
+        
+        if (updateStatusCodes.includes(200)) {
+          setCurrentSaveState(SaveState.SUCCESS);
+          return resolve();
+        } else {
+          setCurrentSaveState(SaveState.FAIL);
+          return reject();
+        }
       });
 
-      const { updateStatusCodes } = res?.data;
-      console.log(`[POST] saving PostId: ${postId}`);
-      console.log(`Status codes were [${updateStatusCodes.join(", ")}]`);
-
-      if (updateStatusCodes.includes(200)) {
-        setCurrentSaveState(SaveState.SUCCESS);
-      } else {
-        setCurrentSaveState(SaveState.FAIL);
-      }
+      toast.promise(
+        createPromise,
+          {
+            pending: 'Creating ⌛',
+            success: 'Created!',
+            error: 'There was an error :(',
+          },
+          {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 2000
+          }
+      );
     }
   };
 
@@ -182,6 +227,7 @@ const Publish = ({}) => {
             initialData={blogPosts[activeBlogPostIndex]}
             updatePostHandler={updatePostHandler}
             savePostHandler={savePostHandler}
+            saveButtonDisabled={savingInProgress}
           />
         )}
 

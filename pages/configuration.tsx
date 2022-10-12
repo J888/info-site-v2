@@ -83,8 +83,8 @@ const TextInput = ({
   </React.Fragment>
 );
 
-const SaveButton = ({onClickHandler}) => {
-  return (<Button colorVariant={'light'} onClick={() => { onClickHandler() }}>Save</Button>);
+const SaveButton = ({onClickHandler, disabled}) => {
+  return (<Button disabled={disabled} colorVariant={'light'} onClick={() => { onClickHandler() }}>Save</Button>);
 }
 
 const Stats = ({ config }) => <div>
@@ -99,11 +99,13 @@ const Stats = ({ config }) => <div>
 const PageDescription = () => <p>{"Modify your website's configuration."} <b>{"A rebuild is necessary for modifications to be reflected"}</b></p>;
 
 const Configuration = ({ config }) => {
+  const [modifyingConfig, setModifyingConfig] = useState(false);
   const [modifiedConfig, setModifiedConfig] = useState(config);
   const [showRawConfig, setShowRawConfig] = useState(true);
 
   const saveConfiguration = async() => {
     let modifiedConfigToSave = repairedConfiguration(modifiedConfig);
+    setModifyingConfig(true);
     const updatePromise = new Promise<void>(async (resolve, reject) => {
       const sleep = (ms) => {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -111,22 +113,24 @@ const Configuration = ({ config }) => {
 
       await sleep (800);
       let res = await axios.put('/api/config/update', modifiedConfigToSave);
+      
+      setModifyingConfig(false);
       if (res.status === 200) {
         setModifiedConfig(modifiedConfigToSave);
-        resolve();
+        return resolve();
       } else {
-        reject();
+        return reject();
       }
     });
     toast.promise(
       updatePromise,
         {
-          pending: 'Updating config',
-          success: 'Config updated successfully 👌',
+          pending: 'Saving ⌛',
+          success: 'Saved!',
           error: 'There was an error updating the config :(',
         },
         {
-          position: toast.POSITION.BOTTOM_LEFT,
+          position: toast.POSITION.TOP_LEFT,
           autoClose: 2000
         }
     );
@@ -145,7 +149,7 @@ const Configuration = ({ config }) => {
       <Spacer size={'sm'}/>
       <Stats config={modifiedConfig}/>
       <Spacer size={'sm'}/>
-      <SaveButton onClickHandler={saveConfiguration}/>
+      <SaveButton disabled={modifyingConfig} onClickHandler={saveConfiguration}/>
       <Spacer size={'sm'}/>
 
       {/* Begin general section */}
