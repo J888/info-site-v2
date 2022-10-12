@@ -4,7 +4,7 @@ const Images = async (req, res) => {
   const { PostShortId } = req.query;
 
   try {
-    const items = await getImagesByPostId(process.env.IMG_S3_BUCKET, PostShortId);
+    const items = await getImagesByPostId(process.env.PUBLIC_FILES_BUCKET, PostShortId);
 
     return res.status(200).json({ items });
   } catch (err) {

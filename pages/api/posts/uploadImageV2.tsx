@@ -60,7 +60,7 @@ apiRoute.post(async (req: MulterRequest, res: NextApiResponse) => {
   const { PostShortId } = req.body;
 
   const uploadRes = await uploadImage(
-    process.env.IMG_S3_BUCKET,
+    process.env.PUBLIC_FILES_BUCKET,
     PostShortId,
     imageData,
     imageFile.originalname,

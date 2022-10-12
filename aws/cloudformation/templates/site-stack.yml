@@ -1,0 +1,186 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  BlogPostTableName:
+    Type: String
+  PublicFilesBucketName:
+    Type: String
+  StaticFilesBucketName:
+    Type: String
+
+Description: 'Stack for Info Site'
+
+Resources:
+  StaticFilesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      BucketName: !Ref StaticFilesBucketName
+    DeletionPolicy: Retain
+
+  PublicFilesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      BucketName: !Ref PublicFilesBucketName
+    DeletionPolicy: Retain
+
+  StaticFilesBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref StaticFilesBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            - s3:ListBucket
+            Principal:
+              AWS:
+              - !GetAtt AuthorizedApplicationUser.Arn
+            Resource:
+            - !Sub ${StaticFilesBucket.Arn}
+            - !Sub ${StaticFilesBucket.Arn}/*
+          - Effect: Deny
+            Action:
+            - s3:*
+            Principal: '*'
+            Resource:
+            - !Sub ${StaticFilesBucket.Arn}
+            - !Sub ${StaticFilesBucket.Arn}/*
+            Condition:
+              StringNotLike:
+                aws:PrincipalArn:
+                - !GetAtt AuthorizedApplicationUser.Arn
+                - !Sub arn:aws:iam::${AWS::AccountId}:root
+                - !Sub arn:aws:iam::${AWS::AccountId}:user/Administrator
+          - Effect: Allow
+            Action:
+            - s3:*
+            Resource:
+            - !Sub ${StaticFilesBucket.Arn}
+            - !Sub ${StaticFilesBucket.Arn}/*
+            Principal:
+              AWS:
+              - !Sub arn:aws:iam::${AWS::AccountId}:root
+              - !Sub arn:aws:iam::${AWS::AccountId}:user/Administrator
+
+  PublicFilesBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref PublicFilesBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            Principal: '*'
+            Resource:
+            - !Sub ${PublicFilesBucket.Arn}/*
+            Condition:
+              StringEquals:
+                s3:ExistingObjectTag/public: 'TRUE'
+          - Effect: Allow
+            Action:
+            - s3:*
+            Resource:
+            - !Sub ${PublicFilesBucket.Arn}
+            - !Sub ${PublicFilesBucket.Arn}/*
+            Principal:
+              AWS:
+              - !Sub arn:aws:iam::${AWS::AccountId}:root
+              - !Sub arn:aws:iam::${AWS::AccountId}:user/Administrator
+
+  # For the web app to use at build time
+  AuthorizedApplicationUser:
+    Type: AWS::IAM::User
+    Properties:
+      Policies: 
+        - PolicyName: s3readwriteaccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - s3:GetObject
+              - s3:ListObjects
+              - s3:ListBucket
+              Resource:
+              - !Sub ${StaticFilesBucket.Arn}
+              - !Sub ${StaticFilesBucket.Arn}/*
+        - PolicyName: publicFilesListBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - s3:ListBucket
+              Resource:
+              - !Sub ${PublicFilesBucket.Arn}
+        - PolicyName: publicFilesPutObject
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - s3:PutObject
+              - s3:PutObjectTagging
+              Resource:
+              - !Sub ${PublicFilesBucket.Arn}/*
+        - PolicyName: blogPostsDynamoDbAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - dynamodb:Scan
+              - dynamodb:UpdateItem
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              Resource:
+              - !GetAtt BlogPostsDynamoDB.Arn
+      # UserName: LocalInfoSiteStaticFileReader # If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the user name.
+
+  BlogPostsDynamoDB:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "SiteName"
+          AttributeType: "S"
+        - 
+          AttributeName: "PostId"
+          AttributeType: "S"
+        -
+          AttributeName: "Category"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "SiteName"
+          KeyType: "HASH" # a.k.a partition key
+        - 
+          AttributeName: "PostId"
+          KeyType: "RANGE"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: !Ref BlogPostTableName
+      GlobalSecondaryIndexes:
+        - IndexName: gsiOnCategoryAndSiteName
+          KeySchema:
+            - AttributeName: "Category"
+              KeyType: "HASH"
+            - AttributeName: "SiteName"
+              KeyType: "RANGE"
+          Projection:
+            NonKeyAttributes:
+              - Title
+            ProjectionType: INCLUDE
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+
+

@@ -1,7 +1,7 @@
 import { Card, Columns, Message, Tag } from "react-bulma-components";
 import MainWrapper from "../components/mainWrapper";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { getSiteConfig } from "../util/s3Util";
 import LinkWrapper from "../components/linkWrapper";
 import PostGrid from "../components/postGrid";
@@ -14,6 +14,7 @@ import PostGridItemV2 from "../components/postGridItemV2";
 import FeaturedSection from "../components/featuredSection";
 import { PostData } from "../interfaces/PostData";
 import { SiteConfig } from "../interfaces/SiteConfig";
+import { useRouter } from 'next/router'
 
 const isSameDate = (dateA, dateB) => {
   // month number (0 - 11)
@@ -222,6 +223,25 @@ export async function getStaticProps() {
     process.env.BLOG_POSTS_DYNAMO_TABLE_NAME
   );
   const siteConfig = await getSiteConfig();
+
+  /** If there is no site config, then we need to assume this is a brand new site that must be set up */
+  if (!siteConfig) {
+    return {
+      redirect: {
+        destination: "/configuration/setup",
+      },
+    }
+  }
+
+  /** If the config is empty, redirect to the configuration page */
+  if (Object.keys(siteConfig).length === 0) {
+    return {
+      redirect: {
+        destination: "/configuration",
+      },
+    }
+  }
+
   const pageViewsMappedBySlug = await getPageViewsBySlug("2021-11-25");
 
   /**

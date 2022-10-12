@@ -21,7 +21,7 @@ export default withIronSessionApiRoute(async function imagesRoute(req, res) {
         }
 
         const [ PostShortId, filename ] = req.query.shortIdSlashFileName
-        const deleteRes = await deleteFileS3(process.env.IMG_S3_BUCKET, PostShortId, filename);
+        const deleteRes = await deleteFileS3(process.env.PUBLIC_FILES_BUCKET, PostShortId, filename);
         console.log(deleteRes)
         if (deleteRes[`$metadata`].httpStatusCode === 204) {
           return res.status(204).send({});

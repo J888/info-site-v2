@@ -1,0 +1,12 @@
+.wrapper {
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+
+  input {
+    border: dashed #d6d6d6 0.1rem;
+    font-size: 0.89rem;
+    margin-bottom: 0.3rem;
+    padding: 0.4rem;
+  }
+}

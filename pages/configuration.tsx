@@ -9,6 +9,7 @@ import Spacer from "../components/utility/spacer";
 import { NavBackground, NavLink } from "../interfaces/Nav";
 import axios from "axios";
 import ConfigurationPagesWrapper from "../components/configuration/ConfigurationPagesWrapper";
+import { blankConfig } from "../util/configUtil";
 
 interface SiteCategory {
   key?: string;
@@ -285,7 +286,8 @@ const Configuration = ({ config }) => {
             setModifiedConfig(newConfig);
           }}
           disabled={
-            modifiedConfig.categories[modifiedConfig.categories.length - 1].key === undefined
+            modifiedConfig.categories.length > 0
+            && modifiedConfig.categories[modifiedConfig.categories.length - 1].key === undefined
             && modifiedConfig.categories[modifiedConfig.categories.length - 1].label === undefined
             && modifiedConfig.categories[modifiedConfig.categories.length - 1].description === undefined
           }
@@ -425,7 +427,8 @@ const Configuration = ({ config }) => {
             setModifiedConfig(newConfig);
           }}
           disabled={
-            modifiedConfig.nav.links[modifiedConfig.nav.links.length - 1].label === undefined
+            modifiedConfig.nav.links.length > 0
+            && modifiedConfig.nav.links[modifiedConfig.nav.links.length - 1].label === undefined
             && modifiedConfig.nav.links[modifiedConfig.nav.links.length - 1].href === undefined
 
           }
@@ -469,8 +472,13 @@ const ConfigurationWrapped = ({ config }) => (
 );
 
 export async function getStaticProps({ params, preview = false, previewData }) {
-  const config = await getSiteConfig();
-  console.log(`GETTING SITE CONFIG`)
+  let config = await getSiteConfig();
+  
+  const isBrandNewSite: boolean = Object.keys(config).length === 0;
+  if (isBrandNewSite) {
+    // fill in all the default values
+    config = blankConfig();
+  }
   return {
     props: {
       config,
