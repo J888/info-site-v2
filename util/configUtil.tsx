@@ -22,9 +22,9 @@ const blankConfig = () => ({
   },
   nav: {
     logoUrl:
-      "https://nftblog1-images.s3.us-east-2.amazonaws.com/assets/logo.png",
+      "https://gamboge888-public.s3.us-east-2.amazonaws.com/defaults/default-LOGO.png",
     background: {
-      url: "https://nftblog1-images.s3.us-east-2.amazonaws.com/assets/banner.png",
+      url: "https://gamboge888-public.s3.us-east-2.amazonaws.com/defaults/default-NAV_BKGRD.jpg",
       size: "30rem",
     },
     links: [],

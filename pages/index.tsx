@@ -1,7 +1,7 @@
-import { Card, Columns, Message, Tag } from "react-bulma-components";
+import { Box, Card, Columns, Heading, Message, Tag } from "react-bulma-components";
 import MainWrapper from "../components/mainWrapper";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React from "react";
 import { getSiteConfig } from "../util/s3Util";
 import LinkWrapper from "../components/linkWrapper";
 import PostGrid from "../components/postGrid";
@@ -9,12 +9,10 @@ import styles from "../sass/components/Index.module.scss";
 import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 import { capitalizeWord } from "../util/textUtil";
-import ShowMoreToggle from "../components/showMoreToggle";
 import PostGridItemV2 from "../components/postGridItemV2";
 import FeaturedSection from "../components/featuredSection";
 import { PostData } from "../interfaces/PostData";
 import { SiteConfig } from "../interfaces/SiteConfig";
-import { useRouter } from 'next/router'
 
 const isSameDate = (dateA, dateB) => {
   // month number (0 - 11)
@@ -87,15 +85,10 @@ export default function Home({
       <Columns style={{ margin: "0 0.5rem 0 0.5rem" }}>
         <Columns.Column size={2}></Columns.Column>
         <Columns.Column size={4}>
-          <ShowMoreToggle
-            labelShow={`+ Read more`}
-            labelHide={`- Hide/minimize`}
-            title={siteStatementsPurposeShort}
-            titleSize={4}
-            className={styles.frontPageBillboard}
-          >
-            {siteStatementsPurposeLong}
-          </ShowMoreToggle>
+          <Box>
+            <Heading>{siteStatementsPurposeShort}</Heading>
+            <p>{siteStatementsPurposeLong}</p>
+          </Box>
         </Columns.Column>
         <Columns.Column size={4}>
           <h2 className={styles.newestPostHeading}>
