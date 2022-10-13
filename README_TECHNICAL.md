@@ -7,7 +7,6 @@
 ## Development To-Do Items
 
 - Theming/coloring based on settings
-- add some toasts for when things have been saved. (basically replace all the 'alerts')
 - Make disqus completely optional
 - Make fonts configurable
 - "highlighted" tweets section - show a set of tweets (with react twitter embed component)
@@ -41,17 +40,13 @@ Option 2: `Create a file `.env.local` in the root of this project and fill in va
 
 ```
 GOOGLE_PRIVATE_KEY=
-
 SECRET_COOKIE_PASSWORD=
 BLOG_POSTS_DYNAMO_TABLE_NAME=
-
 S3_REGION=
 SITE_IDENTIFIER=
 STATIC_FILES_BUCKET=
 PUBLIC_FILES_BUCKET=
-
 SITE_BASE_URL=
-
 ```
 
 ## Run Development Server
