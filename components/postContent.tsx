@@ -78,7 +78,7 @@ const PostContent = ({ data, views, twitterUsername }: Props) => (
               </Tag.Group>
               <AuthorCredits authorName={data.AuthorName} twitterUsername={twitterUsername}/>
               <div style={{marginTop: `1.6rem`}}>
-                {views !== undefined && (
+                {views !== undefined && views !== 0 && (
                   <div className={styles.viewCount}>
                     <img src="/icons/eye1.png" className={styles.viewCountIcon} alt={"View count icon"}/>{" "}
                     <span>{views < 1 ? 1 : views}</span>

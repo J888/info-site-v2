@@ -16,6 +16,7 @@ type Props = {
   saveState: SaveState;
   savePostHandler: (PostId: string) => void;
   updatePostHandler: (i: number, newData: PostDataWithNextPrev) => void;
+  saveButtonDisabled: boolean;
 };
 
 const BlogPostEditor = ({
@@ -27,6 +28,7 @@ const BlogPostEditor = ({
   images,
   saveState,
   savePostHandler,
+  saveButtonDisabled,
 }: Props) => {
   const [showPreview, setShowPreview] = useState(false);
 
@@ -106,6 +108,7 @@ const BlogPostEditor = ({
             onClick={() => {
               savePostHandler(initialData.PostId);
             }}
+            disabled={saveButtonDisabled}
           >
             Save
           </Button>
@@ -115,7 +118,7 @@ const BlogPostEditor = ({
               setShowPreview(!showPreview);
             }}
           >
-            {showPreview == false ? "Preview" : "Edit"}
+            {showPreview == false ? "Preview" : "Close Preview"}
           </Button>
         </div>
       </div>

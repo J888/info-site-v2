@@ -9,12 +9,15 @@ import Spacer from "../components/utility/spacer";
 import { NavBackground, NavLink } from "../interfaces/Nav";
 import axios from "axios";
 import ConfigurationPagesWrapper from "../components/configuration/ConfigurationPagesWrapper";
+import { blankConfig } from "../util/configUtil";
+import { toast } from 'react-toastify';
 
 interface SiteCategory {
   key?: string;
   label?: string;
   description?: string;
 }
+
 interface FeaturedSection {
   titleText: string;
   postIds: string[];
@@ -25,6 +28,7 @@ interface Nav {
   background: NavBackground;
   links: NavLink[];
 }
+
 interface SiteConfiguration {
   categories: Array<SiteCategory>;
   featuredSection?: FeaturedSection;
@@ -44,21 +48,43 @@ const repairedConfiguration = (conf: SiteConfiguration) => {
   return copy;
 }
 
-const TextInput = ({ config, configKey, label, onChangeHandler }) => (
+const TextInput = ({
+  config, configKey, label,
+  onChangeHandler, inputType = 'input', className = undefined
+}) => (
   <React.Fragment>
     <label>{label}: </label>
-    <input
-      placeholder="Subject"
-      value={_.get(config, configKey)}
-      onChange={(e) => {
-        onChangeHandler(e.target.value);
-      }}
-    />
+    { inputType === 'input' && <input placeholder={label}
+                                      value={_.get(config, configKey)}
+                                      onChange={(e) => {
+                                        onChangeHandler(e.target.value);
+                                      }}
+                                />
+    }
+
+    { inputType === 'textarea' && <textarea placeholder={label}
+                                            value={_.get(config, configKey)}
+                                            onChange={(e) => {
+                                              onChangeHandler(e.target.value);
+                                            }}
+                                            className={className}
+                                            
+                                  />
+    }
+
+    { inputType === 'checkbox' && <input type="checkbox"
+                                         checked={_.get(config, configKey) === true}
+                                         onChange={(e) => {
+                                          onChangeHandler(e.target.checked)
+                                         }}
+                                         style={{maxWidth: 'fit-content'}}
+                                  />
+    }
   </React.Fragment>
 );
 
-const SaveButton = ({onClickHandler}) => {
-  return (<Button colorVariant={'light'} onClick={() => { onClickHandler() }}>Save</Button>);
+const SaveButton = ({onClickHandler, disabled}) => {
+  return (<Button disabled={disabled} colorVariant={'light'} onClick={() => { onClickHandler() }}>Save</Button>);
 }
 
 const Stats = ({ config }) => <div>
@@ -73,18 +99,41 @@ const Stats = ({ config }) => <div>
 const PageDescription = () => <p>{"Modify your website's configuration."} <b>{"A rebuild is necessary for modifications to be reflected"}</b></p>;
 
 const Configuration = ({ config }) => {
+  const [modifyingConfig, setModifyingConfig] = useState(false);
   const [modifiedConfig, setModifiedConfig] = useState(config);
   const [showRawConfig, setShowRawConfig] = useState(true);
 
   const saveConfiguration = async() => {
-    if (confirm('Are you sure you want to save this configuration?')) {
-      let modifiedConfigToSave = repairedConfiguration(modifiedConfig);
-      let response = await axios.put('/api/config/update', modifiedConfigToSave);
-      if (response.status == 200) {
-        setModifiedConfig(modifiedConfigToSave);
-        alert('config save successful');
+    let modifiedConfigToSave = repairedConfiguration(modifiedConfig);
+    setModifyingConfig(true);
+    const updatePromise = new Promise<void>(async (resolve, reject) => {
+      const sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
       }
-    }
+
+      await sleep (800);
+      let res = await axios.put('/api/config/update', modifiedConfigToSave);
+      
+      setModifyingConfig(false);
+      if (res.status === 200) {
+        setModifiedConfig(modifiedConfigToSave);
+        return resolve();
+      } else {
+        return reject();
+      }
+    });
+    toast.promise(
+      updatePromise,
+        {
+          pending: 'Saving ⌛',
+          success: 'Saved!',
+          error: 'There was an error updating the config :(',
+        },
+        {
+          position: toast.POSITION.TOP_LEFT,
+          autoClose: 2000
+        }
+    );
   }
   
   const handleTextInputChanged = (key, value) => {
@@ -100,7 +149,7 @@ const Configuration = ({ config }) => {
       <Spacer size={'sm'}/>
       <Stats config={modifiedConfig}/>
       <Spacer size={'sm'}/>
-      <SaveButton onClickHandler={saveConfiguration}/>
+      <SaveButton disabled={modifyingConfig} onClickHandler={saveConfiguration}/>
       <Spacer size={'sm'}/>
 
       {/* Begin general section */}
@@ -117,6 +166,7 @@ const Configuration = ({ config }) => {
           {
             key: "site.statements.purpose.long",
             label: "Purpose Statement (Long Version)",
+            inputType: "textarea"
           },
           {
             key: "footer.tagline",
@@ -139,12 +189,61 @@ const Configuration = ({ config }) => {
             onChangeHandler={(value) => {
               handleTextInputChanged(item.key, value);
             }}
+            inputType={item.inputType}
           />
         ))}
       </div>
       {/* End general section */}
 
       <Spacer size={'m'}/>
+
+      <h2 className={styles.sectionHeading}><u>Google Analytics</u></h2>
+      <p>This information is used to integrate with Google for things like page views</p>
+      <Spacer size={'xs'}/>
+      <div className={styles.inputsSectionGoogleAnalytics}>
+        {[
+          { key: "integrations.google.analytics.enabled", label: "Enabled", inputType: 'checkbox' },
+          { key: "integrations.google.analytics.viewId", label: "View ID (aka the property id used for retrieval of page views)" },
+          { key: "integrations.google.analytics.clientEmail", label: "Client Email" },
+          { key: "integrations.google.analytics.clientId", label: "Client ID" },
+          { key: "integrations.google.analytics.propertyId", label: "Property Id (used for gtag)" },
+        ].map((item, i) => (
+          <TextInput
+            key={`googleanalytics-text-input-item-${i}`}
+            config={modifiedConfig}
+            configKey={item.key}
+            label={item.label}
+            onChangeHandler={(value) => {
+              handleTextInputChanged(item.key, value);
+            }}
+            inputType={item.inputType}
+          />
+        ))}
+      </div>
+      
+      <Spacer size={'m'}/>
+
+      <h2 className={styles.sectionHeading}><u>Disqus</u></h2>
+      <p>Add commenting to your site</p>
+      <Spacer size={'xs'}/>
+      <div className={styles.inputsSectionGoogleAnalytics}>
+        {[
+          { key: "integrations.disqus.shortname", label: "Disqus Shortname" },
+        ].map((item, i) => (
+          <TextInput
+            key={`disqus-text-input-item-${i}`}
+            config={modifiedConfig}
+            configKey={item.key}
+            label={item.label}
+            onChangeHandler={(value) => {
+              handleTextInputChanged(item.key, value);
+            }}
+          />
+        ))}
+      </div>
+      
+      <Spacer size={'m'}/>
+      
       
       {/* Begin Categories */}
       <h2 className={styles.sectionHeading}><u>Categories</u></h2>
@@ -211,7 +310,8 @@ const Configuration = ({ config }) => {
             setModifiedConfig(newConfig);
           }}
           disabled={
-            modifiedConfig.categories[modifiedConfig.categories.length - 1].key === undefined
+            modifiedConfig.categories.length > 0
+            && modifiedConfig.categories[modifiedConfig.categories.length - 1].key === undefined
             && modifiedConfig.categories[modifiedConfig.categories.length - 1].label === undefined
             && modifiedConfig.categories[modifiedConfig.categories.length - 1].description === undefined
           }
@@ -229,18 +329,16 @@ const Configuration = ({ config }) => {
         {[
           { key: "pageData.about.description", label: "Description" },
         ].map((item, i) => (
- 
-          <textarea
-            className={styles.tallTextAreaInput}
-            key={`about-page-${i}`}
-            placeholder="Description"
-            value={_.get(modifiedConfig, item.key)}
-            onChange={(e) => {
-              handleTextInputChanged(
-                item.key,
-                e.target.value
-              );
+          <TextInput
+            key={`featuredsect-text-input-item-${i}`}
+            config={modifiedConfig}
+            configKey={item.key}
+            label={item.label}
+            onChangeHandler={(value) => {
+              handleTextInputChanged(item.key, value);
             }}
+            inputType='textarea'
+            className={styles.tallTextAreaInput}
           />
         ))}
       </div>
@@ -252,10 +350,10 @@ const Configuration = ({ config }) => {
       <h2 className={styles.sectionHeading}><u>Featured Section</u></h2>
       <div className={styles.inputsSectionGeneral}>
         {[
-          { key: "featuredSection.titleText", label: "Title of Featured Section" },
+          { key: "featuredSection.titleText", label: "Title" },
         ].map((item, i) => (
           <TextInput
-            key={`feat-sect-text-input-item-${i}`}
+            key={`featuredsect-text-input-item-${i}`}
             config={modifiedConfig}
             configKey={item.key}
             label={item.label}
@@ -291,6 +389,7 @@ const Configuration = ({ config }) => {
             setModifiedConfig(newConfig);
           }}
           disabled={
+            modifiedConfig.featuredSection.postIds.length > 0 &&
             modifiedConfig.featuredSection.postIds[modifiedConfig.featuredSection.postIds.length - 1] === undefined
           }
         >
@@ -310,7 +409,7 @@ const Configuration = ({ config }) => {
           { key: "nav.background.size", label: "Size" },
         ].map((item, i) => (
           <TextInput
-            key={`text-input-item-${i}`}
+            key={`navigation-input-item-${i}`}
             config={modifiedConfig}
             configKey={item.key}
             label={item.label}
@@ -353,7 +452,8 @@ const Configuration = ({ config }) => {
             setModifiedConfig(newConfig);
           }}
           disabled={
-            modifiedConfig.nav.links[modifiedConfig.nav.links.length - 1].label === undefined
+            modifiedConfig.nav.links.length > 0
+            && modifiedConfig.nav.links[modifiedConfig.nav.links.length - 1].label === undefined
             && modifiedConfig.nav.links[modifiedConfig.nav.links.length - 1].href === undefined
 
           }
@@ -397,8 +497,13 @@ const ConfigurationWrapped = ({ config }) => (
 );
 
 export async function getStaticProps({ params, preview = false, previewData }) {
-  const config = await getSiteConfig();
-  console.log(`GETTING SITE CONFIG`)
+  let config = await getSiteConfig();
+  
+  const isBrandNewSite: boolean = Object.keys(config).length === 0;
+  if (isBrandNewSite) {
+    // fill in all the default values
+    config = blankConfig();
+  }
   return {
     props: {
       config,

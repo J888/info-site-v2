@@ -10,3 +10,7 @@ export enum API_ENDPOINTS {
   IMAGES = `/api/images`,
   IMAGE_UPLOAD = `/api/posts/uploadImageV2`,
 }
+
+export enum SITE_CONFIG {
+  FILE_NAME = `siteConfig.json`,
+}

@@ -3,14 +3,16 @@ import Link from "next/link";
 import styles from "../sass/components/NavBar.module.scss";
 import Logo from "./logo";
 import { NavBackground, NavLink } from "../interfaces/Nav";
+import { Heading } from "react-bulma-components";
 
 type Props = {
   background?: NavBackground;
   navLinks: Array<NavLink>;
-  navLogoUrl: string;
+  logoUrl: string;
+  siteName: string;
 };
 
-const NavV2 = ({ navLinks, navLogoUrl, background }: Props) => {
+const NavV2 = ({ navLinks, logoUrl, background, siteName }: Props) => {
   const [showNav, setShowNav] = useState(false);
 
   const stylesNavbarV2 = background !== undefined ? {
@@ -23,7 +25,7 @@ const NavV2 = ({ navLinks, navLogoUrl, background }: Props) => {
     <div className={styles.mainWrapper}>
       <div className={styles.header}>
         <div className={styles.siteName}>
-          <Logo logoUrl={navLogoUrl}/>
+          <Logo logoUrl={logoUrl} siteName={siteName}/>
         </div>
         <img
           src="/icons/icons8-menu-48.png"
@@ -51,7 +53,7 @@ const NavV2 = ({ navLinks, navLogoUrl, background }: Props) => {
             navLinks && 
             <div className={styles.navBarV2Items}>
               <div className={styles.siteNameInPanel}>
-                <Logo logoUrl={navLogoUrl}/>
+                <Logo logoUrl={logoUrl} siteName={siteName}/>
               </div>
               {
                 navLinks.map(navLink => 

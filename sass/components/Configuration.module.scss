@@ -10,6 +10,8 @@
     border: solid #cecece 0.1rem;
     border-radius: 0.2rem;
     padding: 0.3333rem;
+    margin-bottom: 0.9rem;
+    height: 5rem;
     font-family: 'IBM Plex Mono', serif;
   }
 }
@@ -20,11 +22,19 @@
 
 .tallTextAreaInput {
   height: 10rem;
-  padding: 0.4rem 0.4rem 0.4rem 1rem;
   font-size: 1rem;
 }
 
 .inputsSectionGeneral {
+  display: flex;
+  flex-direction: column;
+
+  input {
+    margin-bottom: 1rem;
+  }
+}
+
+.inputsSectionGoogleAnalytics {
   display: flex;
   flex-direction: column;
 

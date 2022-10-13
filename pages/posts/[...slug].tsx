@@ -136,7 +136,7 @@ export async function getStaticProps({ params, preview = false, previewData }) {
     props: {
       slug,
       postData,
-      disqusShortname: process.env.DISQUS_SHORTNAME || '',
+      disqusShortname: siteConfig?.integrations?.disqus?.shortname || '',
       articleUrl: `${process.env.SITE_BASE_URL}${slug}`,
       ...baseProps,
     },

@@ -7,3 +7,4 @@ css
 *.local
 tmp/
 cypress/videos
+public/uploads/*

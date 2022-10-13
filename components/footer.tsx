@@ -6,12 +6,13 @@ type Props = {
   logoUrl: string;
   tagline: string;
   twitterUsername: string;
+  siteName: string;
 };
 
-const Footer = ({ logoUrl, twitterUsername, tagline }: Props) => (
+const Footer = ({ logoUrl, twitterUsername, tagline, siteName }: Props) => (
   <footer className={styles.footer}>
     <div className={styles.logo}>
-      <Logo logoUrl={logoUrl} />
+      <Logo logoUrl={logoUrl} siteName={siteName}/>
     </div>
     <div>{`© ${new Date().getFullYear()} - ${tagline}`}</div>
     <div className={styles.twitterIcon}>

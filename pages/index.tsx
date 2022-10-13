@@ -1,4 +1,4 @@
-import { Card, Columns, Message, Tag } from "react-bulma-components";
+import { Box, Card, Columns, Heading, Message, Tag } from "react-bulma-components";
 import MainWrapper from "../components/mainWrapper";
 import Link from "next/link";
 import React from "react";
@@ -9,7 +9,6 @@ import styles from "../sass/components/Index.module.scss";
 import { getPageViewsBySlug } from "../lib/google_analytics/pageViewRetrieval";
 import { getBlogPostsWithPrevNext } from "../util/dynamoDbUtil";
 import { capitalizeWord } from "../util/textUtil";
-import ShowMoreToggle from "../components/showMoreToggle";
 import PostGridItemV2 from "../components/postGridItemV2";
 import FeaturedSection from "../components/featuredSection";
 import { PostData } from "../interfaces/PostData";
@@ -36,7 +35,7 @@ const isSameDate = (dateA, dateB) => {
 
 const newPostHeadingWording = (postCreatedDate, category) => {
   return isSameDate(new Date(), new Date(postCreatedDate))
-    ? `Just Posted in ${category}`
+    ? `Recently Posted in "${category}"`
     : `New in ${category}`;
 };
 
@@ -79,22 +78,17 @@ export default function Home({
 }: Props) {
   return (
     <MainWrapper
-      title={`Front Page, ${siteStatementsPurposeShort}`}
+      title={`Home`}
       description={`A blog dedicated to non-fungible tokens, the blockchain, news, and the meta-verse.`}
       siteConfig={siteConfig}
     >
       <Columns style={{ margin: "0 0.5rem 0 0.5rem" }}>
         <Columns.Column size={2}></Columns.Column>
         <Columns.Column size={4}>
-          <ShowMoreToggle
-            labelShow={`+ Read more`}
-            labelHide={`- Hide/minimize`}
-            title={siteStatementsPurposeShort}
-            titleSize={4}
-            className={styles.frontPageBillboard}
-          >
-            {siteStatementsPurposeLong}
-          </ShowMoreToggle>
+          <Box>
+            <Heading>{siteStatementsPurposeShort}</Heading>
+            <p>{siteStatementsPurposeLong}</p>
+          </Box>
         </Columns.Column>
         <Columns.Column size={4}>
           <h2 className={styles.newestPostHeading}>
@@ -222,6 +216,33 @@ export async function getStaticProps() {
     process.env.BLOG_POSTS_DYNAMO_TABLE_NAME
   );
   const siteConfig = await getSiteConfig();
+
+  if (!postsDynamo || postsDynamo.length === 0) {
+    return {
+      redirect: {
+        destination: "/publish",
+      },
+    }
+  }
+
+  /** If there is no site config, then we need to assume this is a brand new site that must be set up */
+  if (!siteConfig) {
+    return {
+      redirect: {
+        destination: "/configuration/setup",
+      },
+    }
+  }
+
+  /** If the config is empty, redirect to the configuration page */
+  if (Object.keys(siteConfig).length === 0) {
+    return {
+      redirect: {
+        destination: "/configuration",
+      },
+    }
+  }
+
   const pageViewsMappedBySlug = await getPageViewsBySlug("2021-11-25");
 
   /**
